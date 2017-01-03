@@ -1,4 +1,5 @@
 defusedxml
+django
 django-allauth
 oauthlib
 PyJWT
