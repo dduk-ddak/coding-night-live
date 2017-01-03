@@ -21,7 +21,7 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * `django-allauth`
 * `python-social-auth`
 * `bootstrap`
-* `React`
+* `react`
 
 ## 서비스 이용해보기
 1. Python 설치하기
