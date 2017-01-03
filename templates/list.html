@@ -7,7 +7,8 @@
     <title>Your Slides</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
-    <script src="https://use.fontawesome.com/22d0d19cf2.js"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
     <style>
     .center-list {
       display: block;
@@ -22,7 +23,6 @@
   <body style="background-color:#eee">
     <nav class="navbar navbar-light bg-faded" style="background-color:#151515">
       <a class="navbar-brand" href="#">
-        {% load static %}
         <img src="{% static "image/small-logo-point.png" %}" height="30vh">
       </a>
       <ul class="nav navbar-nav">
