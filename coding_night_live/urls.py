@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^services/', RoomListView.as_view(), name='services'),
+    url(r'^auth/', include('django.contrib.auth.urls'), {'next_page': '/'}),
 ]
