@@ -40,7 +40,7 @@
       </h3>
       <h3 class="navbar-text float-xs-right" style="color:#1e2ea5"><i class="fa fa-user-plus" aria-hidden="true"></i> 34</h3>
     </nav>
-    <nav class="drawer-nav" role="navigation">
+    <nav class="drawer-nav" role="navigation" style="z-index:5">
       <ul class="drawer-menu list-group">
         <li class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></li>
         <li><a class="drawer-menu-item list-group-item" href="#"><i class="fa fa-font" aria-hidden="true"></i> Lorem ipsum dolor sit amet markdown</a></li>
@@ -53,7 +53,7 @@
       </ul>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="z-index:4">
       <div class="row">
         <div class="col-md-8">
           <div class="card" style="margin-top: 1em">
@@ -78,21 +78,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.2.2/markdown-it.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
     <script>
-
-    // drawer init
-    $(document).ready(function() {
-      $('.drawer').drawer({
-        class: {
-          nav: 'drawer-nav',
-          toggle: 'drawer-toggle'
-        },
-        iscroll: {
-          mouseWheel: true,
-          preventDefault: false
-        },
-        showOverlay: true
-      });
-    });
 
     // highlight.js init
     hljs.initHighlightingOnLoad();
@@ -121,6 +106,22 @@
     editor.on('change', function(e) {
       var out = document.getElementById('out');
       out.innerHTML = md.render(e.getValue());
+    });
+
+
+    // drawer init
+    $(document).ready(function() {
+      $('.drawer').drawer({
+        class: {
+          nav: 'drawer-nav',
+          toggle: 'drawer-toggle'
+        },
+        iscroll: {
+          mouseWheel: true,
+          preventDefault: false
+        },
+        showOverlay: true
+      });
     });
 
     </script>
