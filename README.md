@@ -7,7 +7,6 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 이를 해결하기 위하여 별도 설치가 필요 없는 Web기반의 Application을 만들게 되었습니다.
 
 ## 주요 기능
-------------
 * 투표 기능(참가자들의 참여도 혹은 이해도 파악 가능, ...)
 * 댓글 형식의 자유로운 질의응답
 * 코드 공유(문법 하이라이팅) 및 정보 공유(공지 사항, 발표 자료, ...)
@@ -16,7 +15,6 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * 코드랩 참여 인원 파악 가능
 
 ## 사용 기술
-------------
 * `python` 3.x
 * `django` 1.9 or later
 * `bootstrap`
@@ -24,7 +22,6 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * `React`
 
 ## 서비스 이용해보기
-------------
 1. Python 설치하기
 
     * [설치](https://python.org)
@@ -61,5 +58,4 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
     * **Chosen sites**에 `localhost:8000` 추가하기
 
 ## 소스 코드 라이센스
-------------
 MIT 라이센스 하에 배포합니다. `LICENSE` 파일을 참고해주시길 바랍니다.
