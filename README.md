@@ -14,11 +14,12 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * 세미나 완료 후 pdf로 코드랩 내용 내보내기 가능
 * 코드랩 참여 인원 파악 가능
 
-## 사용 기술
+## 사용한 오픈소스
 * `python` 3.x
 * `django` 1.9 or later
+* `django-allauth`
+* `python-social-auth`
 * `bootstrap`
-* `sqlite3`
 * `React`
 
 ## 서비스 이용해보기
