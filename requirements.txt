@@ -1,0 +1,11 @@
+defusedxml
+django-allauth
+oauthlib
+PyJWT
+python3-openid
+python-social-auth
+requests
+requests-oauthlib
+six
+social-auth-app-django
+social-auth-core
