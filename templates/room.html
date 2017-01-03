@@ -7,12 +7,25 @@
     <title>Lorem ipsum dolor sit amet</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/css/drawer.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+
     {% load static %}
     <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
-    <!--<script src="https://use.fontawesome.com/22d0d19cf2.js"></script>-->
   </head>
 
   <style>
+  .CodeMirror {
+    height: auto;
+  }
+  .halves {
+    width:50%;
+    display:inline-block;
+    vertical-align: top;
+    border-color: #eee;
+    border-width: thin;
+    border-style:solid;
+  }
   </style>
 
   <body class="drawer drawer--left" style="background-color:#eee">
@@ -44,10 +57,10 @@
       <div class="row">
         <div class="col-md-8">
           <div class="card" style="margin-top: 1em">
-            <h4 class="card-title" align="center" style="margin-top:0.5em"><i class="fa fa-code" aria-hidden="true"></i> Title of Slide</h4>
+            <h4 class="card-title" align="center" style="margin-top:0.5em"><i class="fa fa-code" aria-hidden="true"></i> lorem/ipsum.py</h4>
           </div>
-          <div class="card" style="margin-top: 1em">
-            <p class="card-text" style="padding:1em">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <div style="margin-top: 1em; background-color: #eee">
+            <div class="halves"><textarea id="code"></textarea></div><div class="halves" id="out" style="padding:1em; background-color: #fff"></div>
           </div>
         </div>
         <div class="col-md-4">
@@ -60,7 +73,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.1.3/iscroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/js/drawer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.2.2/markdown-it.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
     <script>
+
+    // drawer init
     $(document).ready(function() {
       $('.drawer').drawer({
         class: {
@@ -74,6 +93,36 @@
         showOverlay: true
       });
     });
+
+    // highlight.js init
+    hljs.initHighlightingOnLoad();
+
+    // markdownit init
+    var md = markdownit({
+      html: true,
+      highlight: function(str, lang){
+        if(lang && hljs.getLanguage(lang)){
+          try {
+            return hljs.highlight(lang, str).value;
+          } catch(__){}
+        }
+        return '';
+      }
+    });
+
+    // codemirror init
+    var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+      mode: 'gfm',
+      lineNumbers: true,
+      matchBrackets: true,
+      lineWrapping: true,
+      viewportMargin: Infinity
+    });
+    editor.on('change', function(e) {
+      var out = document.getElementById('out');
+      out.innerHTML = md.render(e.getValue());
+    });
+
     </script>
 
   </body>
