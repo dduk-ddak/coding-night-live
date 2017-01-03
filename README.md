@@ -30,7 +30,7 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 
 2. 기타 패키지 설치하기
 
-    ```pip install requirements.txt```
+    ```pip install -r requirements.txt```
 
 3. 프로젝트 migrate 명령 실행하기
 
