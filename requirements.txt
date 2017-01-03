@@ -1,6 +1,5 @@
 defusedxml
 django
-django-allauth
 oauthlib
 PyJWT
 python3-openid
