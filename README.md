@@ -1,5 +1,5 @@
 # Coding-Night-Live
-Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication Application입니다.
+Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication Application입니다. [소개 동영상](https://youtu.be/-EFYUEsLLDo)
 >코드랩이란 특정 기능을 개발하기 위해 단계를 나누고 목표를 세워 함께 배워나가는 행사입니다
 
 코드랩 행사를 진행하면서 `Slack`이나 `PingPong` 등으로만 진행하는 데에는 불편함이 많습니다.
