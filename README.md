@@ -22,6 +22,16 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * `python-social-auth`
 * `bootstrap`
 * `react`
+* `socket.io`
+* `codemirror`
+* `bootstrap4 (alpha)`
+* `jquery`
+* `ajax`
+* [`drawer`](https://github.com/blivesta/drawer)
+* `highlight.js`
+* `markdown-it`
+* `iscroll`
+
 
 ## 서비스 이용해보기
 1. Python 설치하기
