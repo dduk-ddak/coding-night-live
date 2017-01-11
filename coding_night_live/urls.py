@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from coding_night_live.views import MainView
-from manage_room.views import RoomListView
+from manage_user.views import RoomListView
 
 urlpatterns = [
     url(r'^$', MainView.as_view(), name='main'),
