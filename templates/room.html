@@ -65,10 +65,15 @@
         </div>
         <div class="col-md-4">
           <div class="card" style="margin-top: 1em">
-            <div class="card-block">
+            <div class="card-block" style="padding-bottom: 10px;">
               <h4 class="card-title"><i class="fa fa-podcast" aria-hidden="true"></i> Notice</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
-              <a href="#" class="card-text btn btn-sm btn-block"><i class="fa fa-sort-desc" aria-hidden="true"></i></a>
+              <div id="hidden-notice">
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+              </div>
+              <a href="javascript:toggleNotice();" class="card-text btn btn-sm btn-block"><i id="notice-toggler" class="fa fa-sort-asc" aria-hidden="true"></i></a>
             </div>
           </div>
           <div class="card" style="margin-top: 1em">
@@ -204,6 +209,19 @@
         showOverlay: true
       });
     });
+
+    // notice show/hide
+    function toggleNotice() {
+      $('#hidden-notice').slideToggle('slow');
+      if($('#notice-toggler').hasClass('fa-sort-desc')) {
+        $('#notice-toggler').removeClass('fa-sort-desc');
+        $('#notice-toggler').addClass('fa-sort-asc');
+      }
+      else if($('#notice-toggler').hasClass('fa-sort-asc')) {
+        $('#notice-toggler').removeClass('fa-sort-asc');
+        $('#notice-toggler').addClass('fa-sort-desc');
+      }
+    }
 
     </script>
 
