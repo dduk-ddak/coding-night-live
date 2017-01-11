@@ -163,7 +163,13 @@
       highlight: function(str, lang){
         if(lang && hljs.getLanguage(lang)){
           try {
-            return hljs.highlight(lang, str).value;
+            var line_numbers = str.split('\n').length - 1;
+            var ret_lines = '';
+            for(i=1; i<=line_numbers; i++) {
+              ret_lines += '<p style="text-align:right; margin-bottom:0;">' + i + '</p>';
+            }
+            return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + hljs.highlight(lang, str).value + '</div></div>'
+            //return hljs.highlight(lang, str).value;
           } catch(__){}
         }
         return '';
