@@ -53,7 +53,7 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 
 5. REDIS 실행시키기
 
-    ```redis-server```
+    ``` redis-server ```
 
 6. 프로젝트 서버 실행시키기
 
