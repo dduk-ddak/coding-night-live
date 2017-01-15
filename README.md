@@ -54,6 +54,7 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 5. 프로젝트 서버 실행시키기
 
     ```python manage.py runserver```
+
     
     ```redis-server```
 
