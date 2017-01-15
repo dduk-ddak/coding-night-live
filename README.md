@@ -55,10 +55,6 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 
     ```python manage.py runserver```
 
-    
-    ```redis-server```
-
-
 6. `Google API Console`에서 `OAuth 2.0 Client ID` 생성하기
 
     * [Google API Console](https://console.developers.google.com/)
