@@ -98,6 +98,20 @@ DATABASES = {
     }
 }
 
+redis_host = os.environ.get('REDIS_HOST', 'localhost')    # redis host definition
+
+# channel layer definitions
+CHANNEL_LAYERS = {
+    "default": {
+        # This example app uses the Redis channel layer implementation asgi_redis
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(redis_host, 6379)],
+        },
+        "ROUTING": "coding_night_live.routing.channel_routing",
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
