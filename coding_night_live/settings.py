@@ -38,10 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'allauth',
+    'allauth',    # django social auth setting
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',   
+    'allauth.socialaccount.providers.google',
+    'channels',    # channels setting
 ]
 
 SITE_ID = 1
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'coding_night_live.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'),],    # templates DIR
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,6 +82,7 @@ AUTHENTICATION_BACKENDS = (
 
 WSGI_APPLICATION = 'coding_night_live.wsgi.application'
 
+# django social auth setting
 SOCIALACCOUNT_PROVIDERS = \
     { 'google':
         { 'SCOPE': ['profile', 'email'],
@@ -129,6 +131,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+# django social auth setting ; login redirect and logout url
 LOGIN_REDIRECT_URL = "/services/"
 LOGOUT_URL = "/"
 
@@ -136,5 +139,5 @@ LOGOUT_URL = "/"
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]    #static files DIR
 #STATIC_ROOT = os.path.join(BASE_DIR, 'collected')
