@@ -108,7 +108,7 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [(redis_host, 6379)],
         },
-        "ROUTING": "multichat.routing.channel_routing",
+        "ROUTING": "coding_night_live.routing.channel_routing",
     },
 }
 
