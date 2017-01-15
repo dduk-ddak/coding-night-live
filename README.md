@@ -51,11 +51,15 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 
     ```python manage.py createsuperuser```
 
-5. 프로젝트 서버 실행시키기
+5. REDIS 실행시키기
+
+    ```redis-server```
+
+6. 프로젝트 서버 실행시키기
 
     ```python manage.py runserver```
 
-6. `Google API Console`에서 `OAuth 2.0 Client ID` 생성하기
+7. `Google API Console`에서 `OAuth 2.0 Client ID` 생성하기
 
     * [Google API Console](https://console.developers.google.com/)
     * **사용자 인증 정보** 클릭
@@ -63,7 +67,7 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
     * **이름**은 임의로 입력해준다.
     * **승인된 자바스크립트 원본**은 `http://localhost:8000`를 입력해주고, **승인된 리디렉션 URI**는 `http://localhost:8000/accounts/google/login/callback/`를 입력해준다.
 
-7. `localhost:8000/admin`에 접속 후 application 설정 추가하기
+8. `localhost:8000/admin`에 접속 후 application 설정 추가하기
     * **Sites**에서 `example.com`을 `localhost:8000`으로 변경하기
     * **Social Applications**에서 **ADD SOCIAL APPLICATION** 클릭하기
     * **Provider**는 `Google`선택, **Name**에는 Google API Console의 OAuth Client ID의 `이름` 입력하기
