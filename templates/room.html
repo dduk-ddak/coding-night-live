@@ -169,6 +169,7 @@
         if(lang && hljs.getLanguage(lang)){
           try {
             var line_numbers = str.split('\n').length - 1;
+            if(str[str.length-1] !== '\n') line_numbers += 1;
             var ret_lines = '';
             for(i=1; i<=line_numbers; i++) {
               ret_lines += '<p style="text-align:right; margin-bottom:0;">' + i + '</p>';
