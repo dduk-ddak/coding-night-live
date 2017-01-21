@@ -67,23 +67,22 @@
                   <div class="btn-group" role="group">
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-text-height" aria-hidden="true"></i></button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                      <a class="dropdown-item" href="#">Title</a>
-                      <a class="dropdown-item" href="#">Header 2</a>
-                      <a class="dropdown-item" href="#">Header 3</a>
-                      <a class="dropdown-item" href="#">Header 4</a>
-                      <a class="dropdown-item" href="#">Header 5</a>
-                      <a class="dropdown-item" href="#">Header 6</a>
+                      <a class="dropdown-item" href="#" onclick="header_edit(1)">Title</a>
+                      <a class="dropdown-item" href="#" onclick="header_edit(2)">Header 2</a>
+                      <a class="dropdown-item" href="#" onclick="header_edit(3)">Header 3</a>
+                      <a class="dropdown-item" href="#" onclick="header_edit(4)">Header 4</a>
+                      <a class="dropdown-item" href="#" onclick="header_edit(5)">Header 5</a>
+                      <a class="dropdown-item" href="#" onclick="header_edit(6)">Header 6</a>
                     </div>
                   </div>
 
                   <div class="btn-group" role="group">
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-font" aria-hidden="true"></i></button>
                     <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                      <a class="dropdown-item" href="#">Bold</a>
-                      <a class="dropdown-item" href="#">Italic</a>
-                      <a class="dropdown-item" href="#">Underline</a>
-                      <a class="dropdown-item" href="#">Inline Code</a>
-                      <a class="dropdown-item" href="#">Strikethrough</a>
+                      <a class="dropdown-item" href="#" onclick="inline_edit('**')">Bold</a>
+                      <a class="dropdown-item" href="#" onclick="inline_edit('_')">Italic</a>
+                      <a class="dropdown-item" href="#" onclick="inline_edit('`')">Inline Code</a>
+                      <a class="dropdown-item" href="#" onclick="inline_edit('~~')">Strikethrough</a>
                     </div>
                   </div>
 
@@ -275,6 +274,19 @@
         chat_list_height = 100;
       }
       $('#chat_list_scroll').height(chat_list_height);
+    }
+
+    function header_edit(n) {
+      for(var sharp = ''; sharp.length < n; sharp += '#'){}
+      var curr_line = editor.doc.getCursor().line;
+      editor.doc.replaceRange(sharp + ' ', {line: curr_line, ch:0}, {line: curr_line, ch:0});
+    }
+
+    function inline_edit(ch) {
+      var curr_line = editor.doc.getCursor().line;
+      var curr_text = editor.doc.getLine(curr_line);
+      var curr_len = curr_text.length;
+      editor.doc.replaceRange(ch + curr_text + ch, {line: curr_line, ch:0}, {line: curr_line, ch:curr_len});
     }
 
     $(window).resize(function() {
