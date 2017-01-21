@@ -64,7 +64,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card" style="margin-top: 1em">
+          <div id="notice_card" class="card" style="margin-top: 1em">
             <div class="card-block" style="padding-bottom: 10px;">
               <h4 class="card-title"><i class="fa fa-podcast" aria-hidden="true"></i> Notice</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
@@ -78,58 +78,44 @@
           </div>
           <div class="card" style="margin-top: 1em">
             <div class="card-block">
-              <h4 class="card-title" style="margin-bottom:0;"><i class="fa fa-comments-o" aria-hidden="true"></i> Chat</h4>
+              <h4 class="card-title" style="margin-bottom:0;"><i class="fa fa-comments-o" aria-hidden="true"></i> Q&A</h4>
             </div>
-            <ul class="list-group list-group-flush" style="overflow-y: scroll; height: 55vh;">
+            <ul id="chat_list_scroll" class="list-group list-group-flush" style="overflow-y: scroll;">
               <div class="list-group-item">
 
-                <!-- Type #1 -->
+                <!-- Type question -->
                 <div class="card">
-                  <div class="card-header">
-                    <div style="float:left; margin-right: 10px;"><i class="fa fa-user-circle" aria-hidden="true"></i> juice500</div> <div style="margin:0;font-size:.75em;" align="right">2017.01.04. 13:04</div>
+                  <div class="card-header" style="padding-left: .5rem;">
+                    <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> j3f29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
                   </div>
                   <div class="card-block">
                     <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                   </div>
                 </div>
 
-                <!-- Type #2 -->
+                <!-- Type reply -->
                 <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
                 <div class="card" style="margin-left:30px;">
-                  <div class="card-header">
-                    <div style="float:left; margin-right: 10px;"><i class="fa fa-user-circle" aria-hidden="true"></i> ewahaew32</div> <div style="margin:0;font-size:.75em;" align="right">2017.01.04. 13:04</div>
-                  </div>
                   <div class="card-block">
                     <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                   </div>
                 </div>
 
+                <!-- Type speaker -->
                 <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
                 <div class="card" style="margin-left:30px;">
-                  <div class="card-header">
-                    <div style="float:left; margin-right: 10px;"><i class="fa fa-user-circle" aria-hidden="true"></i> zngf2</div> <div style="margin:0;font-size:.75em;" align="right">2017.01.04. 13:04</div>
-                  </div>
-                  <div class="card-block">
-                    <p class="card-text">Dolore magna aliqua.</p>
-                  </div>
-                </div>
-
-                <div class="card">
-                  <div class="card-header">
-                    <div style="float:left; margin-right: 10px;"><i class="fa fa-user-circle" aria-hidden="true"></i> __324ff</div> <div style="margin:0;font-size:.75em;" align="right">2017.01.04. 13:04</div>
-                  </div>
-                  <div class="card-block">
-                    <p class="card-text">Consectetur adipiscing elit.</p>
-                  </div>
-                </div>
-
-                <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
-                <div class="card" style="margin-left:30px;">
-                  <div class="card-header">
-                    <div style="float:left; margin-right: 10px;"><i class="fa fa-user-circle" aria-hidden="true"></i> an2dfl</div> <div style="margin:0;font-size:.75em;" align="right">2017.01.04. 13:04</div>
-                  </div>
-                  <div class="card-block">
+                  <div class="card-block" style="background-color: rgba(0, 116, 217, 0.28);">
                     <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                  </div>
+                </div>
+
+                <!-- Type not yet read -->
+                <div class="card" style="border-right-color:#0275d8; border-right-style: solid; border-right-width: thick;">
+                  <div class="card-header" style="padding-left: .5rem;">
+                    <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> j3f29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
+                  </div>
+                  <div class="card-block">
+                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                   </div>
                 </div>
 
@@ -137,7 +123,7 @@
             </ul>
 
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Chat away...">
+              <input type="text" class="form-control" placeholder="Type @help for syntax...">
               <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Send</button>
               </span>
@@ -209,11 +195,14 @@
         },
         showOverlay: true
       });
+
+      chatListResize();
     });
 
     // notice show/hide
     function toggleNotice() {
-      $('#hidden-notice').slideToggle('slow');
+      $('#hidden-notice').slideToggle({duration:200, step:chatListResize});
+
       if($('#notice-toggler').hasClass('fa-sort-desc')) {
         $('#notice-toggler').removeClass('fa-sort-desc');
         $('#notice-toggler').addClass('fa-sort-asc');
@@ -222,8 +211,22 @@
         $('#notice-toggler').removeClass('fa-sort-asc');
         $('#notice-toggler').addClass('fa-sort-desc');
       }
+      chatListResize();
     }
 
+    function chatListResize() {
+      var viewport_height = $(window).height();
+      var start_height = $('#notice_card').height() + $('#notice_card').offset().top;
+      var chat_list_height = viewport_height - start_height - 140;
+      if(chat_list_height < 100) {
+        chat_list_height = 100;
+      }
+      $('#chat_list_scroll').height(chat_list_height);
+    }
+    
+    $(window).resize(function() {
+      chatListResize();
+    });
     </script>
 
   </body>
