@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'channels',    # channels setting
+    'manage_room',
 ]
 
 SITE_ID = 1
