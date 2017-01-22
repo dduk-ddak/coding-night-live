@@ -18,14 +18,15 @@ from django.contrib import admin
 
 from coding_night_live.views import MainView
 from manage_user.views import RoomListView
-from manage_room.views import RoomCreateView, RedirectRoom
+
+import manage_room.views
 
 urlpatterns = [
     url(r'^$', MainView.as_view(), name='main'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^services/', RoomListView.as_view(), name='services'),
-    url(r'^services/new/$', RoomCreateView, name='new'),
-    url(r'^(?P<label>[\w-]{,50})/$', RedirectRoom, name='redirect_room'),
+    url(r'^services/new/$', manage_room.views.RoomCreateView, name='new'),
+    url(r'^(?P<label>[\w-]{,50})/$', manage_room.views.RedirectRoomView.as_view(), name='redirect_room'),
     url(r'^auth/', include('django.contrib.auth.urls'), {'next_page': '/'}),
 ]

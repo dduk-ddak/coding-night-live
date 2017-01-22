@@ -1,5 +1,7 @@
 import random
 
+from django.http import HttpResponse
+
 from django.shortcuts import render, redirect
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -23,8 +25,9 @@ def RoomCreateView(request, LoginRequiredMixin):
             room = Room.objects.create(admin_user=request.user, link=url, label=share_link)
     #return redirect(RedirectRoom, room.label)
 
+
 def RoomDeleteView(request, LoginRequiredMixin):
     Room.objects.filter(admin_user=request.user, link=request.link).delete()
 
-def RedirectRoom():
+class RedirectRoomView(TemplateView):
     template_name='room.html'
