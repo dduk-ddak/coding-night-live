@@ -1,20 +1,25 @@
 import json
+
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
+
 from channels import Group
 
 # Create your models here.
 class Room(models.Model):
     admin_user = models.ForeignKey(User, on_delete=True)    #fk
     email = admin_user.email
-    title = models.CharField()
+    title = models.CharField(max_length=255, default="NoTitle")
     link = models.URLField(primary_key=True)    #pk
-    time = models.DateTimeField()
-    slide = models.Field()  #fk
+    time = models.DateTimeField(default=timezone.now, db_index=True)
+    #slide = models.Field()  #fk
+
+    label = models.SlugField(unique=True)
 
     def __str__(self):
         return self.title
-
+"""
 class Slide(models.Model):
     md_blob = models.FileField()
 
@@ -25,3 +30,4 @@ class Slide(models.Model):
 
     def __str__(self):
         return self.now_id
+"""
