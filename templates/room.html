@@ -239,6 +239,7 @@
     editor.on('change', function(e) {
       var out = document.getElementById('out');
       out.innerHTML = md.render(e.getValue());
+      $('blockquote').addClass('blockquote');
     });
 
 
