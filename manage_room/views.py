@@ -14,7 +14,7 @@ from .models import Room
 
 @login_required
 def RoomCreateView(request):
-    return HttpResponse("hello world")
+    #return HttpResponse("hello world")
     url = 'http://' + Site.objects.get_current().domain + '/services/'
     room = None
 
