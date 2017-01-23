@@ -162,7 +162,7 @@
     // markdownit init
     var md = markdownit({
       html: true,
-      breaks: true,
+      breaks: false,
       highlight: function(str, lang){
         if(lang && hljs.getLanguage(lang)){
           try {
@@ -184,7 +184,7 @@
     var editor = new SimpleMDE({
         element: document.getElementById("code"),
         autofocus: true,
-        spellChecker: false,
+        spellChecker: true,
         forceSync: true,
         lineNumbers: true,
 
@@ -207,15 +207,12 @@
                   "ordered-list", "unordered-list", "table", "|",
                   "link", "image", "|"],
         toolbarTips: false,
-
         promptURLs: true,
     });
    editor.codemirror.on("change", function(e) {
         var out = document.getElementById("out");
         out.innerHTML = md.render(e.getValue());
         $('blockquote').addClass('blockquote');
-
-
     });
 
     // drawer init
