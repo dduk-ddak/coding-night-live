@@ -11,3 +11,4 @@ six==1.10.0
 social-auth-app-django==0.1.0
 social-auth-core==0.2.1
 channels
+asgi_redis
