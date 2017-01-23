@@ -10,10 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+
     {% load static %}
     <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
-  </head>
 
+  </head>
   <style>
   .CodeMirror {
     height: auto;
@@ -64,58 +66,6 @@
             <h4 class="card-title" align="center" style="margin-top:0.5em"><i class="fa fa-font" aria-hidden="true"></i> markdown test</h4>
           </div>
 
-          <!-- markdown tooltips -->
-          <div class="btn-toolbar" style="margin-bottom: 10px;" role="toolbar">
-            <div class="btn-group" role="group">
-
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-text-height" aria-hidden="true"></i></button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                  <a class="dropdown-item" href="#" onclick="header_edit(1)">Title</a>
-                  <a class="dropdown-item" href="#" onclick="header_edit(2)">Header 2</a>
-                  <a class="dropdown-item" href="#" onclick="header_edit(3)">Header 3</a>
-                  <a class="dropdown-item" href="#" onclick="header_edit(4)">Header 4</a>
-                  <a class="dropdown-item" href="#" onclick="header_edit(5)">Header 5</a>
-                  <a class="dropdown-item" href="#" onclick="header_edit(6)">Header 6</a>
-                </div>
-              </div>
-
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-font" aria-hidden="true"></i></button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                  <a class="dropdown-item" href="#" onclick="inline_edit('**')">Bold</a>
-                  <a class="dropdown-item" href="#" onclick="inline_edit('_')">Italic</a>
-                  <a class="dropdown-item" href="#" onclick="inline_edit('`')">Inline Code</a>
-                  <a class="dropdown-item" href="#" onclick="inline_edit('~~')">Strikethrough</a>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="btn-group" role="group" aria-label="Second group">
-              <div class="btn-group" role="group">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-list" aria-hidden="true"></i></button>
-                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                  <a class="dropdown-item" href="#">Ordered</a>
-                  <a class="dropdown-item" href="#">Unordered</a>
-                  <a class="dropdown-item" href="#">Checklist</a>
-                </div>
-              </div>
-            
-              <button type="button" class="btn btn-secondary"><i class="fa fa-table" aria-hidden="true"></i></button>
-            </div>
-            
-            <div class="btn-group" role="group" aria-label="Third group">
-              <button type="button" class="btn btn-secondary"><i class="fa fa-quote-left" aria-hidden="true"></i></button>
-              <button type="button" class="btn btn-secondary"><i class="fa fa-code" aria-hidden="true"></i></button>
-            </div>
-
-            <div class="btn-group" role="group" aria-label="Fourth group">
-              <button type="button" class="btn btn-secondary"><i class="fa fa-link" aria-hidden="true"></i></button>
-              <button type="button" class="btn btn-secondary"><i class="fa fa-picture-o" aria-hidden="true"></i></button>
-            </div>
-          </div>
-
           <!-- markdown & rendered output -->
           <div style="margin-top: 1em; background-color: #eee">
             <div class="halves"><textarea id="code"></textarea>
@@ -142,7 +92,6 @@
             </div>
             <ul id="chat_list_scroll" class="list-group list-group-flush" style="overflow-y: scroll;">
               <div class="list-group-item">
-
                 <!-- Type question -->
                 <div class="card">
                   <div class="card-header" style="padding-left: .5rem;">
@@ -203,7 +152,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.2.2/markdown-it.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
-    <script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+   <script>
 
     // highlight.js init
     hljs.initHighlightingOnLoad();
@@ -211,6 +162,7 @@
     // markdownit init
     var md = markdownit({
       html: true,
+      breaks: false,
       highlight: function(str, lang){
         if(lang && hljs.getLanguage(lang)){
           try {
@@ -225,23 +177,43 @@
           } catch(__){}
         }
         return '';
-      }
+      },
     });
 
     // codemirror init
-    var editor = CodeMirror.fromTextArea(document.getElementById('code'), {
-      mode: 'gfm',
-      lineNumbers: true,
-      matchBrackets: true,
-      lineWrapping: true,
-      viewportMargin: Infinity
-    });
-    editor.on('change', function(e) {
-      var out = document.getElementById('out');
-      out.innerHTML = md.render(e.getValue());
-      $('blockquote').addClass('blockquote');
-    });
+    var editor = new SimpleMDE({
+        element: document.getElementById("code"),
+        autofocus: true,
+        spellChecker: true,
+        forceSync: true,
+        lineNumbers: true,
 
+        insertTexts: {
+          image: ["![enter image description here](http://", ")"],
+          link: ["[enter link description here]","(http://)"],
+          horizontalRule: ["", "\n\n-----\n\n"],
+          table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
+        },
+        previewRender: function(plainText) {
+            return md.render(plainText);
+        },
+
+		renderingConfig: {
+			singleLineBreaks: true,
+        	codeSyntaxHighlighting: true,
+    	},
+        toolbar: ["bold", "italic", "strikethrough", "heading", "|",
+                  "code", "quote", "horizontal-rule", "|",
+                  "ordered-list", "unordered-list", "table", "|",
+                  "link", "image", "|"],
+        toolbarTips: false,
+        promptURLs: true,
+    });
+   editor.codemirror.on("change", function(e) {
+        var out = document.getElementById("out");
+        out.innerHTML = md.render(e.getValue());
+        $('blockquote').addClass('blockquote');
+    });
 
     // drawer init
     $(document).ready(function() {
@@ -285,19 +257,6 @@
       $('#chat_list_scroll').height(chat_list_height);
     }
 
-    function header_edit(n) {
-      for(var sharp = ''; sharp.length < n; sharp += '#'){}
-      var curr_line = editor.doc.getCursor().line;
-      editor.doc.replaceRange(sharp + ' ', {line: curr_line, ch:0}, {line: curr_line, ch:0});
-    }
-
-    function inline_edit(ch) {
-      var curr_line = editor.doc.getCursor().line;
-      var curr_text = editor.doc.getLine(curr_line);
-      var curr_len = curr_text.length;
-      editor.doc.replaceRange(ch + curr_text + ch, {line: curr_line, ch:0}, {line: curr_line, ch:curr_len});
-    }
-
     function togglePoll(q_str, a_strs) {
       // debug
       q_str = "Q. How does this get toggled? Let's make this question much longer!";
@@ -314,7 +273,7 @@
     function endPoll(ret_idx) {
       $('#polls-wrapper').empty();
       $('#contents-wrapper').css('visibility', 'visible');
-      
+
       // do something with ret_idx
       console.log(ret_idx);
     }
