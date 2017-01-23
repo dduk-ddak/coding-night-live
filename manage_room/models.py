@@ -26,15 +26,15 @@ class Room(models.Model):
     def __str__(self):
         return self.title
 
-"""
+
 class Slide(models.Model):
-    md_blob = models.FileField()
+    md_blob = models.TextField()
 
     #id linked list
-    now_id = models.PositiveSmallIntegerField(primary_key=True)     #pk
+    now_id = models.AutoField(primary_key=True)     #pk
     prev_id = models.PositiveSmallIntegerField()
     next_id = models.PositiveSmallIntegerField()
 
     def __str__(self):
         return self.now_id
-"""
+
