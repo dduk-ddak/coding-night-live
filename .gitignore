@@ -91,4 +91,6 @@ ENV/
 .ropeproject
 
 .DS_Store
-.rdb
+
+# Redis db
+*.rdb
