@@ -196,16 +196,6 @@
           horizontalRule: ["", "\n\n-----\n\n"],
           table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
         },
-        
-        previewRender: function(plainText) {
-            return md.render(plainText);
-        },
-        
-        renderingConfig: {
-          singleLineBreaks: true,
-        	codeSyntaxHighlighting: true,
-        },
-        
         toolbar: ["bold", "italic", "strikethrough", "heading", "|",
                   "code", "quote", "horizontal-rule", "|",
                   "ordered-list", "unordered-list", "table", "|",
