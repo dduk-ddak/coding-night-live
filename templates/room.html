@@ -187,27 +187,19 @@
         spellChecker: true,
         forceSync: true,
         lineNumbers: true,
+        toolbarTips: false,
+        promptURLs: false,
 
         insertTexts: {
           image: ["![enter image description here](http://", ")"],
-          link: ["[enter link description here]","(http://)"],
+          link: ["[enter link description here](http://", ")"],
           horizontalRule: ["", "\n\n-----\n\n"],
           table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
         },
-        previewRender: function(plainText) {
-            return md.render(plainText);
-        },
-
-		renderingConfig: {
-			singleLineBreaks: true,
-        	codeSyntaxHighlighting: true,
-    	},
         toolbar: ["bold", "italic", "strikethrough", "heading", "|",
                   "code", "quote", "horizontal-rule", "|",
                   "ordered-list", "unordered-list", "table", "|",
                   "link", "image", "|"],
-        toolbarTips: false,
-        promptURLs: true,
     });
    editor.codemirror.on("change", function(e) {
         var out = document.getElementById("out");
