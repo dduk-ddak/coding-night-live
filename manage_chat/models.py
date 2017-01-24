@@ -23,16 +23,27 @@ class Notice(models.Model):
     time = models.DateTimeField(default=timezone.now)
     description = models.TextField()
 
+    def __str__(self):
+        return self._id
+
 class Poll(models.Model):
     _id = models.AutoField(primary_key=True)
+    #room = models.ForeignKey(Room, on_delete=models.CASCADE)
     #slide = models.ForeignKey(Slide, on_delete=models.CASCADE)  #fk
     time = models.DateTimeField(default=timezone.now)
     description = models.TextField()
 
+    def __str__(self):
+        return self._id
+
 class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
     #slide = models.ForeignKey(Slide, on_delete=models.CASCADE)  #fk
+    #room = models.ForeignKey(Room, on_delete=models.CASCADE)
     hash_value = models.CharField(max_length=10, default=_createHash, unique=True)
     time = models.DateTimeField(default=timezone.now)
     is_reply = models.BooleanField(default=False)
     description = models.TextField()
+
+    def __str__(self):
+        return self._id
