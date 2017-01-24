@@ -76,3 +76,5 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 
 ## 소스 코드 라이센스
 MIT 라이센스 하에 배포합니다. [`LICENSE`](https://github.com/punkyoon/coding-night-live/blob/master/LICENSE) 파일을 참고해주시길 바랍니다.
+
+Copyright (c) 2017 fuzzythecat, juice500ml, punkyoon
