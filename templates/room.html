@@ -295,6 +295,8 @@
       // do something with idx
       console.log('clickSlide');
       console.log(idx);
+      $('.drawer').drawer('close');
+      showSlide(idx);
     }
 
     function addSlide() {
@@ -306,7 +308,8 @@
     function showSlide(idx) {
       // debug
       // get data string with idx
-      var data = '# this is title\n## and this is content!\n## this too!';
+      console.log('showSlide');
+      var data = '# this is title with idx ' + idx.toString() + '\n## and this is content!\n### this too!';
       editor.value(data);
     }
     
