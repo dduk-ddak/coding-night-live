@@ -15,7 +15,7 @@ class Room(models.Model):
     #admin_user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     #admin_user = models.ForeignKey(allauth.socialaccount.models.SocialAccount, on_delete=models.CASCADE)
     
-    #email = admin_user.email
+    #email = admin_user.email    
     title = models.CharField(max_length=255, default="NoTitle")
     link = models.URLField(primary_key=True)    #pk
     time = models.DateTimeField(default=timezone.now)
@@ -29,7 +29,7 @@ class Room(models.Model):
 
 class Slide(models.Model):
     md_blob = models.TextField()
-
+    
     #id linked list
     now_id = models.AutoField(primary_key=True)     #pk
     prev_id = models.PositiveSmallIntegerField()
