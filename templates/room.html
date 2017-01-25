@@ -62,7 +62,7 @@
       <div id="contents-wrapper" class="row">
         <div class="col-md-8">
           <div class="card" style="margin-top: 1em">
-            <h4 class="card-title" align="center" style="margin-top:0.5em"><i class="fa fa-font" aria-hidden="true"></i> markdown test</h4>
+            <h4 class="card-title" align="center" style="margin-top:0.5em", id="markdown-title"><i aria-hidden="true"></i>(empty)</h4>
           </div>
 
           <!-- markdown & rendered output -->
@@ -154,7 +154,9 @@
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
    <script>
-
+    // make initial empty title gray
+    $('h4#markdown-title.card-title').css({color: "#D8D6D5"});
+ 
     // highlight.js init
     hljs.initHighlightingOnLoad();
 
@@ -200,12 +202,31 @@
                   "ordered-list", "unordered-list", "table", "|",
                   "link", "image", "|"],
     });
-   editor.codemirror.on("change", function(e) {
+    editor.codemirror.on("change", function(e) {
         var out = document.getElementById("out");
         out.innerHTML = md.render(e.getValue());
-        $('blockquote').addClass('blockquote');
-    });
+        $('blockquote').addClass('blockquote');     
+     });
 
+    editor.codemirror.on("changes", function(e) {
+        var default_title = "(empty)"
+        var title = $('h4#markdown-title.card-title');
+        if($('h1').length == 0) { 
+            title.text(default_title);
+            title.css({color: "#D8D6D5"});
+        } else {
+            var user_defined_title = $('h1')[0].textContent;
+            if (user_defined_title.length == 0) {
+                title.text(default_title);
+                title.css({color: "#D8D6D5"});
+                return;
+            }
+            title.text(user_defined_title);
+            title.css({color: "black"});
+            $('h1').contents()[0].remove();
+        }
+    });
+ 
     // drawer init
     $(document).ready(function() {
       $('.drawer').drawer({
