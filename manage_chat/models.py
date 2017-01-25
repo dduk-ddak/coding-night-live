@@ -26,10 +26,13 @@ class Notice(models.Model):
     def __str__(self):
         return self._id
 
+    def __str__(self):
+        return self._id
+
 class Poll(models.Model):
     _id = models.AutoField(primary_key=True)
     #room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    #slide = models.ForeignKey(Slide, on_delete=models.CASCADE)    #fk
+    #slide = models.ForeignKey(Slide, on_delete=models.CASCADE)  #fk
     time = models.DateTimeField(default=timezone.now)
     description = models.TextField()
 
@@ -38,7 +41,7 @@ class Poll(models.Model):
 
 class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
-    #slide = models.ForeignKey(Slide, on_delete=models.CASCADE)    #fk
+    #slide = models.ForeignKey(Slide, on_delete=models.CASCADE)  #fk
     #room = models.ForeignKey(Room, on_delete=models.CASCADE)
     hash_value = models.CharField(max_length=10, default=_createHash, unique=True)
     time = models.DateTimeField(default=timezone.now)

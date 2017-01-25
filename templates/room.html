@@ -43,16 +43,15 @@
       <h3 class="navbar-text float-xs-right" style="color:#1e2ea5"><i class="fa fa-user-plus" aria-hidden="true"></i> 34</h3>
     </nav>
     <nav class="drawer-nav" role="navigation" style="z-index:5">
-      <ul class="drawer-menu list-group">
+      <ul id="slide_list" class="drawer-menu list-group">
         <li class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></li>
-        <li><a class="drawer-menu-item list-group-item" href="#"><i class="fa fa-font" aria-hidden="true"></i> Lorem ipsum dolor sit amet markdown</a></li>
-        <li><a class="drawer-menu-item list-group-item" href="#"><i class="fa fa-font" aria-hidden="true"></i> Lorem ipsum markdown</a></li>
-        <li><a class="drawer-menu-item list-group-item" href="#"><i class="fa fa-font" aria-hidden="true"></i> Lorem ipsum markdown</a></li>
-        <li><a class="drawer-menu-item list-group-item" href="#"><i class="fa fa-code" aria-hidden="true"></i> lorem_ipsum.py</a></li>
-        <li><a class="drawer-menu-item list-group-item" href="#"><i class="fa fa-font" aria-hidden="true"></i> Lorem ipsum markdown</a></li>
-        <li><a class="drawer-menu-item list-group-item" href="#"><i class="fa fa-code" aria-hidden="true"></i> lorem_ipsum.py</a></li>
-        <button class="drawer-menu-item list-group-item btn btn-secondary btn-block"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <li class="list-group-item drawer-menu-item" onclick="clickSlide(32)">Lorem ipsum dolor sit</li>
+        <li class="list-group-item drawer-menu-item" onclick="clickSlide(413)">ipsum dolor sit amet markdown long long long long long title</li>
+        <li class="list-group-item drawer-menu-item" onclick="clickSlide(210)">dolor sit amet markdown</li>
+        <li class="list-group-item drawer-menu-item" onclick="clickSlide(335)">sit amet markdown</li>
+        <li class="list-group-item drawer-menu-item" onclick="clickSlide(194)">amet markdown</li>
       </ul>
+      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="addSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
     </nav>
 
     <div class="container-fluid" style="z-index:4">
@@ -131,7 +130,7 @@
               </div>
             </ul>
 
-            <div class="input-group">
+            <div class="input-group" style="z-index:1">
               <input type="text" class="form-control" placeholder="Type @help for syntax...">
               <span class="input-group-btn">
                 <button class="btn btn-secondary" type="button">Send</button>
@@ -249,7 +248,7 @@
       $('#chat_list_scroll').height(chat_list_height);
     }
 
-    function togglePoll(q_str, a_strs) {
+    function startPoll(q_str, a_strs) {
       // debug
       q_str = "Q. How does this get toggled? Let's make this question much longer!";
       a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
@@ -267,9 +266,29 @@
       $('#contents-wrapper').css('visibility', 'visible');
 
       // do something with ret_idx
+      console.log('endPoll');
       console.log(ret_idx);
     }
 
+    function clickSlide(idx) {
+      // do something with idx
+      console.log('clickSlide');
+      console.log(idx);
+    }
+
+    function addSlide() {
+      // debug
+      var new_idx = 10;
+      $('#slide_list').append('<li class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx + ')">(empty)</li>');
+    }
+
+    function showSlide(idx) {
+      // debug
+      // get data string with idx
+      var data = '# this is title\n## and this is content!\n## this too!';
+      editor.value(data);
+    }
+    
     $(window).resize(function() {
       chatListResize();
     });

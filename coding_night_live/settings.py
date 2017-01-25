@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'channels',    # channels setting
     'manage_room',
+    'manage_chat',
 ]
 
 SITE_ID = 1
