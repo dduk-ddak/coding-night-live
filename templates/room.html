@@ -45,13 +45,13 @@
     <nav class="drawer-nav" role="navigation" style="z-index:5">
       <ul id="slide_list" class="drawer-menu list-group">
         <li class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></li>
-        <li class="list-group-item drawer-menu-item" onclick="clickSlide(32)">Lorem ipsum dolor sit</li>
-        <li class="list-group-item drawer-menu-item" onclick="clickSlide(413)">ipsum dolor sit amet markdown long long long long long title</li>
-        <li class="list-group-item drawer-menu-item" onclick="clickSlide(210)">dolor sit amet markdown</li>
-        <li class="list-group-item drawer-menu-item" onclick="clickSlide(335)">sit amet markdown</li>
-        <li class="list-group-item drawer-menu-item" onclick="clickSlide(194)">amet markdown</li>
+        <li id="slide_32" class="list-group-item drawer-menu-item" onclick="clickSlide(32)">Lorem ipsum dolor sit</li>
+        <li id="slide_413" class="list-group-item drawer-menu-item" onclick="clickSlide(413)">ipsum dolor sit amet markdown long long long long long title</li>
+        <li id="slide_210" class="list-group-item drawer-menu-item" onclick="clickSlide(210)">dolor sit amet markdown</li>
+        <li id="slide_335" class="list-group-item drawer-menu-item" onclick="clickSlide(335)">sit amet markdown</li>
+        <li id="slide_194" class="list-group-item drawer-menu-item" onclick="clickSlide(194)">amet markdown</li>
       </ul>
-      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="addSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
     </nav>
 
     <div class="container-fluid" style="z-index:4">
@@ -175,7 +175,6 @@
               ret_lines += '<p style="text-align:right; margin-bottom:0;">' + i + '</p>';
             }
             return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + hljs.highlight(lang, str).value + '</div></div>'
-            //return hljs.highlight(lang, str).value;
           } catch(__){}
         }
         return '';
@@ -203,22 +202,22 @@
       "ordered-list", "unordered-list", "table", "|",
       "link", "image", "|"],
     });
+
     editor.codemirror.on("change", function(e) {
       var out = document.getElementById("out");
       out.innerHTML = md.render(e.getValue());
       $('blockquote').addClass('blockquote');     
-    });
-
-    editor.codemirror.on("changes", function(e) {
+      
       var slide_title = '(empty)';
       var slide_title_color = '#D8D8D8';
 
-      if($('h1').length !== 0) { 
+      if($('h1').length !== 0) {
         var user_defined_title = $('h1')[0].textContent;
         if (user_defined_title.length !== 0) {
           slide_title = user_defined_title;
           slide_title_color = 'black';
           $('h1').contents()[0].remove();
+          $('#slide_' + currSlideIndex()).text(slide_title);
         }
       }
 
@@ -227,8 +226,8 @@
       title.css({'color': slide_title_color});
     });
  
-    // drawer init
     $(document).ready(function() {
+      // drawer init
       $('.drawer').drawer({
         class: {
           nav: 'drawer-nav',
@@ -240,6 +239,42 @@
         },
         showOverlay: true
       });
+      $('#slide_list').sortable({
+        update: function(event, ui) {
+          var curr_slide = ui.item;
+          var prev_slide = ui.item.prev();
+          var next_slide = ui.item.next();
+
+          var curr_slide_idx = parseInt(curr_slide.attr('id').split('_')[1]);
+          var prev_slide_idx = 0;
+          var next_slide_idx = 0;
+
+          if(prev_slide.length === 1 && typeof prev_slide.attr('id') != 'undefined' && prev_slide.attr('id').substring(0,6) === 'slide_') {
+            prev_slide_idx = parseInt(prev_slide.attr('id').split('_')[1]);
+          }
+          if(next_slide.length === 1 && typeof next_slide.attr('id') != 'undefined' && next_slide.attr('id').substring(0,6) === 'slide_') {
+            next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
+          }
+
+          // debug: send server curr,prev,next slide idx
+          console.log(curr_slide_idx + ' ' + prev_slide_idx + ' ' + next_slide_idx);
+        }
+      });
+
+      // debug: get lists of slides and data of each slide
+      // note: how to find out slides' titles?
+      var is_empty_slide = false;
+      var first_slide_idx = 0;
+
+      if(is_empty_slide) {
+        newSlide();
+      }
+      else {
+        // debug: find out from server's response
+        first_slide_idx = 32;
+
+        clickSlide(first_slide_idx);
+      }
 
       chatListResize();
     });
@@ -286,33 +321,67 @@
       $('#polls-wrapper').empty();
       $('#contents-wrapper').css('visibility', 'visible');
 
-      // do something with ret_idx
+      // debug: do something with ret_idx
       console.log('endPoll');
       console.log(ret_idx);
     }
 
+    var curr_slide_idx = 0;
+    function currSlideIndex(idx) {
+      if(typeof idx != 'undefined') {
+        curr_slide_idx = idx;
+      }
+      return curr_slide_idx;
+    }
+
     function clickSlide(idx) {
-      // do something with idx
+      if(idx === currSlideIndex()) {
+        return;
+      }
+
+      // debug: do something with idx and get data
       console.log('clickSlide');
       console.log(idx);
-      $('.drawer').drawer('close');
-      showSlide(idx);
-    }
-
-    function addSlide() {
-      // debug
-      var new_idx = 10;
-      $('#slide_list').append('<li class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx + ')">(empty)</li>');
-    }
-
-    function showSlide(idx) {
-      // debug
-      // get data string with idx
-      console.log('showSlide');
       var data = '# this is title with idx ' + idx.toString() + '\n## and this is content!\n### this too!';
+
+      var preclicked_slide = $('#slide_' + currSlideIndex().toString());
+      if(preclicked_slide.length !== 0) {
+        preclicked_slide.removeClass('active');
+      }
+      currSlideIndex(idx);
+      $('#slide_' + idx.toString()).addClass('active');
+
       editor.value(data);
+      $('.drawer').drawer('close');
     }
-    
+
+    function newSlide() {
+      // debug: get new_idx from server
+      var new_idx = 10;
+
+      $('#slide_list').append('<li id="slide_' + new_idx.toString() + '" class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx.toString() + ')">(empty)</li>');
+      clickSlide(new_idx);
+    }
+
+    function delSlide(idx) {
+      // debug: remove idx from server
+
+      var curr_slide = $('#slide_' + idx.toString());
+      if(idx === currSlideIndex()) {
+        // No more slides
+        if($('li.drawer-menu-item').length === 1) {
+          newSlide();
+        }
+
+        var next_slide = curr_slide.next();
+        if(next_slide.length === 0) {
+          next_slide = curr_slide.prev();
+        }
+        clickSlide(parseInt(next_slide.attr('id').split('_')[1]));
+      }
+      curr_slide.remove();
+    }
+
     $(window).resize(function() {
       chatListResize();
     });
