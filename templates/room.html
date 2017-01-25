@@ -183,48 +183,47 @@
 
     // codemirror init
     var editor = new SimpleMDE({
-        element: document.getElementById("code"),
-        autofocus: true,
-        spellChecker: true,
-        forceSync: true,
-        lineNumbers: true,
-        toolbarTips: false,
-        promptURLs: false,
+      element: document.getElementById("code"),
+      autofocus: true,
+      spellChecker: true,
+      forceSync: true,
+      lineNumbers: true,
+      toolbarTips: false,
+      promptURLs: false,
 
-        insertTexts: {
-          image: ["![enter image description here](http://", ")"],
-          link: ["[enter link description here](http://", ")"],
-          horizontalRule: ["", "\n\n-----\n\n"],
-          table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
-        },
-        toolbar: ["bold", "italic", "strikethrough", "heading", "|",
-                  "code", "quote", "horizontal-rule", "|",
-                  "ordered-list", "unordered-list", "table", "|",
-                  "link", "image", "|"],
+      insertTexts: {
+        image: ["![enter image description here](http://", ")"],
+        link: ["[enter link description here](http://", ")"],
+        horizontalRule: ["", "\n\n-----\n\n"],
+        table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
+      },
+      toolbar: ["bold", "italic", "strikethrough", "heading", "|",
+      "code", "quote", "horizontal-rule", "|",
+      "ordered-list", "unordered-list", "table", "|",
+      "link", "image", "|"],
     });
     editor.codemirror.on("change", function(e) {
-        var out = document.getElementById("out");
-        out.innerHTML = md.render(e.getValue());
-        $('blockquote').addClass('blockquote');     
-     });
+      var out = document.getElementById("out");
+      out.innerHTML = md.render(e.getValue());
+      $('blockquote').addClass('blockquote');     
+    });
 
     editor.codemirror.on("changes", function(e) {
-        var default_title = "(empty)"
-        var title = $('h4#markdown-title.card-title');
-        if($('h1').length == 0) { 
-            title.text(default_title);
-            title.css({color: "#D8D6D5"});
-        } else {
-            var user_defined_title = $('h1')[0].textContent;
-            if (user_defined_title.length == 0) {
-                title.text(default_title);
-                title.css({color: "#D8D6D5"});
-                return;
-            }
-            title.text(user_defined_title);
-            title.css({color: "black"});
-            $('h1').contents()[0].remove();
+      var slide_title = "(empty)";
+      var slide_title_color = "#D8D8D8";
+
+      if($('h1').length !== 0) { 
+        var user_defined_title = $('h1')[0].textContent;
+        if (user_defined_title.length !== 0) {
+          slide_title = user_defined_title;
+          slide_title_color = "black";
+          $('h1').contents()[0].remove();
         }
+      }
+
+      var title = $('h4#markdown-title.card-title');
+      title.text(slide_title);
+      title.css({color: slide_title_color});
     });
  
     // drawer init
