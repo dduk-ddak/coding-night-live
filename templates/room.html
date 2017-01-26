@@ -93,11 +93,21 @@
           <div id="notice_card" class="card" style="margin-top: 1em">
             <div class="card-block" style="padding-bottom: 10px;">
               <h4 class="card-title"><i class="fa fa-podcast" aria-hidden="true"></i> Notice</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+              <div id="shown-notice">
+                <div class="notice-with-time">
+                  <p class="card-text" style="margin-bottom: 0px;">Newest Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+                  <p class="card-text text-muted" style="text-align:right;">2013.03.23. 13:23</p>
+                </div>
+              </div>
               <div id="hidden-notice">
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+                <div class="notice-with-time">
+                  <p class="card-text" style="margin-bottom: 0px;">Oldest Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+                  <p class="card-text text-muted" style="text-align:right;">2013.03.23. 13:23</p>
+                </div>
+                <div class="notice-with-time">
+                  <p class="card-text" style="margin-bottom: 0px;">Middle Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
+                  <p class="card-text text-muted" style="text-align:right;">2013.03.23. 13:23</p>
+                </div>
               </div>
               <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block"><i id="notice-toggler" class="fa fa-sort-asc" aria-hidden="true"></i></a>
             </div>
@@ -483,12 +493,27 @@
           $('#chat_scroll_button').css('visibility', 'visible');
         }
       }
-
     }
 
     function scrollDownToLastest() {
       $('#chat_list_scroll').animate({scrollTop: toBeScrolledPosition()}, 'slow');
       $('#chat_scroll_button').css('visibility', 'hidden');
+    }
+
+    function newNotice(obj) {
+      // debug: get with websocket.
+      obj = {time: '2013.01.05. 13:32', description: 'notice description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'};
+
+      var preappended_elem = $('#shown-notice').find('div.notice-with-time').detach();
+      if(preappended_elem.length !== 0) {
+        preappended_elem.prependTo('#hidden-notice');
+      }
+
+      $('#shown-notice').append('\
+              <div class="notice-with-time">\
+                <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
+                <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
+              </div>');
     }
 
     </script>
