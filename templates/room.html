@@ -31,6 +31,22 @@
   </style>
 
   <body class="drawer drawer--left" style="background-color:#eee">
+
+    <!-- Slide delete modal -->
+    <div class="modal fade" id="del-slide-modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Are you sure to delete this slide?</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delSlide()">Delete slide</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <nav class="navbar navbar-light bg-faded" style="background-color:#151515">
       <a class="btn drawer-toggle">
         <i class="fa fa-bars" aria-hidden="true" style="color:white"></i>
@@ -63,6 +79,7 @@
         <div class="col-md-8">
           <div class="card" style="margin-top: 1em">
             <h4 class="card-title" align="center" style="margin-top:0.5em", id="markdown-title"><i aria-hidden="true"></i>(empty)</h4>
+            <i class="fa fa-trash" aria-hidden="true" style="position:absolute; font-size:2em; top:0.25em; right:0.5em;" data-toggle="modal" data-target="#del-slide-modal"></i>
           </div>
 
           <!-- markdown & rendered output -->
@@ -364,9 +381,14 @@
     }
 
     function delSlide(idx) {
-      // debug: remove idx from server
+      if(typeof idx == 'undefined') {
+        idx = currSlideIndex();
+      }
 
-      var curr_slide = $('#slide_' + idx.toString());
+      // debug: remove idx from server
+      console.log('deleted ' + idx);
+
+      var curr_slide = $('#slide_' + idx);
       if(idx === currSlideIndex()) {
         // No more slides
         if($('li.drawer-menu-item').length === 1) {
