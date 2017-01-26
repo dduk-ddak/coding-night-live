@@ -27,8 +27,8 @@ def RoomCreateView(request):
     return HttpResponseRedirect(url)
 
 @login_required
-def RoomDeleteView(request):
-    Room.objects.filter(admin_user=request.user, link=request.link).delete()
+def RoomDeleteView(request, pk):
+    Room.objects.filter(admin_user=request.user, label=pk).delete()
     return HttpResponse("<h1>done</h1>")
 
 @login_required

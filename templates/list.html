@@ -50,7 +50,7 @@
         <button type="button" class="list-group-item list-group-item-action" onclick="location.href='{{ room.link }}'">
           <h4 class="list-group-item-heading">{{ room.title }}</h4>
           <span class="tag tag-danger tag-pill float-xs-right">
-            <a href="{% url 'delete' %}" style="color:white">Delete</a>
+            <a href="{% url 'delete' pk=room.label %}" style="color:white">Delete</a>
           </span>
           <p class="list-group-item-text">Generated at {{ room.time }}</p>
           <!-- <p class="list-group-item-text">Generated at {{ item.time }} Saved at 2016.1.17.</p> -->
