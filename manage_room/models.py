@@ -15,7 +15,6 @@ class Room(models.Model):
     #admin_user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     #admin_user = models.ForeignKey(allauth.socialaccount.models.SocialAccount, on_delete=models.CASCADE)
     
-    #email = admin_user.email    
     title = models.CharField(max_length=255, default="NoTitle")
     link = models.URLField(primary_key=True)    #pk
     time = models.DateTimeField(default=timezone.now)
@@ -37,4 +36,3 @@ class Slide(models.Model):
 
     def __str__(self):
         return self.now_id
-

@@ -46,29 +46,27 @@
     </div>
 
     <div class="list-group center-list">
-      <button type="button" class="list-group-item list-group-item-action" onclick="location.href='http://www.naver.com'" style="margin-top:2vh">
-        <h4 class="list-group-item-heading">Lorem ipsum dolor sit amet</h4>
-        <span class="tag tag-danger tag-pill float-xs-right">
-          <a href="http://www.naver.com" style="color:white">Delete</a>
-        </span>
-        <p class="list-group-item-text">Generated at 2016.1.1. Saved at 2016.1.17.</p>
-      </button>
-
       <!-- same below -->
-      <button type="button" class="list-group-item list-group-item-action" onclick="location.href='http://www.naver.com'">
-        <h4 class="list-group-item-heading">Dolore eripuit</h4>
+      {% for room in rooms %}
+        <button type="button" class="list-group-item list-group-item-action" onclick="location.href='{{ room.link }}'">
+          <h4 class="list-group-item-heading">{{ room.title }}</h4>
+          <span class="tag tag-danger tag-pill float-xs-right">
+            <a href="http://www.naver.com" style="color:white">Delete</a>
+          </span>
+          <p class="list-group-item-text">Generated at {{ room.time }}</p>
+          <!-- <p class="list-group-item-text">Generated at {{ item.time }} Saved at 2016.1.17.</p> -->
+        </button>
+      {% endfor %}
+      
+      <!-- check delete
+      <button type="button" class="list-group-item list-group-item-action" onclick="location.href='	http://localhost:8000/blue-haze-1930'">
+        <h4 class="list-group-item-heading">{{ rooms }}Dolore eripuit</h4>
         <span class="tag tag-danger tag-pill float-xs-right">
-          <a href="http://www.naver.com" style="color:white">Delete</a>
+          <a href="{% url 'delete' %}" style="color:white">Delete</a>
         </span>
         <p class="list-group-item-text">Generated at 2016.1.1. Saved at 2016.1.17.</p>
       </button>
-      <button type="button" class="list-group-item list-group-item-action" onclick="location.href='http://www.naver.com'">
-        <h4 class="list-group-item-heading">Nec et essent animal liberavisse</h4>
-        <span class="tag tag-danger tag-pill float-xs-right">
-          <a href="http://www.naver.com" style="color:white">Delete</a>
-        </span>
-        <p class="list-group-item-text">Generated at 2016.1.1. Saved at 2016.1.17.</p>
-      </button>
+      -->
     </div>
     <!-- same above -->
 
