@@ -2,7 +2,7 @@ import random
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db import transaction
 from django.views.generic.base import TemplateView
 from django.contrib.sites.models import Site
@@ -29,7 +29,8 @@ def RoomCreateView(request):
 @login_required
 def RoomDeleteView(request, pk):
     Room.objects.filter(admin_user=request.user, label=pk).delete()
-    return HttpResponse("<h1>done</h1>")
+    url = 'http://' + Site.objects.get_current().domain + '/services'
+    return HttpResponseRedirect(url)
 
 @login_required
 def RoomListView(request):

@@ -26,7 +26,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^services/$', manage_room.views.RoomListView, name='services'),
-    #url(r'^services/$', RoomListView.as_view(), name='services'),
     url(r'^services/new/', manage_room.views.RoomCreateView, name='new'),
     url(r'^services/delete/(?P<pk>([a-z]{3,}-[a-z]{3,}-[0-9]{4}))/$', manage_room.views.RoomDeleteView, name='delete'),
     url(r'^([a-z]{3,}-[a-z]{3,}-[0-9]{4})/$', manage_room.views.RedirectRoomView.as_view(), name='redirect_room'),
