@@ -106,53 +106,61 @@
             <div class="card-block">
               <h4 class="card-title" style="margin-bottom:0;"><i class="fa fa-comments-o" aria-hidden="true"></i> Q&A</h4>
             </div>
-            <ul id="chat_list_scroll" class="list-group list-group-flush" style="overflow-y: scroll;">
-              <div class="list-group-item">
-                <!-- Type question -->
-                <div class="card">
-                  <div class="card-header" style="padding-left: .5rem;">
-                    <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> j3f29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
+            <div id="chat_list_scroll" class="list-group list-group-flush" style="overflow-y: scroll;">
+              <div id="chat_list_items" class="list-group-item">
+                <div id="chat_j3f29ko">
+                  <!-- Type question -->
+                  <div class="card">
+                    <div class="card-header" style="padding-left: .5rem;">
+                      <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> j3f29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
+                    </div>
+                    <div class="card-block">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
                   </div>
-                  <div class="card-block">
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                  <!-- Type reply -->
+                  <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
+                  <div class="card" style="margin-left:30px;">
+                    <div class="card-block">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                  </div>
+                  <!-- Type speaker -->
+                  <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
+                  <div class="card" style="margin-left:30px;">
+                    <div class="card-block" style="background-color: rgba(0, 116, 217, 0.28);">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
                   </div>
                 </div>
 
-                <!-- Type reply -->
-                <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
-                <div class="card" style="margin-left:30px;">
-                  <div class="card-block">
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </div>
-                </div>
-
-                <!-- Type speaker -->
-                <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
-                <div class="card" style="margin-left:30px;">
-                  <div class="card-block" style="background-color: rgba(0, 116, 217, 0.28);">
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </div>
-                </div>
-
-                <!-- Type not yet read -->
-                <div class="card" style="border-right-color:#0275d8; border-right-style: solid; border-right-width: thick;">
-                  <div class="card-header" style="padding-left: .5rem;">
-                    <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> j3f29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
-                  </div>
-                  <div class="card-block">
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <div id="chat_kkf29ko">
+                  <!-- Type not yet read -->
+                  <div class="card" style="border-right-color:#0275d8; border-right-style: solid; border-right-width: thick;">
+                    <div class="card-header" style="padding-left: .5rem;">
+                      <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> kkf29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
+                    </div>
+                    <div class="card-block">
+                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    </div>
                   </div>
                 </div>
 
               </div>
-            </ul>
-
-            <div class="input-group" style="z-index:1">
-              <input type="text" class="form-control" placeholder="Type @help for syntax...">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Send</button>
-              </span>
             </div>
+
+            <div id="chat_scroll_button" style="position:absolute; height:3em; text-align:center; bottom:2em; left:0px; right:0px; background-color:rgba(0, 116, 217, 0.8); padding-top:0.5em; color:#ffffff; visibility: hidden;" onclick="scrollDownToLastest()">
+              New messages
+            </div>
+
+            <form id="chat_form" method="post" action="">
+              <div class="input-group" style="z-index:1">
+                <input id="chat_input" type="text" class="form-control" placeholder="Type @help for syntax...">
+                <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="submit">Send</button>
+                </span>
+              </div>
+            </form>
 
 
           </div>
@@ -407,6 +415,82 @@
     $(window).resize(function() {
       chatListResize();
     });
+
+    $('#chat_form').submit(function (e) {
+      var comment = $("#chat_input").val();
+      $('#chat_input').val('');
+      e.preventDefault();
+
+      // debug: check send comment (whether its syntax is correct)
+      console.log(comment);
+    });
+
+    $('#chat_input').autocomplete({
+      source: function(request, response) {
+        // debug: use regular expressions
+        console.log(request.term);
+        // debug: return with list of dict
+        response([{ label: 'test', value: 'testtest'}]);
+      },
+      delay: 0,
+    });
+
+    var to_be_scrolled_position = 0;
+    function toBeScrolledPosition(pos) {
+      if(typeof pos != 'undefined') {
+        to_be_scrolled_position = pos;
+      }
+      return to_be_scrolled_position;
+    }
+
+    function newChat(obj) {
+      // debug: get with websocket. currently newChat(1) will add new chat, newChat(0) will add reply to hash_value
+      obj = {hash_value: 'this_is_hash_val', time: '2013.01.05. 13:32', description: 'chat description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', is_reply: obj===0};
+
+      var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
+      var appended_elem = 0;
+
+      if(obj.is_reply) {
+        appended_elem = $('\
+                  <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>\
+                  <div class="card" style="margin-left:30px;">\
+                    <div class="card-block">\
+                      <p class="card-text">' + obj.description + '</p>\
+                    </div>\
+                  </div>');
+        $('#chat_list_items').find('#chat_' + obj.hash_value).append(appended_elem);
+      }
+      else {
+        appended_elem = $('\
+                <div id="chat_' + obj.hash_value + '">\
+                  <div class="card">\
+                    <div class="card-header" style="padding-left: .5rem;">\
+                      <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> ' + obj.hash_value + '</div> <div style="margin:0;font-size:.5em;" align="right">' + obj.time + '</div>\
+                    </div>\
+                    <div class="card-block">\
+                      <p class="card-text">' + obj.description + '</p>\
+                    </div>\
+                  </div>');
+        $('#chat_list_items').append(appended_elem);
+      }
+
+      if(is_end_of_scroll) {
+        $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'slow');
+      }
+      else {
+        if($('#chat_scroll_button').css('visibility') == 'hidden') {
+          toBeScrolledPosition(appended_elem.position().top);
+          $('#chat_scroll_button').css('visibility', 'visible');
+        }
+      }
+
+    }
+
+    function scrollDownToLastest() {
+      $('#chat_list_scroll').animate({scrollTop: toBeScrolledPosition()}, 'slow');
+      $('#chat_scroll_button').css('visibility', 'hidden');
+    }
+
     </script>
 
   </body>
