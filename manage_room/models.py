@@ -27,8 +27,9 @@ class Room(models.Model):
 
 
 class Slide(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    title = models.CharField(max_length=35, default="(empty)")
     md_blob = models.TextField()
-    
     #id linked list
     now_id = models.AutoField(primary_key=True)     #pk
     prev_id = models.PositiveSmallIntegerField()
