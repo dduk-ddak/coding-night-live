@@ -32,8 +32,7 @@ class Slide(models.Model):
     md_blob = models.TextField()
     #id linked list
     now_id = models.AutoField(primary_key=True)     #pk
-    prev_id = models.PositiveSmallIntegerField()
-    next_id = models.PositiveSmallIntegerField()
+    next_id = models.PositiveSmallIntegerField(unique=True) #if 0: last element
 
     def __str__(self):
         return self.now_id
