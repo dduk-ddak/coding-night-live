@@ -26,7 +26,9 @@ class Poll(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     time = models.DateTimeField(default=timezone.now)
-    description = models.TextField()
+    question = models.CharField(max_length=130)
+    answer = models.TextField()    #tuple or dictionary.. but dictionary is better than a tuple. because this field will save a JSON data
+    answer_count = models.TextField()   #will save a JSON data
 
     def __str__(self):
         return self._id
