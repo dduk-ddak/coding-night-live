@@ -8,8 +8,6 @@ from channels import Group
 
 from .setting import MSG_TYPE_MESSAGE
 
-#from channels import Group
-
 # Create your models here.
 
 class Room(models.Model):
@@ -20,7 +18,6 @@ class Room(models.Model):
     title = models.CharField(max_length=255, default="NoTitle")
     link = models.URLField(primary_key=True)    #pk
     time = models.DateTimeField(default=timezone.now)
-    #slide = models.Field()  #fk
 
     label = models.SlugField(unique=True)
 

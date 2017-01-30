@@ -149,6 +149,7 @@ USE_TZ = True
 
 # django social auth setting ; login redirect and logout url
 LOGIN_REDIRECT_URL = "/services/"
+LOGIN_URL = "/"
 LOGOUT_URL = "/"
 
 # Static files (CSS, JavaScript, Images)

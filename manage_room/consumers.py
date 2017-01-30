@@ -19,7 +19,6 @@ def ws_connect(message):
     # Initialise their session
     message.channel_session['room'] = []
 
-
 # Unpacks the JSON in the received WebSocket frame and puts it onto a channel
 # of its own with a few attributes extra so we can route it
 # This doesn't need @channel_session_user as the next consumer will have that,
@@ -48,7 +47,6 @@ def ws_disconnect(message):
 
 
 ### Chat channel handling ###
-
 
 # Channel_session_user loads the user out from the channel session and presents
 # it as message.user. There's also a http_session_user if you want to do this on
@@ -79,7 +77,6 @@ def room_join(message):
             "title": room.title,
         }),
     })
-
 
 @channel_session_user
 @catch_client_error

@@ -17,7 +17,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from coding_night_live.views import MainView
-from manage_user.views import RoomListView
 
 import manage_room.views
 
