@@ -295,7 +295,7 @@
    <script>
     // make initial empty title gray
     $('h4#markdown-title.card-title').css({color: "#D8D6D5"});
- 
+
     // highlight.js init
     hljs.initHighlightingOnLoad();
 
@@ -344,8 +344,8 @@
     editor.codemirror.on("change", function(e) {
       var out = document.getElementById("out");
       out.innerHTML = md.render(e.getValue());
-      $('blockquote').addClass('blockquote');     
-      
+      $('blockquote').addClass('blockquote');
+
       var slide_title = '(empty)';
       var slide_title_color = '#D8D8D8';
 
@@ -363,7 +363,7 @@
       title.text(slide_title);
       title.css({'color': slide_title_color});
     });
- 
+
     $(document).ready(function() {
       // drawer init
       $('.drawer').drawer({
@@ -529,21 +529,112 @@
       chatListResize();
     });
 
+    var valid_syntex = [
+      "@help",
+      "@notice [<args>]",
+    ];
+
+    var valid_syntex_regex_pattern = [
+      /^(\s)*@help\s*$/g,
+      /^(\s)*@notice\s+.*$/g,
+    ];
+
+    var help_regex = [
+      /@/g, /@h/g, /@he/g,
+      /@hel/g, /@help/g,
+      /^(\s)*@help\s*$/g,
+    ];
+
+    var notice_regex = [
+      /@/g, /@n/g, /@no/g,
+      /@not/g, /@noti/g, /@notic/g,
+      /@notice/g, /^(\s)*@notice\s+.*$/g,
+    ];
+
+    function validate_notice_syntax(command, matches) {
+      var len = command.length,
+          upper_bound = 7, // length of '@notice'
+          is_valid = false,
+          text = "@notice ";
+
+      if(len <= upper_bound) {
+        // user is still typing the command;
+        // check for partial syntax.
+        is_valid = !!command.match(notice_regex[len-1]);
+      } else {
+        // check for full syntax
+        is_valid = !!command.match(notice_regex[upper_bound]);
+        command = command.replace(/^(@notice\s)/g, "");
+        // to retrieve only the notice message:
+        // command.replace(/^(@notice\s*)/g, "");
+        text += command;
+      }
+
+      if(is_valid === true) {
+        matches = matches.concat([{label: "@notice [<args>]",
+                                   value: text}]);
+      } return matches;
+    }
+
+    function validate_help_syntax(command, matches) {
+      var len = command.length,
+          upper_bound = 5, // length of '@help'
+          is_valid = false,
+          text = "@help";
+
+      if(len <= upper_bound) {
+        // user is still typing the command;
+        // check for partial syntax.
+        is_valid = !!command.match(help_regex[len-1]);
+      } else {
+        // check for full systax
+        is_valid = !!command.match(help_regex[upper_bound]);
+      }
+      if(is_valid === true) {
+        matches = matches.concat([{label: "@help",
+                                   value: text}]);
+      }
+      return matches;
+    }
+
     $('#chat_form').submit(function (e) {
-      var comment = $("#chat_input").val();
+      // remove the leading white spaces
+      var comment = $("#chat_input").val().replace(/^\s*/g, "");
       $('#chat_input').val('');
       e.preventDefault();
 
       // debug: check send comment (whether its syntax is correct)
-      console.log(comment);
+      // check syntax here
+      // -> if correct, print the comment on console
+      // -> if incorrect, print help message on console
+      var is_valid = false;
+      for(var i=0; i<valid_syntex_regex_pattern.length; i+=1) {
+        is_valid = !!comment.match(valid_syntex_regex_pattern[i]);
+        if(is_valid === true) {
+          break;
+        }
+      }
+      if(is_valid === true) {
+        console.log(comment);
+      } else {
+        comment = "'" + comment + "'";
+        console.log(comment, "is not a valid command. See '@help'.");
+      }
     });
 
     $('#chat_input').autocomplete({
       source: function(request, response) {
         // debug: use regular expressions
-        console.log(request.term);
+        //console.log(request.term);
+
         // debug: return with list of dict
-        response([{ label: 'test', value: 'testtest'}]);
+        // remove the leading white spaces
+        var command = request.term.replace(/^\s*/g, ""),
+            matches = [];
+        matches = validate_help_syntax(command, matches);
+        matches = validate_notice_syntax(command, matches);
+
+        response(matches);
       },
       delay: 0,
     });
