@@ -136,14 +136,14 @@
 
             if (inRoom(room_label)) {
               // Leave room
-              $(this).removeClass("leaved");
+              //$(this).removeClass("joined");
               socket.send(JSON.stringify({
                 "command": "leave",
                 "room": room_label
               }));
             } else {
               // Join room
-              $(this).addClass("joined");
+              //$(this).addClass("joined");
               socket.send(JSON.stringify({
                 "command": "join",
                 "room": room_label
