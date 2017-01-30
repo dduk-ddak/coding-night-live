@@ -99,15 +99,3 @@ def room_leave(message):
             "leave": str(room.label),
         }),
     })
-
-
-@channel_session_user
-@catch_client_error
-def room_send(message):
-    # Check that the user in the room
-    if int(message['room']) not in message.channel_session['room']:
-        raise ClientError("ROOM_ACCESS_DENIED")
-    # Find the room they're sending to, check perms
-    room = get_room_or_error(message["room"])
-    # Send the message along
-    room.send_message(MSG_TYPE_MESSAGE)
