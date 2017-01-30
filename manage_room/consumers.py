@@ -37,7 +37,7 @@ def ws_receive(message):
 @channel_session_user
 def ws_disconnect(message):
     # Unsubscribe from any connected rooms
-    for room_label in message.channel_session.get("room", set()):  #rooooooooooooooooooooooom?
+    for room_label in message.channel_session.get("room", set()):
         try:
             room = Room.objects.get(label=room_label)
             # Removes us from the room's send group. If this doesn't get run,
@@ -64,18 +64,18 @@ def room_join(message):
 
     # Send a "enter message" to the room if available
     if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(None, message.user, MSG_TYPE_ENTER)
+        room.send_message(MSG_TYPE_ENTER)
 
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
     room.websocket_group.add(message.reply_channel)
-    message.channel_session['room'] = list(set(message.channel_session['room']).union([room.id]))
+    message.channel_session['room'] = list(set(message.channel_session['room']).union([room.label]))
     # Send a message back that will prompt them to open the room
     # Done server-side so that we could, for example, make people
     # join rooms automatically.
     message.reply_channel.send({
         "text": json.dumps({
-            "join": str(room.id),
+            "join": str(room.label),
             "title": room.title,
         }),
     })
@@ -89,25 +89,25 @@ def room_leave(message):
 
     # Send a "leave message" to the room if available
     if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(None, message.user, MSG_TYPE_LEAVE)
+        room.send_message(MSG_TYPE_LEAVE)
 
     room.websocket_group.discard(message.reply_channel)
-    message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.id]))
+    message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.label]))
     # Send a message back that will prompt them to close the room
     message.reply_channel.send({
         "text": json.dumps({
-            "leave": str(room.id),
+            "leave": str(room.label),
         }),
     })
 
 
 @channel_session_user
 @catch_client_error
-def chat_send(message):
+def room_send(message):
     # Check that the user in the room
     if int(message['room']) not in message.channel_session['room']:
         raise ClientError("ROOM_ACCESS_DENIED")
     # Find the room they're sending to, check perms
     room = get_room_or_error(message["room"])
     # Send the message along
-    room.send_message(message["message"], message.user)
+    room.send_message(MSG_TYPE_MESSAGE)

@@ -77,11 +77,11 @@
           console.log("Connecting to " + ws_path);
           var socket = new ReconnectingWebSocket(ws_path);
 
-          // Handle incoming messages
           socket.onmessage = function (message) {
             // Decode the JSON
             console.log("Got websocket message " + message.data);
             var data = JSON.parse(message.data);
+            
             // Handle errors
             if (data.error) {
               alert(data.error);
@@ -90,72 +90,59 @@
             // Handle joining
             if (data.join) {
               console.log("Joining room " + data.join);
-
-              socket.send(JSON.stringify({
-                "command": "send",
-                "room": data.join,
-                "message": ""
-              }));
-              // Handle leaving
-            } else if (data.leave) {
-              console.log("Leaving room " + data.leave);
-              $("#room-" + data.leave).remove();
-              // Handle getting a message
-            } else if (data.message || data.msg_type != 0) {
-              // msg types are defined in manange_room/setting.py
-              // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
-              switch (data.msg_type) {
-                case 4:
-                  // User joined room
-                  console.log("some user joined room")
-                  break;
-                case 5:
-                  // User left room
-                  console.log("some user left room");
-                  break;
-                default:
-                  console.log("Unsupported message type!");
-                  return;
+              // Handle Leaving
+              } else if (data.leave) {
+                console.log("Leaving room " + data.leave);
+                data.leave.remove();
+                // Handle getting a message
+              } else if (data.message || data.msg_type != 0) {
+                // msg types are defined in chat/settings.py
+                // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
+                switch (data.msg_type) {
+                  case 0:
+                    // Message
+                    break;
+                  case 4:
+                    // User joined room
+                    console.log("some user joined room");
+                    break;
+                  case 5:
+                    // User left room
+                    console.log("some user left room");
+                    break;
+                  default:
+                    console.log("Unsupported message type!");
+                    return;
+                }
+              } else {
+                console.log("Cannot handle message!");
               }
-            } else {
-              console.log("Cannot handle message!");
-            }
-          };
+            };
 
-          // Says if we joined a room or not by if there's a div for it
-          inRoom = function (room_label) {
-            return room_label.length > 0;
-          };
+            // Helpful debugging
+            socket.onopen = function () {
+              console.log("connected websocket");
+              
+              room_label = window.location.pathname;
+              room_label = room_label.substring(1, room_label.length-1);
 
-          // Room join/leave
-          $(function () {
-            room_label = window.location.pathname;
-            room_label = room_label.substring(1, room_label.length-1);
-
-            if (inRoom(room_label)) {
-              // Leave room
-              //$(this).removeClass("joined");
               socket.send(JSON.stringify({
-                "command": "leave",
-                "room": room_label
-              }));
-            } else {
-              // Join room
-              //$(this).addClass("joined");
-              socket.send(JSON.stringify({
-                "command": "join",
-                "room": room_label
-              }));
-            }
-          });
+                  "command": "join",
+                  "room": room_label
+                }));
+            };
 
-          // Helpful debugging
-          socket.onopen = function () {
-            console.log("Connected to room socket");
-          };
-          socket.onclose = function () {
-            console.log("Disconnected from room socket");
-          }
+            socket.onclose = function () {
+              console.log("disconnected websocket");
+              
+              room_label = window.location.pathname;
+              room_label = room_label.substring(1, room_label.length-1);
+              
+              socket.send(JSON.stringify({
+                  "command": "leave",
+                  "room": room_label
+                }));
+            };
         });
       </script>
       <h3 class="navbar-text float-xs-right" style="color:#1e2ea5"><i class="fa fa-user-plus" aria-hidden="true"></i> 34</h3>

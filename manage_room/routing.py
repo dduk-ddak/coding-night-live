@@ -1,5 +1,5 @@
 from channels import route
-from .consumers import ws_connect, ws_receive, ws_disconnect, room_join, room_leave
+from .consumers import ws_connect, ws_receive, ws_disconnect, room_join, room_leave, room_send
 
 websocket_routing = [
     route("websocket.connect", ws_connect),
@@ -10,4 +10,5 @@ websocket_routing = [
 custom_routing = [
     route("room.receive", room_join, command="^join$"),
     route("room.receive", room_leave, command="^leave"),
+    route("room.receive", room_send, command="^send"),
 ]
