@@ -31,7 +31,6 @@ class Room(models.Model):
         messages as they are generated.
         """
         return Group(self.label)
-        #return Group("room-%s" % self.label)
 
     def send_message(self, msg_type=MSG_TYPE_MESSAGE):
         """
