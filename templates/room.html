@@ -81,7 +81,7 @@
             // Decode the JSON
             console.log("Got websocket message " + message.data);
             var data = JSON.parse(message.data);
-            
+
             // Handle errors
             if (data.error) {
               alert(data.error);
@@ -119,7 +119,7 @@
             // Helpful debugging
             socket.onopen = function () {
               console.log("connected websocket");
-              
+
               room_label = window.location.pathname;
               room_label = room_label.substring(1, room_label.length-1);
 
@@ -131,10 +131,10 @@
 
             socket.onclose = function () {
               console.log("disconnected websocket");
-              
+
               room_label = window.location.pathname;
               room_label = room_label.substring(1, room_label.length-1);
-              
+
               socket.send(JSON.stringify({
                   "command": "leave",
                   "room": room_label
@@ -513,14 +513,16 @@
       chatListResize();
     });
 
-    var valid_syntex = [
-      "@help",
-      "@notice [<args>]",
-    ];
+    var valid_syntax = {
+      help: "@help",
+      notice: "@notice [<args>]",
+      poll: "@poll [-t <title>] <options/...>",
+    };
 
-    var valid_syntex_regex_pattern = [
+    var valid_syntax_regex_pattern = [
       /^(\s)*@help\s*$/g,
       /^(\s)*@notice\s+.*$/g,
+      /^(\s)*@poll\s+(-t\s*\"[^\"\']*\")?.*$/g,
     ];
 
     var help_regex = [
@@ -535,11 +537,18 @@
       /@notice/g, /^(\s)*@notice\s+.*$/g,
     ];
 
+    var poll_regex = [
+      /@/g, /@p/g, /@po/g,
+      /@pol/g, /@poll/g,
+      /^(\s)*@poll\s+(-t\s*\"[^\"\']*\")?.*$/g,
+    ];
+
     function validate_notice_syntax(command, matches) {
       var len = command.length,
           upper_bound = 7, // length of '@notice'
           is_valid = false,
-          text = "@notice ";
+          text = "@notice ",
+          notice = "";
 
       if(len <= upper_bound) {
         // user is still typing the command;
@@ -548,14 +557,14 @@
       } else {
         // check for full syntax
         is_valid = !!command.match(notice_regex[upper_bound]);
-        command = command.replace(/^(@notice\s)/g, "");
         // to retrieve only the notice message:
         // command.replace(/^(@notice\s*)/g, "");
-        text += command;
+        notice = command.replace(/^(@notice\s*)/g, "");
+        text += notice;
       }
 
       if(is_valid === true) {
-        matches = matches.concat([{label: "@notice [<args>]",
+        matches = matches.concat([{label: valid_syntax.notice,
                                    value: text}]);
       } return matches;
     }
@@ -575,7 +584,104 @@
         is_valid = !!command.match(help_regex[upper_bound]);
       }
       if(is_valid === true) {
-        matches = matches.concat([{label: "@help",
+        matches = matches.concat([{label: valid_syntax.help,
+                                   value: text}]);
+      }
+      return matches;
+    }
+
+    function validate_poll_syntax(command, matches) {
+      var len = command.length,
+          upper_bound = 5, // length of '@poll'
+          is_valid = false,
+          title_given = false,
+          text = "@poll ",
+          title = null,
+          options = [];
+
+      if(len <= upper_bound) {
+        // user is still typing the command;
+        // check for partial syntax.
+        is_valid = !!command.match(poll_regex[len-1]);
+      } else {
+        // check for full systax
+        // TODO: full syntax checking incomplete
+
+        is_valid = !!command.match(poll_regex[upper_bound]);
+        if(is_valid === true) {
+          // remove @poll from command string
+          command = command.replace(/^(@poll\s*)/g, "");
+        }
+        is_valid = !!!command.match(/^(-[^t])(?!(.*\/))/g);
+
+        if(is_valid === true) {
+          // check for title option
+          title = command.match(/-t\s*\"[^\"\']*\"(?!\s*\/)/g);
+
+          if(title !== null) {
+            // remove -t
+            // if multiple title options are given, use the first one
+            title = title[0].replace(/-t\s*/g, "");
+            // trim "" on the either end
+            title = title.slice(1, -1);
+            //trim white spaces on either end
+
+
+            title = title.trim();
+
+
+
+          } else if(!!command.match(/-t\s*\"(?!\s*\/)/g)) {
+              // var pos = command.search(/-t\s*\"(?!\s*\/)/g);
+              // command = command + '"';
+              // command = command.replace(/-t\s*/g, "");
+              // title = command.slice(pos,-1);
+              // command = command.slice(0, pos-1);
+              var str = command.match(/-t\s*\"(?!\s*\/)/g);
+              console.log("str == ", str);
+
+              var pos = command.search(/-t\s*\"(?!\s*\/)/g) + str[0].length;
+              title = command.substring(0, pos+1) + command.substring(pos+2, command.length-1);
+
+              var str = command.match(/-t\s*\"(?!\s*\/)/g);
+              var pos = command.search(/-t\s*\"(?!\s*\/)/g) + str[0].length;
+              title = command.slice(pos, title.length-1);
+              title = title.trim();
+              command = command.replace(/-t\s*\"(?!\s*\/).*/g, "");
+              console.log("title == ", title);
+              console.log("command == ", command);
+          } else if(!!command.match(/-t(?!\s*\/)/g)) {
+              title = "";
+              command = command.replace(/-t(?!\s*\/)/g, "");
+          } else if(!!command.match(/^(-[^t])(?!(.*\/))/g)) {
+            title = "";
+            command = command.replace(/^(-[^t])(?!(.*\/))/g, "");
+          }
+
+
+          // does not remove '-t ""' within /options/
+          // multiple -t options are removed but the first
+          command = command.replace(/-t\s*\"[^\"\']*\"(?!\s*\/)/g, "");
+          // split options, and trim leading/trailing white spaces
+          options = command.split("/");
+          // empty options are dealt with in autocomplete
+          for(var i=0; i<options.length; i+=1)
+            options[i] = options[i].trim();
+        }
+      }
+      if(is_valid === true) {
+        // make autocompleted text
+
+        // if title option follows the options,
+        // make the title option precede the options in autocomplete
+        if(title !== null) {
+          text = text + "-t " + '"' + title + '" ';
+        }
+        for(var i=0; i<options.length; i+=1) {
+          if(options[i].length == 0) continue;
+          text += options[i] + "/";
+        }
+        matches = matches.concat([{label: valid_syntax.poll,
                                    value: text}]);
       }
       return matches;
@@ -592,8 +698,8 @@
       // -> if correct, print the comment on console
       // -> if incorrect, print help message on console
       var is_valid = false;
-      for(var i=0; i<valid_syntex_regex_pattern.length; i+=1) {
-        is_valid = !!comment.match(valid_syntex_regex_pattern[i]);
+      for(var i=0; i<valid_syntax_regex_pattern.length; i+=1) {
+        is_valid = !!comment.match(valid_syntax_regex_pattern[i]);
         if(is_valid === true) {
           break;
         }
@@ -617,6 +723,7 @@
             matches = [];
         matches = validate_help_syntax(command, matches);
         matches = validate_notice_syntax(command, matches);
+        matches = validate_poll_syntax(command, matches);
 
         response(matches);
       },
