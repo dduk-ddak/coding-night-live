@@ -95,7 +95,7 @@
                 console.log("Leaving room " + data.leave);
                 data.leave.remove();
                 // Handle getting a message
-              } else if (data.message || data.msg_type != 0) {
+              } else if (data.msg_type != 0) {
                 // msg types are defined in chat/settings.py
                 // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
                 switch (data.msg_type) {

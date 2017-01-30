@@ -33,13 +33,14 @@ class Room(models.Model):
         Returns the Channels Group that sockets should subscribe to to get sent
         messages as they are generated.
         """
-        return Group("room-%s" % self.label)
+        return Group(self.label)
+        #return Group("room-%s" % self.label)
 
     def send_message(self, msg_type=MSG_TYPE_MESSAGE):
         """
         Called to send a message to the room on behalf of a user.
         """
-        final_msg = {'room': str(self.label), 'msg_type': msg_type}
+        final_msg = {'room': str(self.label), 'msg_type': msg_type,}
 
         # Send out the message to everyone in the room
         self.websocket_group.send(
