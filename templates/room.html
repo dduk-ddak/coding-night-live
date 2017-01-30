@@ -90,18 +90,30 @@
                 // Handle joining
                 if (data.join) {
                     console.log("Joining room " + data.join);
+
+                    socket.send(JSON.stringify({
+                            "command": "send",
+                            "room": data.join,
+                            "message": ""
+                    }));
                 // Handle leaving
                 } else if (data.leave) {
                     console.log("Leaving room " + data.leave);
+                    $("#room-" + data.leave).remove();
                 } else {
                     console.log("Cannot handle message!");
                 }
             };
 
+            // Says if we joined a room or not by if there's a div for it
+            inRoom = function (room_label) {
+                return $("#room-" + room_label).length > 0;
+            };
+
             // Room join/leave
             $(function () {
                 room_label = window.location.pathname;
-                room_label = room_label.substring(1, data.length-1);
+                room_label = room_label.substring(1, room_label.length-1);
 
                 if (inRoom(room_label)) {
                     // Leave room
