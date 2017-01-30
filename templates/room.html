@@ -99,11 +99,8 @@
                 // Handle leaving
                 } else if (data.leave) {
                     console.log("Leaving room " + data.leave);
-                    $("#room-" + data.leave).remove();
                 // Handle getting a message
                 } else if (data.message || data.msg_type != 0) {
-                    var msgdiv = $("#room-" + data.room + " .messages");
-                    var ok_msg = "";
                     // msg types are defined in manange_room/setting.py
                     // Only for demo purposes is hardcoded, in production scenarios, consider call a service.
                     switch (data.msg_type) {
@@ -135,17 +132,17 @@
                 room_label = room_label.substring(1, room_label.length-1);
 
                 if (inRoom(room_label)) {
-                    // Leave room
-                    $(this).removeClass("leaved");
-                    socket.send(JSON.stringify({
-                        "command": "leave",
-                        "room": room_label
-                    }));
-                } else {
                     // Join room
                     $(this).addClass("joined");
                     socket.send(JSON.stringify({
                         "command": "join",
+                        "room": room_label
+                    }));
+                } else {
+                    // Leave room
+                    $(this).removeClass("joined");
+                    socket.send(JSON.stringify({
+                        "command": "leave",
                         "room": room_label
                     }));
                 }
