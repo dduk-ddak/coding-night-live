@@ -11,7 +11,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 ![intro image](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/video_demo.png)
 
 
-Youtube: https://youtu.be/-EFYUEsLLDo
+[Youtube Link](https://youtu.be/-EFYUEsLLDo)
 
 ## Features
 * Markdown-based slides
