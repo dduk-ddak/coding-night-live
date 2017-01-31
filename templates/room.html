@@ -183,18 +183,38 @@
             }
           };
 
-          // notice sending test
+          // test
           $("#send-btn").click(function () {
             room_label = window.location.pathname;
             room_label = room_label.substring(1, room_label.length-1);
 
             //console.log('send clicked / ' + $("#chat_input").val());
             
+            /* notice sending test
             socket.send(JSON.stringify({
                 "command": "notice",
                 "description": $("#chat_input").val(),
                 "room": room_label
             }));
+            */
+
+            /* chat test
+            socket.send(JSON.stringify({
+                "command": "chat",
+                "is_reply": False,
+                "description": $("#chat_input").val(),
+                "room": room_label
+            }));
+            */
+            
+            /* reply test
+            socket.send(JSON.stringify({
+                "command": "chat",
+                "is_reply": True,
+                "description": $("#chat_input").val(),
+                "room": room_label
+            }));
+            */
           });
           
           // Helpful debugging
