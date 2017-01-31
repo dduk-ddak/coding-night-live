@@ -67,7 +67,7 @@ def room_join(message):
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
     room.websocket_group.add(message.reply_channel)
-    message.channel_session['room'] = list(set(message.channel_session['room']).union([room.label]))
+    #message.channel_session['room'] = list(set(message.channel_session['room']).union([room.label]))
     # Send a message back that will prompt them to open the room
     # Done server-side so that we could, for example, make people
     # join rooms automatically.
@@ -89,7 +89,7 @@ def room_leave(message):
         room.send_message(MSG_TYPE_LEAVE)
 
     room.websocket_group.discard(message.reply_channel)
-    message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.label]))
+    #message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.label]))
     # Send a message back that will prompt them to close the room
     message.reply_channel.send({
         "text": json.dumps({
