@@ -42,33 +42,6 @@
   }
   </style>
 
-  <body class="drawer drawer--left" style="background-color:#eee">
-
-    <!-- Slide delete modal -->
-    <div class="modal fade" id="del-slide-modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Are you sure to delete this slide?</h4>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delSlide()">Delete slide</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <nav class="navbar navbar-light bg-faded" style="background-color:#151515">
-      <a class="btn drawer-toggle">
-        <i class="fa fa-bars" aria-hidden="true" style="color:white"></i>
-      </a>
-      <h3 class="navbar-text" style="color:white">
-        Slide example
-        <a href="#" style="padding-left:20px"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
-        <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
-      </h3>
-
       <!-- connected user couting -->
       <script>
         $(function () {
@@ -143,214 +116,131 @@
         });
       </script>
 
+  <body class="drawer drawer--left" style="background-color:#eee">
+
+    <!-- Slide delete modal -->
+    <div class="modal fade" id="del-slide-modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Are you sure to delete this slide?</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delSlide()">Delete slide</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-light bg-faded" style="background-color:#151515">
+      <a class="btn drawer-toggle">
+        <i class="fa fa-bars" aria-hidden="true" style="color:white"></i>
+      </a>
+
+      <!-- Navbar: Title -->
+      <h3 class="navbar-text" style="color:white">
+        Slide example
+        <a href="#" style="padding-left:20px"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
+        <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      </h3>
+
+      <!-- Navbar: People count -->
       <h3 class="navbar-text float-xs-right" style="color:#1e2ea5"><i class="fa fa-user-plus" aria-hidden="true"></i> 34</h3>
 
-      <script>
-        $(function () {
-          // Correctly decide between ws:// and wss://
-          var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-          var ws_path = ws_scheme + '://' + window.location.host + "/talk/";
-          console.log("Connecting to " + ws_path);
-          var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
-
-          socket.onmessage = function (message) {
-            // Decode the JSON
-            console.log("[Talk]Got websocket message " + message.data);
-            var data = JSON.parse(message.data);
-
-            // Handle errors
-            if (data.error) {
-              alert(data.error);
-              return;
-            }
-
-            // Handle joining
-            if (data.join) {
-              console.log("Joining talk " + data.join);
-              // Handle Leaving
-            } else if (data.leave) {
-              console.log("Leaving talk " + data.leave);
-              data.leave.remove();
-              // Handle getting a message
-            } else if (data.chat) {
-                //console.log("Chat : " + data.chat);
-                newChat(data)
-            } else if (data.notice) {
-                //console.log("Notice : " + data.notice);
-                newNotice(data)
-            } else {
-              console.log("Cannot handle message!");
-            }
-          };
-
-          // test
-          $("#send-btn").click(function () {
-            room_label = window.location.pathname;
-            room_label = room_label.substring(1, room_label.length-1);
-
-            //console.log('send clicked / ' + $("#chat_input").val());
-
-            /* notice sending test
-            socket.send(JSON.stringify({
-                "command": "notice",
-                "description": $("#chat_input").val(),
-                "room": room_label
-            }));
-            */
-
-            /* chat test
-            socket.send(JSON.stringify({
-                "command": "chat",
-                "is_reply": false,
-                "description": $("#chat_input").val(),
-                "room": room_label
-            }));
-            */
-
-            ///* reply test
-            socket.send(JSON.stringify({
-                "command": "chat",
-                "is_reply": true,
-                "description": $("#chat_input").val(),
-                "hash": "sdfasdf",
-                "room": room_label
-            }));
-            //*/
-          });
-
-          // Helpful debugging
-          socket.onopen = function () {
-            console.log("connected websocket - chat");
-
-            room_label = window.location.pathname;
-            room_label = room_label.substring(1, room_label.length-1);  //get label
-
-            socket.send(JSON.stringify({
-              "command": "join",
-              "room": room_label
-            }));
-          };
-
-          socket.onclose = function () {
-            console.log("disconnected websocket - chat");
-
-            room_label = window.location.pathname;
-            room_label = room_label.substring(1, room_label.length-1);  //get label
-
-            socket.send(JSON.stringify({
-              "command": "leave",
-              "room": room_label
-            }));
-          };
-        });
-      </script>
-
     </nav>
+
+    <!-- Drawer -->
     <nav class="drawer-nav" role="navigation" style="z-index:5">
+
+      <!-- Drawer: Slide list -->
       <ul id="slide_list" class="drawer-menu list-group">
+        <!-- Drawer: Slide list: Title -->
         <li class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></li>
-        <li id="slide_32" class="list-group-item drawer-menu-item" onclick="clickSlide(32)">Lorem ipsum dolor sit</li>
-        <li id="slide_413" class="list-group-item drawer-menu-item" onclick="clickSlide(413)">ipsum dolor sit amet markdown long long long long long title</li>
-        <li id="slide_210" class="list-group-item drawer-menu-item" onclick="clickSlide(210)">dolor sit amet markdown</li>
-        <li id="slide_335" class="list-group-item drawer-menu-item" onclick="clickSlide(335)">sit amet markdown</li>
-        <li id="slide_194" class="list-group-item drawer-menu-item" onclick="clickSlide(194)">amet markdown</li>
+        <!-- Drawer: Slide list: Contents -->
       </ul>
+
+      <!-- Drawer: "Add" button -->
       <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
     </nav>
 
+    <!-- Contents -->
     <div class="container-fluid" style="z-index:4">
-      <!-- polls -->
-      <div id="polls-wrapper" class="row" style="padding: 0px 50px">
+
+      <!-- Polls(to be appended here when prompted) -->
+      <div id="polls-wrapper" class="row" style="padding:0px 50px">
       </div>
 
+      <!-- Shown Contents (without poll) -->
       <div id="contents-wrapper" class="row">
+
+        <!-- Left Div -->
         <div class="col-md-8">
+
+          <!-- Left Div: Slide title -->
           <div class="card" style="margin-top: 1em">
-            <h4 class="card-title" align="center" style="margin-top:0.5em", id="markdown-title"><i aria-hidden="true"></i>(empty)</h4>
+            <h4 class="card-title" align="center" style="margin-top:0.5em; color:#D8D6D5;", id="markdown-title"><i aria-hidden="true"></i>(empty)</h4>
+
+            <!-- Left Div: Slide title: delete button -->
             <i class="fa fa-trash" aria-hidden="true" style="position:absolute; font-size:2em; top:0.25em; right:0.5em; cursor: pointer;" data-toggle="modal" data-target="#del-slide-modal"></i>
           </div>
 
-          <!-- markdown & rendered output -->
-          <div style="margin-top: 1em; background-color: #eee">
+          <!-- Left Div: markdown & rendered output -->
+          <div style="margin-top:1em; background-color:#eee">
             <div class="halves"><textarea id="code"></textarea>
-            </div><div class="halves" id="out" style="padding:1em; background-color: #fff"></div>
+            </div><div class="halves" id="out" style="padding:1em; background-color:#fff"></div>
           </div>
 
         </div>
+
+        <!-- Right Div -->
         <div class="col-md-4">
-          <div id="notice_card" class="card" style="margin-top: 1em">
-            <div class="card-block" style="padding-bottom: 10px;">
+
+          <!-- Right Div: Notice -->
+          <div id="notice_card" class="card" style="margin-top:1em;">
+            <div class="card-block" style="padding-bottom:10px;">
+
+              <!-- Right Div: Notice: Notice title -->
               <h4 class="card-title"><i class="fa fa-podcast" aria-hidden="true"></i> Notice</h4>
+
+              <!-- Right Div: Noice: Only show 1 notice -->
               <div id="shown-notice">
-                <div class="notice-with-time">
-                  <p class="card-text" style="margin-bottom: 0px;">Newest Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
-                  <p class="card-text text-muted" style="text-align:right;">2013.03.23. 13:23</p>
-                </div>
               </div>
+
+              <!-- Hidden notice lists -->
               <div id="hidden-notice">
-                <div class="notice-with-time">
-                  <p class="card-text" style="margin-bottom: 0px;">Oldest Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
-                  <p class="card-text text-muted" style="text-align:right;">2013.03.23. 13:23</p>
-                </div>
-                <div class="notice-with-time">
-                  <p class="card-text" style="margin-bottom: 0px;">Middle Lorem ipsum dolor sit amet, consectetur adipiscing elit. Some quick example texts. No notice here. Merry Coding!</p>
-                  <p class="card-text text-muted" style="text-align:right;">2013.03.23. 13:23</p>
-                </div>
               </div>
+
+              <!-- Toggle notice button -->
               <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block"><i id="notice-toggler" class="fa fa-sort-asc" aria-hidden="true"></i></a>
+
             </div>
           </div>
+
+          <!-- Chat -->
           <div class="card" style="margin-top: 1em">
-            <div class="card-block">
+
+            <!-- Chat title -->
+            <div class="card-block" style="border-bottom:1px solid rgba(0,0,0,.125);">
               <h4 class="card-title" style="margin-bottom:0;"><i class="fa fa-comments-o" aria-hidden="true"></i> Q&A</h4>
             </div>
+
+            <!-- Scrollable -->
             <div id="chat_list_scroll" class="list-group list-group-flush" style="overflow-y: scroll;">
-              <div id="chat_list_items" class="list-group-item">
-                <div id="chat_j3f29ko">
-                  <!-- Type question -->
-                  <div class="card">
-                    <div class="card-header" style="padding-left: .5rem;">
-                      <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> j3f29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
-                    </div>
-                    <div class="card-block">
-                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                  </div>
-                  <!-- Type reply -->
-                  <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
-                  <div class="card" style="margin-left:30px;">
-                    <div class="card-block">
-                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    </div>
-                  </div>
-                  <!-- Type speaker -->
-                  <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
-                  <div class="card" style="margin-left:30px;">
-                    <div class="card-block" style="background-color: rgba(0, 116, 217, 0.28);">
-                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    </div>
-                  </div>
-                </div>
 
-                <div id="chat_kkf29ko">
-                  <!-- Type not yet read -->
-                  <div class="card" style="border-right-color:#0275d8; border-right-style: solid; border-right-width: thick;">
-                    <div class="card-header" style="padding-left: .5rem;">
-                      <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> kkf29ko</div> <div style="margin:0;font-size:.5em;" align="right">2017.01.04. 13:04</div>
-                    </div>
-                    <div class="card-block">
-                      <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </div>
-                  </div>
-                </div>
-
+              <!-- Recieved chats -->
+              <div id="chat_list_items" class="list-group-item" style="border-style: none;">
               </div>
+
             </div>
 
+            <!-- "New messages" button(only shown when new message came) -->
             <div id="chat_scroll_button" style="position:absolute; height:3em; text-align:center; bottom:2em; left:0px; right:0px; background-color:rgba(0, 116, 217, 0.8); padding-top:0.5em; color:#ffffff; visibility:hidden; cursor:pointer;" onclick="scrollDownToLastest()">
               New messages
             </div>
 
+            <!-- Reply Form -->
             <form id="chat_form" method="post" action="">
               <div class="input-group" style="z-index:1">
                 <input id="chat_input" type="text" class="form-control" placeholder="Type @help for syntax...">
@@ -379,9 +269,6 @@
     <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     -->
    <script>
-    // make initial empty title gray
-    $('h4#markdown-title.card-title').css({color: "#D8D6D5"});
-
     // highlight.js init
     hljs.initHighlightingOnLoad();
 
@@ -398,8 +285,9 @@
             for(i=1; i<=line_numbers; i++) {
               ret_lines += '<p style="text-align:right; margin-bottom:0;">' + i + '</p>';
             }
-            return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + hljs.highlight(lang, str).value + '</div></div>'
-          } catch(__){}
+            // Return string **has** to be a one-liner
+            return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + hljs.highlight(lang, str).value + '</div></div>';
+          } catch(_){}
         }
         return '';
       },
@@ -429,26 +317,33 @@
 
     editor.codemirror.on("change", function(e) {
       var out = document.getElementById("out");
+      // TODO!important: change e.getValue() (remove # sth)
       out.innerHTML = md.render(e.getValue());
       $('blockquote').addClass('blockquote');
 
       var slide_title = '(empty)';
       var slide_title_color = '#D8D8D8';
 
+      // if there is something inside text, change slide title
       if($('h1').length !== 0) {
         var user_defined_title = $('h1')[0].textContent;
         user_defined_title = user_defined_title.match(/^[\s\S]{1,30}/g)[0];
         if (user_defined_title.length !== 0) {
           slide_title = user_defined_title;
           slide_title_color = 'black';
+
+          // remove h1 at Left Div: rendered output
           $('h1').contents()[0].remove();
-          $('#slide_' + currSlideIndex()).text(slide_title);
+
+          // Changes title inside drawer: not dealt here!
+          // $('#slide_' + currSlideIndex()).text(slide_title);
+
+          // Changes Left Div: Slide title
+          var title = $('h4#markdown-title.card-title');
+          title.text(slide_title);
+          title.css({'color': slide_title_color});
         }
       }
-
-      var title = $('h4#markdown-title.card-title');
-      title.text(slide_title);
-      title.css({'color': slide_title_color});
     });
 
     $(document).ready(function() {
@@ -488,7 +383,7 @@
 
       // debug: get lists of slides and data of each slide
       // note: how to find out slides' titles?
-      var is_empty_slide = false;
+      var is_empty_slide = true;
       var first_slide_idx = 0;
 
       if(is_empty_slide) {
@@ -586,6 +481,18 @@
 
       $('#slide_list').append('<li id="slide_' + new_idx.toString() + '" class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx.toString() + ')">(empty)</li>');
       clickSlide(new_idx);
+    }
+
+    // this function only deal with **DRAWER**
+    function renameSlide(idx, str) {
+      $('#slide_' + idx).text(str);
+    }
+
+    // TODO: this function only deal with **MDE & TITLE**
+    function changeSlide(idx, patch) {
+      if(idx === currSlideIndex()) {
+        // TODO: Do sth
+      }
     }
 
     function delSlide(idx) {
