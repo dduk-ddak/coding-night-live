@@ -173,10 +173,10 @@
               data.leave.remove();
               // Handle getting a message
             } else if (data.chat) {
-                console.log("Chat : " + data.chat);
-                newChat(data.chat)
+                //console.log("Chat : " + data.chat);
+                newChat(data)
             } else if (data.notice) {
-                console.log("Notice : " + data.notice);
+                //console.log("Notice : " + data.notice);
                 newNotice(data)
             } else {
               console.log("Cannot handle message!");
@@ -201,20 +201,21 @@
             /* chat test
             socket.send(JSON.stringify({
                 "command": "chat",
-                "is_reply": False,
+                "is_reply": false,
                 "description": $("#chat_input").val(),
                 "room": room_label
             }));
             */
 
-            /* reply test
+            ///* reply test
             socket.send(JSON.stringify({
                 "command": "chat",
-                "is_reply": True,
+                "is_reply": true,
                 "description": $("#chat_input").val(),
+                "hash": "sdfasdf",
                 "room": room_label
             }));
-            */
+            //*/
           });
 
           // Helpful debugging
@@ -842,11 +843,10 @@
 
     function newChat(obj) {
       // debug: get with websocket. currently newChat(1) will add new chat, newChat(0) will add reply to hash_value
-      obj = {hash_value: 'this_is_hash_val', time: '2013.01.05. 13:32', description: 'chat description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', is_reply: obj===0};
+      //obj = {hash_value: 'this_is_hash_val', time: '2013.01.05. 13:32', description: 'chat description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', is_reply: obj===0};
 
       var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
       var appended_elem = 0;
-
       if(obj.is_reply) {
         appended_elem = $('\
                   <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>\
@@ -870,7 +870,6 @@
                   </div>');
         $('#chat_list_items').append(appended_elem);
       }
-
       if(is_end_of_scroll) {
         $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'slow');
       }

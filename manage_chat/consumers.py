@@ -52,19 +52,21 @@ def new_chat(message):
     if NOTIFY_USERS_NOTICE_POLL_CHAT:
         if message["is_reply"]:
             chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"])
-            chat.send_message(message["description"], message["hash"], room.label)
+            chat.send_message_reply(message["description"], message["hash"], room.label)
             #chat.send_message(message["description"], message["hash"])
         else:
             chat = ChatAndReply.objects.create(room=room, description=message["description"])
             chat.send_message(message["description"], room.label)
             #chat.send_message(message["description"])
     
+    """
     message.reply_channel.send({
         "text": json.dumps({
             "chat": "send chat",
             "title": room.title,
         }),
     })
+    """
 
 @channel_session_user
 @catch_client_error

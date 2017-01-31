@@ -22,7 +22,7 @@ class Notice(models.Model):
     description = models.TextField()
     
     def __str__(self):
-        return self._id
+        return str(self._id)
     
     @property
     def websocket_group(self):
@@ -53,7 +53,7 @@ class Poll(models.Model):
     answer_count = models.TextField()   #will save a JSON data
 
     def __str__(self):
-        return self._id
+        return str(self._id)
 
 class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
@@ -64,7 +64,7 @@ class ChatAndReply(models.Model):
     description = models.TextField()
     
     def __str__(self):
-        return self._id
+        return str(self._id)
     
     @property
     def websocket_group(self):
@@ -75,12 +75,12 @@ class ChatAndReply(models.Model):
         return Group(str(self.room.label))
     
     # is_reply = true / return original hash value
-    def send_message(self, message, original_hash, label):
+    def send_message_reply(self, message, original_hash, label):
         """
         Called to send a message to the room on behalf of a user.
         """
         # time format ; ex) 2017-01-31 16:21:37
-        final_msg = {'chat': label, 'message': message, 'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")), 'is_reply': str(self.is_reply), 'hash_value': original_hash}
+        final_msg = {'chat': label, 'description': message, 'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")), 'is_reply': self.is_reply, 'hash_value': original_hash[:20]}
 
         # Send out the message to everyone in the room
         self.websocket_group.send(
@@ -93,7 +93,7 @@ class ChatAndReply(models.Model):
         Called to send a message to the room on behalf of a user.
         """
         # time format ; ex) 2017-01-31 16:21:37
-        final_msg = {'chat': label, 'message': message, 'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")), 'is_reply': str(self.is_reply), 'hash_value': str(self.hash_value)}
+        final_msg = {'chat': label, 'description': message, 'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")), 'is_reply': self.is_reply, 'hash_value': str(self.hash_value)[:20]}
 
         # Send out the message to everyone in the room
         self.websocket_group.send(

@@ -4,10 +4,10 @@ $(function () {
   var ws_path = ws_scheme + '://' + window.location.host + "/talk/";
   console.log("Connecting to " + ws_path);
   var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
-
+  
   socket.onmessage = function (message) {
     // Decode the JSON
-    console.log("Got websocket message " + message.data);
+    console.log("[Talk]Got websocket message " + message.data);
     var data = JSON.parse(message.data);
     
     // Handle errors
@@ -15,7 +15,7 @@ $(function () {
       alert(data.error);
       return;
     }
-
+    
     // Handle joining
     if (data.join) {
       console.log("Joining talk " + data.join);
@@ -25,24 +25,48 @@ $(function () {
       data.leave.remove();
       // Handle getting a message
     } else if (data.chat) {
-        console.log("Chat : " + data.chat);
+      //console.log("Chat : " + data.chat);
+      newChat(data)
     } else if (data.notice) {
-        console.log("Notice : " + data.notice);
+      //console.log("Notice : " + data.notice);
+      newNotice(data)
     } else {
       console.log("Cannot handle message!");
     }
   };
-
-  // notice sending test
+  
+  // test
   $("#send-btn").click(function () {
     room_label = window.location.pathname;
     room_label = room_label.substring(1, room_label.length-1);
     
+    //console.log('send clicked / ' + $("#chat_input").val());
+    
+    /* notice sending test
     socket.send(JSON.stringify({
-        "command": "notice",
-        "description": $("#chat_input").val(),
-        "room": room_label
-    }))
+      "command": "notice",
+      "description": $("#chat_input").val(),
+      "room": room_label
+    }));
+    */
+    
+    /* chat test
+    socket.send(JSON.stringify({
+      "command": "chat",
+      "is_reply": false,
+      "description": $("#chat_input").val(),
+      "room": room_label
+    }));
+    */
+    
+    /* reply test
+    socket.send(JSON.stringify({
+      "command": "chat",
+      "is_reply": true,
+      "description": $("#chat_input").val(),
+      "room": room_label
+    }));
+    */
   });
   
   // Helpful debugging
