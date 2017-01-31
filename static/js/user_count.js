@@ -50,6 +50,17 @@ $(function() {
     room_label = room_label.substring(1, room_label.length-1);  // Get Label
     
     socket.send(JSON.stringify({
+      "command": "join",
+      "room": room_label
+    }));
+  
+  socket.onclose = function () {
+    console.log("disconnected websocket");
+    
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);
+
+    socket.send(JSON.stringify({
       "command": "leave",
       "room": room_label
     }));
