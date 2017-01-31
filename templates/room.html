@@ -11,8 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.1.3/iscroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/js/drawer.min.js"></script>
@@ -134,20 +136,21 @@
     </div>
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-light bg-faded" style="background-color:#151515">
+    <nav class="navbar navbar-light bg-faded" style="background-color:#151515; font-size:1.5em;">
       <a class="btn drawer-toggle">
         <i class="fa fa-bars" aria-hidden="true" style="color:white"></i>
       </a>
 
       <!-- Navbar: Title -->
-      <h3 class="navbar-text" style="color:white">
-        Slide example
-        <a href="#" style="padding-left:20px"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <h3 id="room_title" class="navbar-text" style="color:white">Slide example</h3>
+        <a href="#" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
         <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
-      </h3>
 
       <!-- Navbar: People count -->
-      <h3 class="navbar-text float-xs-right" style="color:#1e2ea5"><i class="fa fa-user-plus" aria-hidden="true"></i> 34</h3>
+      <h3 class="navbar-text float-xs-right" style="color:#1e2ea5">
+        <i class="fa fa-user-plus" aria-hidden="true"></i>
+        <div id="user_count" style="float:right; margin-left:10px;">34</div>
+      </h3>
 
     </nav>
 
@@ -168,7 +171,7 @@
     <!-- Contents -->
     <div class="container-fluid" style="z-index:4">
 
-      <!-- Polls(to be appended here when prompted) -->
+      <!-- Poll prompt(to be appended here when prompted) -->
       <div id="polls-wrapper" class="row" style="padding:0px 50px">
       </div>
 
@@ -180,7 +183,7 @@
 
           <!-- Left Div: Slide title -->
           <div class="card" style="margin-top: 1em">
-            <h4 class="card-title" align="center" style="margin-top:0.5em; color:#D8D6D5;", id="markdown-title"><i aria-hidden="true"></i>(empty)</h4>
+            <h4 id="markdown-title" class="card-title" align="center" style="margin-top:0.5em; color:#D8D6D5;"><i aria-hidden="true"></i>(empty)</h4>
 
             <!-- Left Div: Slide title: delete button -->
             <i class="fa fa-trash" aria-hidden="true" style="position:absolute; font-size:2em; top:0.25em; right:0.5em; cursor: pointer;" data-toggle="modal" data-target="#del-slide-modal"></i>
@@ -483,12 +486,15 @@
       clickSlide(new_idx);
     }
 
-    // this function only deal with **DRAWER**
-    function renameSlide(idx, str) {
-      $('#slide_' + idx).text(str);
+    // this function only deal with **DRAWER & TITLE**
+    function renameSlide(idx, name) {
+      $('#slide_' + idx).text(name);
+      if(idx === currSlideIndex()) {
+        $('#markdown-title').text(name);
+      }
     }
 
-    // TODO: this function only deal with **MDE & TITLE**
+    // TODO: this function only deal with **MDE**
     function changeSlide(idx, patch) {
       if(idx === currSlideIndex()) {
         // TODO: Do sth
@@ -517,6 +523,10 @@
         clickSlide(parseInt(next_slide.attr('id').split('_')[1]));
       }
       curr_slide.remove();
+    }
+
+    function changeSlideOrder(idx, next) {
+      $('#slide_' + idx).detach().insertAfter('#slide_' + next);
     }
 
     $(window).resize(function() {
@@ -807,6 +817,14 @@
                 <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
                 <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
               </div>');
+    }
+
+    function setRoomTitle(str) {
+      $('#room_title').text(str);
+    }
+
+    function setUserCount(cnt) {
+      $('#user_count').text(cnt);
     }
 
     </script>
