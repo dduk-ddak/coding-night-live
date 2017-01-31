@@ -13,7 +13,7 @@ from .setting import NOTIFY_USERS_NOTICE_POLL_CHAT
 @channel_session_user_from_http
 def ws_connect(message):
     message.reply_channel.send({'accept': True})
-    message.channel_session['room'] = []
+    message.channel_session['talk'] = []
 
 def ws_receive(message):
     payload = json.loads(message['text'])
@@ -22,7 +22,7 @@ def ws_receive(message):
 
 @channel_session_user
 def ws_disconnect(message):
-    for room_label in message.channel_session.get('room', set()):
+    for room_label in message.channel_session.get('talk', set()):
         try:
             room = Room.objects.get(label=room_label)
             room.websocket_group.discard(message.reply_channel)
@@ -61,7 +61,7 @@ def new_chat(message):
     
     message.reply_channel.send({
         "text": json.dumps({
-            "function": "send chat",
+            "chat": "send chat",
             "title": room.title,
         }),
     })
@@ -71,18 +71,18 @@ def new_chat(message):
 def new_notice(message):
     room = get_room_or_error(message["room"])
     #need to add : checking admin_user
-
-    if NOTIFY_USERS_NOTICE_POLL_CHAT:
-        notice = Notice.objects.create(room=room, description=message["description"])
-        notice.send_message(message["description"], room.label)
-        #notice.send_message(message["description"])
-    
+     
+    notice = Notice.objects.create(room=room, description=message["description"])
+    notice.send_message(message["description"], room.label)
+    #notice.send_message(message["description"])
+    """
     message.reply_channel.send({
         "text": json.dumps({
-            "function": "send notice",
+            "notice": "send notice",
             "title": room.title,
         }),
     })
+    """
 
 @channel_session_user
 @catch_client_error
