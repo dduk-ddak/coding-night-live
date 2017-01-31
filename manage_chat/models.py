@@ -1,8 +1,10 @@
+import json
 import time
 import hashlib
 
 from django.db import models
 from django.utils import timezone
+from channels import Group
 
 from manage_room.models import Room
 
@@ -21,6 +23,25 @@ class Notice(models.Model):
     
     def __str__(self):
         return self._id
+    
+    @property
+    def websocket_group(self):
+        """
+        Returns the Channels Group that sockets should subscribe to to get sent
+        messages as they are generated.
+        """
+        return Group(self.time)
+    
+    def send_message(self, message, label):
+        """
+        Called to send a message to the room on behalf of a user.
+        """
+        final_msg = {'room': label, 'message': message, 'time': str(self.time)}
+
+        # Send out the message to everyone in the room
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )
 
 class Poll(models.Model):
     _id = models.AutoField(primary_key=True)
@@ -43,3 +64,34 @@ class ChatAndReply(models.Model):
     
     def __str__(self):
         return self._id
+    
+    @property
+    def websocket_group(self):
+        """
+        Returns the Channels Group that sockets should subscribe to to get sent
+        messages as they are generated.
+        """
+        return Group(self.time)
+    
+    def send_message(self, message, original_hash, label):
+        """
+        Called to send a message to the room on behalf of a user.
+        """
+        final_msg = {'room': label, 'message': message, 'time': str(self.time), 'reply_hash': original_hash}
+
+        # Send out the message to everyone in the room
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )
+    
+    #??
+    def send_message(self, message, label):
+        """
+        Called to send a message to the room on behalf of a user.
+        """
+        final_msg = {'room': label, 'message': message, 'time': str(self.time)}
+
+        # Send out the message to everyone in the room
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )

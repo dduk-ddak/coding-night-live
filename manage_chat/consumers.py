@@ -4,8 +4,11 @@ import json
 from channels import Channel, Group
 from channels.auth import channel_session_user_from_http, channel_session_user
 
-from .models import ChatAndReply, Notice, Poll
 from manage_room.models import Room
+from manage_room.utils import get_room_or_error, catch_client_error
+
+from .models import ChatAndReply, Notice, Poll
+from .setting import NOTIFY_USERS_NOTICE_POLL_CHAT
 
 @channel_session_user_from_http
 def ws_connect(message):
@@ -27,7 +30,7 @@ def ws_disconnect(message):
             pass
 
 @channel_session_user
-#@catch_client_error
+@catch_client_error
 def talk_join(message):
     room = get_room_or_error(message["room"])
     room.websocket_group.add(message.reply_channel)
@@ -42,16 +45,19 @@ def talk_join(message):
     })
 
 @channel_session_user
-#@catch_client_error
+@catch_client_error
 def new_chat(message):
     room = get_room_or_error(message["room"])
     
-    if NOTIFY_USERS_NOTICE_CHAT_POLL:
+    if NOTIFY_USERS_NOTICE_POLL_CHAT:
         if message["is_reply"]:
-            #chat = new Roo
-            chat.send_message(message["description"], message["hash"])
+            chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"])
+            chat.send_message(message["description"], message["hash"], room.label)
+            #chat.send_message(message["description"], message["hash"])
         else:
-            chat.send_message(message["description"])
+            chat = ChatAndReply.objects.create(room=room, description=message["description"])
+            chat.send_message(message["description"], room.label)
+            #chat.send_message(message["description"])
     
     message.reply_channel.send({
         "text": json.dumps({
@@ -61,17 +67,42 @@ def new_chat(message):
     })
 
 @channel_session_user
-#@catch_client_error
+@catch_client_error
 def new_notice(message):
-    #check admin_user
-    if NOTIFY_USERS_NOTICE_CHAT_POLL:
-        notice.send_message(message["description"])
+    room = get_room_or_error(message["room"])
+    #need to add : checking admin_user
+
+    if NOTIFY_USERS_NOTICE_POLL_CHAT:
+        notice = Notice.objects.create(room=room, description=message["description"])
+        notice.send_message(message["description"], room.label)
+        #notice.send_message(message["description"])
+    
     message.reply_channel.send({
         "text": json.dumps({
             "function": "send notice",
             "title": room.title,
         }),
     })
+
+@channel_session_user
+@catch_client_error
+def talk_leave(message):
+    # Reverse of join - remove them from everything.
+    room = get_room_or_error(message["room"])
+
+    room.websocket_group.discard(message.reply_channel)
+    
+    # test json sending
+    message.reply_channel.send({
+        "text": json.dumps({
+            "leave": str(room.label),
+            "title": room.title,
+            "ws": "talk",
+        }),
+    })
+
+"""
+# Future..
 
 @channel_session_user
 #@catch_client_error
@@ -82,4 +113,4 @@ def start_poll(message):
 #@catch_client_error
 def result_poll(message):
     print('helloworld')
-
+"""

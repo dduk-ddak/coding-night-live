@@ -1,11 +1,11 @@
-$(function() {
+$(function () {
+  // Correctly decide between ws:// and wss://
   var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
   var ws_path = ws_scheme + '://' + window.location.host + "/room/user_count/";
   console.log("Connecting to " + ws_path);
   var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
-  
   socket.onmessage = function (message) {
-    //Decode the JSON
+    // Decode the JSON
     console.log("Got websocket message " + message.data);
     var data = JSON.parse(message.data);
     
@@ -14,10 +14,11 @@ $(function() {
       alert(data.error);
       return;
     }
+
     // Handle joining
     if (data.join) {
       console.log("Joining room " + data.join);
-      // Handle leaving
+      // Handle Leaving
     } else if (data.leave) {
       console.log("Leaving room " + data.leave);
       data.leave.remove();
@@ -46,20 +47,21 @@ $(function() {
   socket.onopen = function () {
     console.log("connected websocket");
     
-    room_label = window.loacation.pathname;
-    room_label = room_label.substring(1, room_label.length-1);  // Get Label
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);  //get label
     
     socket.send(JSON.stringify({
       "command": "join",
       "room": room_label
     }));
+  };
   
   socket.onclose = function () {
     console.log("disconnected websocket");
     
     room_label = window.location.pathname;
-    room_label = room_label.substring(1, room_label.length-1);
-
+    room_label = room_label.substring(1, room_label.length-1);  //get label
+    
     socket.send(JSON.stringify({
       "command": "leave",
       "room": room_label
