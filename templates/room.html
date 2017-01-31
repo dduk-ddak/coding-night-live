@@ -157,7 +157,7 @@
             // Decode the JSON
             console.log("[Talk]Got websocket message " + message.data);
             var data = JSON.parse(message.data);
-            
+
             // Handle errors
             if (data.error) {
               alert(data.error);
@@ -189,7 +189,7 @@
             room_label = room_label.substring(1, room_label.length-1);
 
             //console.log('send clicked / ' + $("#chat_input").val());
-            
+
             /* notice sending test
             socket.send(JSON.stringify({
                 "command": "notice",
@@ -206,7 +206,7 @@
                 "room": room_label
             }));
             */
-            
+
             /* reply test
             socket.send(JSON.stringify({
                 "command": "chat",
@@ -216,26 +216,26 @@
             }));
             */
           });
-          
+
           // Helpful debugging
           socket.onopen = function () {
             console.log("connected websocket - chat");
-            
+
             room_label = window.location.pathname;
             room_label = room_label.substring(1, room_label.length-1);  //get label
-            
+
             socket.send(JSON.stringify({
               "command": "join",
               "room": room_label
             }));
           };
-          
+
           socket.onclose = function () {
             console.log("disconnected websocket - chat");
-            
+
             room_label = window.location.pathname;
             room_label = room_label.substring(1, room_label.length-1);  //get label
-            
+
             socket.send(JSON.stringify({
               "command": "leave",
               "room": room_label
@@ -794,24 +794,24 @@
       var comment = $("#chat_input").val().replace(/^\s*/g, "");
       $('#chat_input').val('');
       e.preventDefault();
-
+      console.log(comment);
       // debug: check send comment (whether its syntax is correct)
       // check syntax here
       // -> if correct, print the comment on console
       // -> if incorrect, print help message on console
-      var is_valid = false;
-      for(var i=0; i<valid_syntax_regex_pattern.length; i+=1) {
-        is_valid = !!comment.match(valid_syntax_regex_pattern[i]);
-        if(is_valid === true) {
-          break;
-        }
-      }
-      if(is_valid === true) {
-        console.log(comment);
-      } else {
-        comment = "'" + comment + "'";
-        console.log(comment, "is not a valid command. See '@help'.");
-      }
+      // var is_valid = false;
+      // for(var i=0; i<valid_syntax_regex_pattern.length; i+=1) {
+      //   is_valid = !!comment.match(valid_syntax_regex_pattern[i]);
+      //   if(is_valid === true) {
+      //     break;
+      //   }
+      // }
+      // if(is_valid === true) {
+      //   console.log(comment);
+      // } else {
+      //   comment = "'" + comment + "'";
+      //   console.log(comment, "is not a valid command. See '@help'.");
+      // }
     });
 
     $('#chat_input').autocomplete({
