@@ -63,6 +63,7 @@ $(function () {
     socket.send(JSON.stringify({
       "command": "chat",
       "is_reply": true,
+      "hash": "sdfasdf",
       "description": $("#chat_input").val(),
       "room": room_label
     }));
