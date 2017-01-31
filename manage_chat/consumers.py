@@ -28,13 +28,50 @@ def ws_disconnect(message):
 
 @channel_session_user
 #@catch_client_error
+def talk_join(message):
+    room = get_room_or_error(message["room"])
+    room.websocket_group.add(message.reply_channel)
+    
+    # test json sending
+    message.reply_channel.send({
+        "text": json.dumps({
+            "join": str(room.label),
+            "title": room.title,
+            "ws": "talk",
+        }),
+    })
+
+@channel_session_user
+#@catch_client_error
 def new_chat(message):
-    print('helloworld')
+    room = get_room_or_error(message["room"])
+    
+    if NOTIFY_USERS_NOTICE_CHAT_POLL:
+        if message["is_reply"]:
+            #chat = new Roo
+            chat.send_message(message["description"], message["hash"])
+        else:
+            chat.send_message(message["description"])
+    
+    message.reply_channel.send({
+        "text": json.dumps({
+            "function": "send chat",
+            "title": room.title,
+        }),
+    })
 
 @channel_session_user
 #@catch_client_error
 def new_notice(message):
-    print('helloworld')
+    #check admin_user
+    if NOTIFY_USERS_NOTICE_CHAT_POLL:
+        notice.send_message(message["description"])
+    message.reply_channel.send({
+        "text": json.dumps({
+            "function": "send notice",
+            "title": room.title,
+        }),
+    })
 
 @channel_session_user
 #@catch_client_error
