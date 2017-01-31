@@ -24,6 +24,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
@@ -862,6 +863,48 @@
       else {
         if($('#chat_scroll_button').css('visibility') == 'hidden') {
           toBeScrolledPosition(appended_elem.position().top);
+          $('#chat_scroll_button').css('visibility', 'visible');
+        }
+      }
+    }
+
+    function newPoll(obj) {
+      // debug
+      obj = {hash_value: 'this_is_hash_val', time: '2013.01.05. 13:32', question: 'poll description',
+        answers: ['answer 1', 'answer 2', 'answer 3 - which is very long indeed!', 'ans4']};
+
+      var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
+      
+      var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
+      $('#chat_list_items').append(ctx);
+      var pollChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: obj.answers,
+          datasets: [{
+            label: '',
+            data: [13, 43, 92, 13],//data: Array.apply(null, {length: obj.answers.length}).map(function() {return 0;}),
+          }],
+        },
+        options: {
+          responiveAnimationDuration: 100,
+          text: obj.question,
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+
+      if(is_end_of_scroll) {
+        $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
+      }
+      else {
+        if($('#chat_scroll_button').css('visibility') == 'hidden') {
+          toBeScrolledPosition(ctx.position().top);
           $('#chat_scroll_button').css('visibility', 'visible');
         }
       }
