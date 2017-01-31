@@ -121,7 +121,7 @@
   <body class="drawer drawer--left" style="background-color:#eee">
 
     <!-- Slide delete modal -->
-    <div class="modal fade" id="del-slide-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="delete_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -129,6 +129,40 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delSlide()">Delete slide</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide rename modal -->
+    <div class="modal fade" id="rename_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="input-group">
+              <input id="slide_name_input" type="text" class="form-control form-control-lg" placeholder="unnamed slide">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="renameSlide()">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room rename modal -->
+    <div class="modal fade" id="rename_room_modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="input-group">
+              <input id="room_name_input" type="text" class="form-control form-control-lg" placeholder="unnamed room">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="renameRoom()">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -143,8 +177,9 @@
 
       <!-- Navbar: Title -->
       <h3 id="room_title" class="navbar-text" style="color:white">Slide example</h3>
-        <a href="#" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
-        <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
+      <a href="#" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
 
       <!-- Navbar: People count -->
       <h3 class="navbar-text float-xs-right" style="color:#1e2ea5">
@@ -183,10 +218,13 @@
 
           <!-- Left Div: Slide title -->
           <div class="card" style="margin-top: 1em">
-            <h4 id="markdown-title" class="card-title" align="center" style="margin-top:0.5em; color:#D8D6D5;"><i aria-hidden="true"></i>(empty)</h4>
-
+            <h4 class="card-title" style="margin-top:0.5em; margin-left:0.5em;">
+              <span id="markdown_title">(empty)</span>
+              <i class="fa fa-pencil" style="display:inline-block; cursor:pointer;" aria-hidden="true" data-toggle="modal" data-target="#rename_slide_modal"></i>
+            <i class="fa fa-trash" aria-hidden="true" style="cursor:pointer; float:right; margin-right:0.5em;" data-toggle="modal" data-target="#delete_slide_modal"></i>
+            </h4>
+            
             <!-- Left Div: Slide title: delete button -->
-            <i class="fa fa-trash" aria-hidden="true" style="position:absolute; font-size:2em; top:0.25em; right:0.5em; cursor: pointer;" data-toggle="modal" data-target="#del-slide-modal"></i>
           </div>
 
           <!-- Left Div: markdown & rendered output -->
@@ -342,7 +380,7 @@
           // $('#slide_' + currSlideIndex()).text(slide_title);
 
           // Changes Left Div: Slide title
-          var title = $('h4#markdown-title.card-title');
+          var title = $('h4#markdown_title.card-title');
           title.text(slide_title);
           title.css({'color': slide_title_color});
         }
@@ -362,6 +400,8 @@
         },
         showOverlay: true
       });
+
+      // sortable init
       $('#slide_list').sortable({
         update: function(event, ui) {
           var curr_slide = ui.item;
@@ -382,6 +422,16 @@
           // debug: send server curr,prev,next slide idx
           console.log(curr_slide_idx + ' ' + prev_slide_idx + ' ' + next_slide_idx);
         }
+      });
+
+      // rename slide modal init
+      $('#rename_slide_modal').on('show.bs.modal', function(e) {
+        $('#slide_name_input').val($('#markdown_title').text());
+      });
+
+      // rename room modal init
+      $('#rename_room_modal').on('show.bs.modal', function(e) {
+        $('#room_name_input').val($('#room_title').text());
       });
 
       // debug: get lists of slides and data of each slide
@@ -482,16 +532,32 @@
       // debug: get new_idx from server
       var new_idx = 10;
 
-      $('#slide_list').append('<li id="slide_' + new_idx.toString() + '" class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx.toString() + ')">(empty)</li>');
+      $('#slide_list').append('<li id="slide_' + new_idx.toString() + '" class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx.toString() + ')">unnamed slide</li>');
       clickSlide(new_idx);
     }
 
     // this function only deal with **DRAWER & TITLE**
     function renameSlide(idx, name) {
+      // called from modal
+      if(typeof idx == 'undefined') {
+        var idx = currSlideIndex();
+        var name = $('#slide_name_input').val();
+        if(!name) name = 'unnamed slide'; // default value
+      }
+
       $('#slide_' + idx).text(name);
       if(idx === currSlideIndex()) {
-        $('#markdown-title').text(name);
+        $('#markdown_title').text(name);
       }
+    }
+
+    function renameRoom(name) {
+      // called from modal
+      if(typeof name == 'undefined') {
+        var name = $('#room_name_input').val();
+        if(!name) name = 'unnamed room'; // default value
+      }
+      $('#room_title').text(name);
     }
 
     // TODO: this function only deal with **MDE**
@@ -502,6 +568,7 @@
     }
 
     function delSlide(idx) {
+      // called from modal
       if(typeof idx == 'undefined') {
         idx = currSlideIndex();
       }
