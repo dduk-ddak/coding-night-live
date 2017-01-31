@@ -224,7 +224,7 @@
               <i class="fa fa-pencil" style="display:inline-block; cursor:pointer;" aria-hidden="true" data-toggle="modal" data-target="#rename_slide_modal"></i>
             <i class="fa fa-trash" aria-hidden="true" style="cursor:pointer; float:right; margin-right:0.5em;" data-toggle="modal" data-target="#delete_slide_modal"></i>
             </h4>
-            
+
             <!-- Left Div: Slide title: delete button -->
           </div>
 
@@ -803,6 +803,7 @@
     });
 
     $('#chat_input').autocomplete({
+      position: {my: "left bottom", at: "left top"},
       source: function(request, response) {
         // debug: use regular expressions
         //console.log(request.term);
