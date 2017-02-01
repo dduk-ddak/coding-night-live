@@ -43,6 +43,12 @@ class Room(models.Model):
             {"text": json.dumps(final_msg)}
         )
 
+    def send_title(self):
+        final_msg = {'room': str(self.label), 'title': str(self.title),}
+
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )
 
 class Slide(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
