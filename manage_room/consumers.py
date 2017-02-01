@@ -10,6 +10,7 @@ from .setting import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LE
 from .utils import get_room_or_error, catch_client_error
 from .exceptions import ClientError
 
+"""
 # This decorator copies the user from the HTTP session (only available in
 # websocket.connect or http.request messages) to the channel session (available
 # in all consumers with the same reply_channel, so all three here)
@@ -44,7 +45,7 @@ def ws_disconnect(message):
             room.websocket_group.discard(message.reply_channel)
         except Room.DoesNotExist:
             pass
-
+"""
 
 ### Chat channel handling ###
 
