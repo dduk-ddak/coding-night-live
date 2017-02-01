@@ -1,7 +1,7 @@
 # /services/list.html - manage the room (create, delete, ..)
 import random
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 
 from django.shortcuts import render, get_object_or_404
 from django.db import transaction
@@ -43,15 +43,17 @@ def RoomListView(request):
     rooms = Room.objects.filter(admin_user=request.user).order_by('time')
     return render(request, 'list.html', {'rooms': rooms})
 
-# rename room title
-@login_required
-def RoomRenameView(request, pk):
-    # 'pk' is label
-    rooms = Room.objects.filter(admin_user=request.user, label=pk)
-    rooms.title = request.title
-    rooms.save()
-    
-    rooms.send_title()
+"""
+def RedirectRoomView(ex, request):
+    #label = HttpRequest.get_full_path(self)
+    #label = label.strip('/')    # get label
+    #rooms = Room.objects.get(label=label)
+
+    # get chat, notice, poll list..
+    return render(request, 'room.html', {})
+    #return render(request, 'room.html', {'title': rooms})
+"""
+
 
 class RedirectRoomView(TemplateView):
     template_name='room.html'

@@ -106,7 +106,7 @@
                   "room": room_label
                 }));
             };
-
+            
             socket.onclose = function () {
               console.log("disconnected websocket");
 
@@ -165,7 +165,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="renameRoom()">Save</button>
+            <!--<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="renameRoom()">Save</button>-->
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="rename_title_room">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -179,7 +180,7 @@
       </a>
 
       <!-- Navbar: Title -->
-      <h3 id="room_title" class="navbar-text" style="color:white">Slide example</h3>
+      <h3 id="room_title" class="navbar-text" style="color:white">Room title desu</h3>
       <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
       <a href="#" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
       <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
@@ -571,6 +572,8 @@
 
     function renameRoom(name) {
       // called from modal
+      //name = document.getElementById("room_name_input").value;
+      
       if(typeof name == 'undefined') {
         var name = $('#room_name_input').val();
         if(!name) name = window.location.pathname.replace(/^\/+|\/+$/g, ''); // default value

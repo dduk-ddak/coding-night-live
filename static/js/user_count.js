@@ -24,6 +24,8 @@ $(function () {
       console.log("Leaving room " + data.leave);
       data.leave.remove();
       // Handle getting a message
+    } else if(data.rename_title) {
+      setRoomTitle(data.title)
     } else if (data.msg_type != 0) {
       // msg types are defined in manage_room/setting.py
       switch (data.msg_type) {
@@ -43,6 +45,24 @@ $(function () {
       console.log("Cannot handle message!");
     }
   };
+
+  /*
+   // rename title test
+   $("#rename_title_room").click(function () {
+     room_label = window.location.pathname;
+     room_label = room_label.substring(1, room_label.length-1);
+     
+     name = document.getElementById("room_name_input").value;
+     
+     renameRoom(name);
+     
+     socket.send(JSON.stringify({
+       "command": "rename_room_title",
+       "title": name,
+       "room": room_label
+     }));
+   });
+   */
   
   // Helpful debugging
   socket.onopen = function () {

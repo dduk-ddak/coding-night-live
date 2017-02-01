@@ -43,8 +43,11 @@ class Room(models.Model):
             {"text": json.dumps(final_msg)}
         )
 
-    def send_title(self):
-        final_msg = {'room': str(self.label), 'title': str(self.title),}
+    def send_title(self, new_title):
+        self.title = new_title
+        self.save()
+
+        final_msg = {'rename_title': str(self.label), 'title': str(self.title),}
 
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}

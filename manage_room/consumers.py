@@ -97,3 +97,10 @@ def room_leave(message):
             "leave": str(room.label),
         }),
     })
+
+@channel_session_user
+@catch_client_error
+def room_title_rename(message):
+    room = get_room_or_error(message["room"])
+
+    room.send_title(message["title"])
