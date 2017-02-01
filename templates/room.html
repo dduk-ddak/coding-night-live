@@ -29,6 +29,8 @@
     {% load staticfiles %}
     <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
     <script src="{% static "js/reconnecting-websocket.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/diff_match_patch.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/java-hashcode-conv.js" %}" type="text/javascript"></script>
 
   </head>
   <style>
@@ -390,6 +392,9 @@
       }
     });
 
+    // diff_match_patch init
+    var dmp = diff_match_patch();
+
     $(document).ready(function() {
       // drawer init
       $('.drawer').drawer({
@@ -520,6 +525,7 @@
       console.log('clickSlide');
       console.log(idx);
       var data = '# this is title with idx ' + idx.toString() + '\n## and this is content!\n### this too!';
+      getSlideText(data);
 
       var preclicked_slide = $('#slide_' + currSlideIndex().toString());
       if(preclicked_slide.length !== 0) {
@@ -528,8 +534,16 @@
       currSlideIndex(idx);
       $('#slide_' + idx.toString()).addClass('active');
 
-      editor.value(data);
       $('.drawer').drawer('close');
+    }
+
+    var slide_text = '';
+    function getSlideText(str) {
+      if(typeof str != 'undefined') {
+        slide_text = str;
+        editor.value(str);
+      }
+      return slide_text;
     }
 
     function newSlide() {
@@ -564,10 +578,27 @@
       $('#room_title').text(name);
     }
 
-    // TODO: this function only deal with **MDE**
-    function changeSlide(idx, patch) {
+    // this function only deal with **MDE**
+    function changeSlide(idx, patch, remote_pre_hash, remote_curr_hash) {
       if(idx === currSlideIndex()) {
-        // TODO: Do sth
+        var local_pre_text = getSlideText();
+        var local_pre_hash = javaHash.hash(local_pre_text);
+
+        // Case 1: No update
+        if(local_pre_hash === remote_curr_hash) return;
+
+        // Case 2: Normal update
+        else if(local_pre_hash === remote_pre_hash) {
+          var patches = dmp.patch_fromText(patch);
+          var local_curr_text = dmp.patch_apply(patches, pre_text);
+          getSlideText(local_curr_text);
+        }
+
+        // Case 3: Late update
+        else {
+          // debug: send local_pre_hash
+          // this will call changeSlide again
+        }
       }
     }
 
