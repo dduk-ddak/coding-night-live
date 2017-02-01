@@ -10,11 +10,10 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
-from django.contrib.sites.shortcuts import get_current_site
-
 from haikunator import Haikunator
 
 from .models import Room
+from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 
 # Create your views here.
 # create a room and redirect to the room
@@ -61,5 +60,11 @@ class RedirectRoomView(TemplateView):
         label = label.strip('/')    # get label
 
         room = Room.objects.get(label=label)
-
-        return {'title': room.title}
+        notices = get_notice_list(label)
+        chat_and_reply = get_chat_list(label)   # [0]: chat / [1] : reply
+        
+        # future ..
+        # polls = get_poll_list(label)
+        # return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "polls": polls}
+        
+        return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1]}
