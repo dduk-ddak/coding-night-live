@@ -10,6 +10,8 @@ from django.contrib.sites.models import Site
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.sites.shortcuts import get_current_site
+
 from haikunator import Haikunator
 
 from .models import Room
@@ -44,16 +46,20 @@ def RoomListView(request):
     return render(request, 'list.html', {'rooms': rooms})
 
 """
-def RedirectRoomView(ex, request):
-    #label = HttpRequest.get_full_path(self)
-    #label = label.strip('/')    # get label
-    #rooms = Room.objects.get(label=label)
-
-    # get chat, notice, poll list..
-    return render(request, 'room.html', {})
-    #return render(request, 'room.html', {'title': rooms})
+def RedirectRoomView(exception, request):
+    #room = Room.objects.get(label=)
+    #return render(request, 'room.html', {'room': room})
+    return render(request, 'room.html', {"title":"title is good"})
 """
 
 
 class RedirectRoomView(TemplateView):
     template_name='room.html'
+    
+    def get_context_data(self, **kwargs):
+        label = self.request.path
+        label = label.strip('/')    # get label
+
+        room = Room.objects.get(label=label)
+
+        return {'title': room.title}
