@@ -4,10 +4,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Login :: coding-night-live</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
     {% load static %}
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
     <style>
     .full{
       background: url("{% static "image/bg.jpg" %}") no-repeat center center fixed;
@@ -24,16 +25,37 @@
       width: 70%;
       max-width: 300px;
     }
+    #google_logo {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 73%;
+      max-width: 313px;
+    }
     </style>
   </head>
 
   <body class="container-fluid full">
     <img src="{% static "image/logo-white.png" %}" alt="" class="img-fluid logo" style="margin-top:30vh">
-    <a class="socialaccount_provider google"  href="/accounts/google/login/?process=login">
-        <button type="button" class="btn btn-primary logo" style="margin-top: 5vh">Login</button>
+    <a class="socialaccount_provider google" href="/accounts/google/login/?process=login">
+      <img id="google_logo" src="{% static "image/google_normal.png" %}" style="margin-top:5vh" onmouseover="myfocus(this)" onmouseout="unfocus(this)" onmousedown="press(this)"/>
     </a>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+    <script>
+    function myfocus(img) {
+      console.log('focus');
+      img.setAttribute('src', "{% static "image/google_focus.png" %}");
+    }
+    function unfocus(img) {
+      console.log('unfocus');
+      img.setAttribute('src', "{% static "image/google_normal.png" %}");
+    }
+    function press(img) {
+      console.log('press');
+      img.setAttribute('src', "{% static "image/google_pressed.png" %}");
+    }
+    </script>
   </body>
 </html>
