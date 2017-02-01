@@ -159,7 +159,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <div class="input-group">
-              <input id="room_name_input" type="text" class="form-control form-control-lg" placeholder="unnamed room">
+              <input id="room_name_input" type="text" class="form-control form-control-lg">
             </div>
           </div>
           <div class="modal-footer">
@@ -436,6 +436,7 @@
       $('#rename_room_modal').on('show.bs.modal', function(e) {
         $('#room_name_input').val($('#room_title').text());
       });
+      $('#room_name_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
 
       // debug: get lists of slides and data of each slide
       // note: how to find out slides' titles?
@@ -558,7 +559,7 @@
       // called from modal
       if(typeof name == 'undefined') {
         var name = $('#room_name_input').val();
-        if(!name) name = 'unnamed room'; // default value
+        if(!name) name = window.location.pathname.replace(/^\/+|\/+$/g, ''); // default value
       }
       $('#room_title').text(name);
     }
