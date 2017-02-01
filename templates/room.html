@@ -627,12 +627,6 @@
       /@notice/g, /^(\s)*@notice\s+.*$/g,
     ];
 
-    var poll_regex = [
-      /@/g, /@p/g, /@po/g,
-      /@pol/g, /@poll/g,
-      /^(\s)*@poll\s+(-t\s*\"[^\"\']*\")?.*$/g,
-    ];
-
     function validate_notice_syntax(command, matches) {
       var len = command.length,
           upper_bound = 7, // length of '@notice'
@@ -679,102 +673,102 @@
       }
       return matches;
     }
-
+    var poll_regex = [
+      /^@$/g, /^@p$/g, /^@po$/g,
+      /^@pol$/g, /^@poll$/g,
+      /^@poll\s$/g,
+    ];
+    var poll_opt_regex = [
+      /^-t\s*(?![^\"\'])/g,
+      /^-(?![^t])/g,
+    ];
     function validate_poll_syntax(command, matches) {
-      var len = command.length,
-          upper_bound = 5, // length of '@poll'
+      var len = 0,
+          upper_bound = 6,          // length of '@poll '
           is_valid = false,
           title_given = false,
           text = "@poll ",
           title = null,
+          quotation_choice = "\"",  // either ' || "
           options = [];
+
+      // remove leading white spaces
+      command = command.replace(/^\s*/g, "");
+      len = command.length;
 
       if(len <= upper_bound) {
         // user is still typing the command;
-        // check for partial syntax.
-        is_valid = !!command.match(poll_regex[len-1]);
+        // valid commands include: @, @p, @po, @pol, @poll
+        if(!!command.match(poll_regex[len-1]))
+          return matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+        else
+          return matches;
       } else {
-        // check for full systax
-        // TODO: full syntax checking incomplete
-
-        is_valid = !!command.match(poll_regex[upper_bound]);
-        if(is_valid === true) {
-          // remove @poll from command string
-          command = command.replace(/^(@poll\s*)/g, "");
+        if(!!!command.match(/^@poll\s+(?![^-\'\"])/g)) {
+          // command doesn't start with '@poll '
+          // or the first character after '@poll ' is invalid
+          return matches;
         }
-        is_valid = !!!command.match(/^(-[^t])(?!(.*\/))/g);
-
-        if(is_valid === true) {
-          // check for title option
-          title = command.match(/-t\s*\"[^\"\']*\"(?!\s*\/)/g);
-
-          if(title !== null) {
-            // remove -t
-            // if multiple title options are given, use the first one
-            title = title[0].replace(/-t\s*/g, "");
-            // trim "" on the either end
-            title = title.slice(1, -1);
-            //trim white spaces on either end
-
-
-            title = title.trim();
-
-
-
-          } else if(!!command.match(/-t\s*\"(?!\s*\/)/g)) {
-              // var pos = command.search(/-t\s*\"(?!\s*\/)/g);
-              // command = command + '"';
-              // command = command.replace(/-t\s*/g, "");
-              // title = command.slice(pos,-1);
-              // command = command.slice(0, pos-1);
-              var str = command.match(/-t\s*\"(?!\s*\/)/g);
-              console.log("str == ", str);
-
-              var pos = command.search(/-t\s*\"(?!\s*\/)/g) + str[0].length;
-              title = command.substring(0, pos+1) + command.substring(pos+2, command.length-1);
-
-              var str = command.match(/-t\s*\"(?!\s*\/)/g);
-              var pos = command.search(/-t\s*\"(?!\s*\/)/g) + str[0].length;
-              title = command.slice(pos, title.length-1);
-              title = title.trim();
-              command = command.replace(/-t\s*\"(?!\s*\/).*/g, "");
-              console.log("title == ", title);
-              console.log("command == ", command);
-          } else if(!!command.match(/-t(?!\s*\/)/g)) {
-              title = "";
-              command = command.replace(/-t(?!\s*\/)/g, "");
-          } else if(!!command.match(/^(-[^t])(?!(.*\/))/g)) {
-            title = "";
-            command = command.replace(/^(-[^t])(?!(.*\/))/g, "");
+        // command starts with '@poll '
+        // remove '@poll ' from the command
+        command = command.replace(/^@poll\s+/g, "");
+        if(command.length === 0) {
+          // input command is '@poll '
+          matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+          return matches;
+        }
+        if(!!command.match(/^-(?=[^t])/g)) {
+          // check for invalid option
+          return matches;
+        }
+        for(var i=0; i<poll_opt_regex.length; i+=1) {
+          // title option is given before "","",...
+          if(!!command.match(poll_opt_regex[i])) {
+            title_given = true;
+            command = command.replace(poll_opt_regex[i], "");
+            text += "-t ";
+            if(command.length === 0) {
+              // input command is '@poll -t'
+              text += (quotation_choice+quotation_choice);
+              matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+              return matches;
+            } else break;
           }
-
-
-          // does not remove '-t ""' within /options/
-          // multiple -t options are removed but the first
-          command = command.replace(/-t\s*\"[^\"\']*\"(?!\s*\/)/g, "");
-          // split options, and trim leading/trailing white spaces
-          options = command.split("/");
-          // empty options are dealt with in autocomplete
-          for(var i=0; i<options.length; i+=1)
-            options[i] = options[i].trim();
         }
-      }
-      if(is_valid === true) {
-        // make autocompleted text
 
-        // if title option follows the options,
-        // make the title option precede the options in autocomplete
-        if(title !== null) {
-          text = text + "-t " + '"' + title + '" ';
+        if(command[0] !== '"' && command[0] !== "'") {
+          return matches;
+        } else {
+          quotation_choice = command[0];
         }
-        for(var i=0; i<options.length; i+=1) {
-          if(options[i].length == 0) continue;
-          text += options[i] + "/";
-        }
-        matches = matches.concat([{label: valid_syntax.poll,
-                                   value: text}]);
-      }
-      return matches;
+
+        if (title_given === true) {
+          var finished = false;
+          for(var i=1; i<command.length; i+=1) {
+            if(command[i] === quotation_choice && command[i-1] !== "\\") {
+              // user has finished typing title
+              title = command.substring(1, i);
+              title = title.trim();
+              command = command.substring(i+1);
+              finished = true; break;
+            }
+          }
+          if(command.length === 0) {
+            // user has given only the title
+            text += quotation_choice + title + quotation_choice + " ";
+            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+            return matches;
+          } else if(finished === false) {
+            // user is in the middle of typing the title
+            // delete the leading quotation mark and trim the white spaces
+            command = command.substring(1);
+            command = command.trim();
+            text += quotation_choice+ command + quotation_choice + " ";
+            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+            return matches;
+          }
+        } // end of if (title_given === true)
+      } // if(len <= upper_bound) else
     }
 
     $('#chat_form').submit(function (e) {
@@ -875,7 +869,7 @@
         answers: ['answer 1', 'answer 2', 'answer 3 - which is very long indeed!', 'ans4']};
 
       var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
-      
+
       var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
       $('#chat_list_items').append(ctx);
       var pollChart = new Chart(ctx, {
