@@ -10,6 +10,7 @@ from manage_room.utils import get_room_or_error, catch_client_error
 from .models import ChatAndReply, Notice, Poll
 from .setting import NOTIFY_USERS_NOTICE_POLL_CHAT
 
+"""
 @channel_session_user_from_http
 def ws_connect(message):
     message.reply_channel.send({'accept': True})
@@ -43,6 +44,7 @@ def talk_join(message):
             "ws": "talk",
         }),
     })
+"""
 
 @channel_session_user
 @catch_client_error
@@ -86,6 +88,7 @@ def new_notice(message):
     })
     """
 
+"""
 @channel_session_user
 @catch_client_error
 def talk_leave(message):
@@ -103,7 +106,6 @@ def talk_leave(message):
         }),
     })
 
-"""
 # Future..
 
 @channel_session_user

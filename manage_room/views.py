@@ -27,7 +27,7 @@ def RoomCreateView(request):
             if Room.objects.filter(label=share_link).exists():
                 continue
             url += share_link
-            room = Room.objects.create(admin_user=request.user, link=url, label=share_link)
+            room = Room.objects.create(title=share_link, admin_user=request.user, link=url, label=share_link)
     return HttpResponseRedirect(url)
 
 # delete a room
