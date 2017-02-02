@@ -59,7 +59,7 @@ class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     hash_value = models.CharField(max_length=10, default=_createHash, unique=True)
-    assist_hash = models.CharField(max_length=10, default=0)
+    assist_hash = models.CharField(max_length=10, default=0)    # saving existing hash (is_reply=True)
     time = models.DateTimeField(default=timezone.now)
     is_reply = models.BooleanField(default=False)
     description = models.TextField()
