@@ -59,6 +59,7 @@ class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     hash_value = models.CharField(max_length=10, default=_createHash, unique=True)
+    assist_hash = models.CharField(max_length=10, default=0)
     time = models.DateTimeField(default=timezone.now)
     is_reply = models.BooleanField(default=False)
     description = models.TextField()
@@ -75,12 +76,12 @@ class ChatAndReply(models.Model):
         return Group(str(self.room.label))
     
     # is_reply = true / return original hash value
-    def send_message_reply(self, message, original_hash, label):
+    def send_message_reply(self, message, existing_hash, label):
         """
         Called to send a message to the room on behalf of a user.
         """
         # time format ; ex) 2017-01-31 16:21:37
-        final_msg = {'chat': label, 'description': message, 'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")), 'is_reply': self.is_reply, 'hash_value': original_hash[:20]}
+        final_msg = {'chat': label, 'description': message, 'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")), 'is_reply': self.is_reply, 'hash_value': existing_hash[:10]}
 
         # Send out the message to everyone in the room
         self.websocket_group.send(

@@ -53,7 +53,7 @@ def new_chat(message):
     
     if NOTIFY_USERS_NOTICE_POLL_CHAT:
         if message["is_reply"]:
-            chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"])
+            chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"], assist_hash=message["hash"])
             chat.send_message_reply(message["description"], message["hash"], room.label)
             #chat.send_message(message["description"], message["hash"])
         else:
