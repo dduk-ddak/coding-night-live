@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 from haikunator import Haikunator
 
-from .models import Room
+from .models import Room, Slide
 from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 
 # Create your views here.
@@ -29,6 +29,8 @@ def RoomCreateView(request):
                 continue
             url += share_link
             room = Room.objects.create(title=share_link, admin_user=request.user, link=url, label=share_link)
+    Slide.objects.create(title="header@slide")  # Create header slide
+
     return HttpResponseRedirect(url)
 
 # delete a room

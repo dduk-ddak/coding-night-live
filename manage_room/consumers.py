@@ -73,8 +73,8 @@ def room_title_rename(message):
 def new_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    last_slide = Slide.object.get(next_id=0)
-    slide = Slide.object.create(room=room)
+    last_slide = Slide.objects.get(next_id=0)
+    slide = Slide.objects.create(room=room)
     last_slide.next_id = slide.id
     last_slide.save()
     #more..
@@ -84,8 +84,8 @@ def new_slide(message):
 def del_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    delete_slide = Slide.object.filter(room=room, now_id=message["id"])
-    slide = Slide.object.filter(room=rom, next_id=message["id"])
+    delete_slide = Slide.objects.filter(room=room, now_id=message["id"])
+    slide = Slide.objects.filter(room=rom, next_id=message["id"])
     slide.next_id = delete_slide.next_id
     
     delete_slide.delete()
@@ -110,7 +110,7 @@ def change_slide_order(message):
     b_slide = Slide.objects.filter(room=room, now_id=message["next_id"])
 
     temp = b_slide.next_id
-    c_slide = Slide.object.filter(room=room, next_id=message["next_id"])
+    c_slide = Slide.objects.filter(room=room, next_id=message["next_id"])
 
     if c_slide:
         c_slide.next_id = a_slide.id
@@ -136,10 +136,16 @@ def current_slide(message):
 def rename_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    slide = Slide.object.fliter(room=room, now_id=message["id"])
+    slide = Slide.objects.fliter(room=room, now_id=message["id"])
     slide.title = message["title"]
     slide.save()
 
+# header slide title is "header@slide"
 def get_slide_list(message):
     room = get_room_or_error(message["room"])
-
+    header = Slide.objects.get(title="header@slide")
+    title_list = []
+    while header.next_id != 0:
+        title_list.append(str(header.title))
+        header = Slide.objects.get(id=header.next_id)
+    print(title_list)
