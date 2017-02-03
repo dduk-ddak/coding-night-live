@@ -73,7 +73,10 @@ def room_title_rename(message):
 def new_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
+    last_slide = Slide.object.get(next_id=0)
     slide = Slide.object.create(room=room)
+    last_slide.next_id = slide.id
+    last_slide.save()
     #more..
 
 @channel_session_user
@@ -136,3 +139,7 @@ def rename_slide(message):
     slide = Slide.object.fliter(room=room, now_id=message["id"])
     slide.title = message["title"]
     slide.save()
+
+def get_slide_list(message):
+    room = get_room_or_error(message["room"])
+

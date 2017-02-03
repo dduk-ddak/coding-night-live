@@ -44,14 +44,6 @@ def RoomListView(request):
     rooms = Room.objects.filter(admin_user=request.user).order_by('time')
     return render(request, 'list.html', {'rooms': rooms})
 
-"""
-def RedirectRoomView(exception, request):
-    #room = Room.objects.get(label=)
-    #return render(request, 'room.html', {'room': room})
-    return render(request, 'room.html', {"title":"title is good"})
-"""
-
-
 class RedirectRoomView(TemplateView):
     template_name='room.html'
     
