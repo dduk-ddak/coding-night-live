@@ -73,11 +73,10 @@ def room_title_rename(message):
 def new_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    last_slide = Slide.objects.get(next_id=0)
+    last_slide = Slide.objects.get(next_id=0, room=room)
     slide = Slide.objects.create(room=room)
-    last_slide.next_id = slide.id
+    last_slide.next_id = slide.now_id
     last_slide.save()
-    #more..
 
 @channel_session_user
 @catch_client_error
@@ -85,7 +84,7 @@ def del_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
     delete_slide = Slide.objects.filter(room=room, now_id=message["id"])
-    slide = Slide.objects.filter(room=rom, next_id=message["id"])
+    slide = Slide.objects.filter(room=room, next_id=message["id"])
     slide.next_id = delete_slide.next_id
     
     delete_slide.delete()
@@ -143,9 +142,10 @@ def rename_slide(message):
 # header slide title is "header@slide"
 def get_slide_list(message):
     room = get_room_or_error(message["room"])
-    header = Slide.objects.get(title="header@slide")
+    header = Slide.objects.get(title="header@slide", room=room)
     title_list = []
+    header = Slide.objects.get(now_id=header.next_id)
     while header.next_id != 0:
         title_list.append(str(header.title))
-        header = Slide.objects.get(id=header.next_id)
+        header = Slide.objects.get(now_id=header.next_id)
     print(title_list)

@@ -69,6 +69,35 @@ $(function () {
     }));
     */
   });
+
+  /* add slide test
+  $("#addSlide").click(function () {
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);
+    
+    console.log('add clicked');
+    
+    socket.send(JSON.stringify({
+      "command": "new_slide",
+      "room": room_label
+    }));
+    newSlide();
+  });
+  */
+  
+  /* get list of slide test
+  $("#getList").click(function () {
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);
+    
+    console.log('getting list clicked');
+    
+    socket.send(JSON.stringify({
+      "command": "get_slide_list",
+      "room": room_label
+    }));
+  });
+  */
   
   // Helpful debugging
   socket.onopen = function () {

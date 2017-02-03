@@ -174,7 +174,7 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-light bg-faded" style="background-color:#151515; font-size:1.5em;">
-      <a class="btn drawer-toggle">
+      <a class="btn drawer-toggle" id="getList">
         <i class="fa fa-bars" aria-hidden="true" style="color:white"></i>
       </a>
 
@@ -203,7 +203,8 @@
       </ul>
 
       <!-- Drawer: "Add" button -->
-      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      <!--<button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>-->
+      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" id="addSlide"><i class="fa fa-plus" aria-hidden="true"></i></button>
     </nav>
 
     <!-- Contents -->
@@ -549,7 +550,7 @@
       // debug: get new_idx from server
       var new_idx = 10;
 
-      $('#slide_list').append('<li id="slide_' + new_idx.toString() + '" class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx.toString() + ')">unnamed slide</li>');
+      $('#slide_list').append('<li id="slide_' + new_idx.toString() + '" class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx.toString() + ')">Unnamed slide</li>');
       clickSlide(new_idx);
     }
 
@@ -1118,6 +1119,7 @@
 
     </script>
 
+    <!-- get list of notice, chat and reply -->
     {% for notice in notices %}
     <script type="text/javascript">
       newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
