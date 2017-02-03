@@ -247,7 +247,7 @@
 
               <!-- Right Div: Notice: Notice title -->
               <h4 class="card-title"><i class="fa fa-podcast" aria-hidden="true"></i> Notice</h4>
-              
+
               <!-- Right Div: Noice: Only show 1 notice -->
               <div id="shown-notice">
               </div>
@@ -372,7 +372,7 @@
       // if there is something inside text, change slide title
       if($('h1').length !== 0) {
         var user_defined_title = $('h1')[0].textContent;
-        user_defined_title = user_defined_title.match(/^[\s\S]{1,30}/g)[0];
+        //YJuser_defined_title = user_defined_title.match(/^[\s\S]{1,30}/g)[0];
         if (user_defined_title.length !== 0) {
           slide_title = user_defined_title;
           slide_title_color = 'black';
@@ -639,7 +639,7 @@
     var valid_syntax = {
       help: "@help",
       notice: "@notice [<args>]",
-      poll: "@poll [-t <title>] <options/...>",
+      poll: "@poll [-t <title>]d <options/...>",
     };
 
     var valid_syntax_regex_pattern = [
@@ -749,13 +749,19 @@
           // input command is '@poll '
           matches = matches.concat([{label: valid_syntax.poll, value: text}]);
           return matches;
+        } else {
+          command = command.trim();
         }
+
         if(!!command.match(/^-(?=[^t])/g)) {
           // check for invalid option
           return matches;
         }
         for(var i=0; i<poll_opt_regex.length; i+=1) {
           // title option is given before "","",...
+          // if title given, sets title_given to true
+          // console.log("[debug] checking for early title option");
+
           if(!!command.match(poll_opt_regex[i])) {
             title_given = true;
             command = command.replace(poll_opt_regex[i], "");
@@ -769,6 +775,7 @@
           }
         }
 
+        // console.log("[debug] checking for quotation choice");
         if(command[0] !== '"' && command[0] !== "'") {
           return matches;
         } else {
@@ -776,6 +783,8 @@
         }
 
         if (title_given === true) {
+          // console.log("[debug] retrieving early title");
+
           var finished = false;
           for(var i=1; i<command.length; i+=1) {
             if(command[i] === quotation_choice && command[i-1] !== "\\") {
@@ -799,9 +808,147 @@
             text += quotation_choice+ command + quotation_choice + " ";
             matches = matches.concat([{label: valid_syntax.poll, value: text}]);
             return matches;
+          } else if(finished === true) {
+            // user has given the title, and there is more to come...
+            text += quotation_choice + title + quotation_choice + " ";
           }
         } // end of if (title_given === true)
+
+        // remove leading white spaces
+        command = command.replace(/^\s*/g, "");
+        if(command[0] !== quotation_choice)
+          return matches;
+
+        var option = "", finished = false;
+        do {
+          option = "", finished = false;
+          for(var i=1; i<command.length; i+=1) {
+            if(command[i] === quotation_choice && command[i-1] !== "\\") {
+              // user has finished typing title
+              option = command.substring(1, i);
+              option = option.trim();
+              if(option.length !== 0) options.push(option);
+              command = command.substring(i+1);
+              finished = true; break;
+            }
+          }
+          if(command.length === 0) {
+            // this option marks the end of user input
+            for(var i=0; i<options.length; i+=1) {
+              text += quotation_choice + options[i] + quotation_choice;
+              if(i !== options.length-1) text += ', ';
+              else if (i !== 0) text += ' ';
+            }
+            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+            return matches;
+          } else if(finished === false) {
+            // user is in the middle of typing the option
+            // delete the leading quotation mark and trim the white spaces
+            command = command.substring(1);
+            command = command.trim();
+            options.push(command);
+            for(var i=0; i<options.length; i+=1) {
+              text += quotation_choice + options[i] + quotation_choice;
+              if(i !== options.length-1) text += ', ';
+            }
+            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+            return matches;
+          } else if(finished === true) {
+            // user has given the option, and there is more to come...
+            command = command.replace(/^\s*/g, "");
+            if(command[0] === ',') {
+              command = command.replace(/^,\s*/g, "");
+              if(command.length !== 0) {
+                if(command[0] !== quotation_choice)
+                  return matches;
+              } else {
+                for(var i=0; i<options.length; i+=1) {
+                  text += quotation_choice + options[i] + quotation_choice;
+                  text += ', ';
+                } text += quotation_choice + quotation_choice;
+                matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+                return matches;
+              }
+            } else if (title_given === false && command[0] === '-') {
+              break;
+            } else {
+              return matches;
+            }
+          }
+        } while(true);
+
+        // if you are here, options are taken care of,
+        // and user has not given the title option yet.
+        // command should start with "-"
+        if(!!command.match(/^-(?=[^t])/g)) {
+          // check for invalid option
+          return matches;
+        }
+        title = "";
+        for(var i=0; i<poll_opt_regex.length; i+=1) {
+          // title option is given after "","",...
+
+          if(!!command.match(poll_opt_regex[i])) {
+            command = command.replace(poll_opt_regex[i], "");
+            text += "-t ";
+            if(command.length === 0) {
+              // input command is '@poll -t'
+              text += (quotation_choice+quotation_choice+' ');
+              for(var i=0; i<options.length; i+=1) {
+                text += quotation_choice + options[i] + quotation_choice;
+                if(i !== options.length-1) text += ', ';
+              }
+              matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+              return matches;
+            } else break;
+          }
+        }
+        if(command[0] !== quotation_choice)
+          return matches;
+
+        var finished = false;
+        for(var i=1; i<command.length; i+=1) {
+          if(command[i] === quotation_choice && command[i-1] !== "\\") {
+            // user has finished typing title
+            title = command.substring(1, i);
+            title = title.trim();
+            command = command.substring(i+1);
+            finished = true; break;
+          }
+        }
+        if(command.length === 0) {
+          // user has given only the title
+          text += quotation_choice + title + quotation_choice + " ";
+        } else if(finished === false) {
+          // user is in the middle of typing the title
+          // delete the leading quotation mark and trim the white spaces
+          command = command.substring(1);
+          command = command.trim();
+          text += quotation_choice+ command + quotation_choice + " ";
+          for(var i=0; i<options.length; i+=1) {
+            text += quotation_choice + options[i] + quotation_choice;
+            if(i !== options.length-1) text += ', ';
+          }
+          matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+          return matches;
+        } else if(finished === true) {
+          // user has given the title, and there is more to come...
+          text += quotation_choice + title + quotation_choice + " ";
+        }
+        // title and options all taken care of
+        // there should be no remaining characters in command
+        if(command.length !== 0)
+          return matches;
       } // if(len <= upper_bound) else
+      // for debugging: print title, options
+      // console.log('title == ', title);
+      // console.log('options == ', options);
+      for(var i=0; i<options.length; i+=1) {
+        text += quotation_choice + options[i] + quotation_choice;
+        if(i !== options.length-1) text += ', ';
+      }
+      matches = matches.concat([{label: valid_syntax.poll, value: text}]);
+      return matches;
     }
 
     $('#chat_form').submit(function (e) {
