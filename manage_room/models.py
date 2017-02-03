@@ -56,10 +56,11 @@ class Room(models.Model):
 class Slide(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     title = models.CharField(max_length=35, default="(empty)")
-    md_blob = models.TextField()
+    md_blob = models.TextField(default="")
     #id linked list
     now_id = models.AutoField(primary_key=True)     #pk
-    next_id = models.PositiveSmallIntegerField(unique=True) #if 0: last element
+    next_id = models.PositiveSmallIntegerField(default=0) #if 0: last element
+    #next_id = models.PositiveSmallIntegerField(unique=True) #if 0: last element
 
     def __str__(self):
         return self.now_id

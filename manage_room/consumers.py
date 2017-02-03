@@ -4,48 +4,11 @@ import json
 from channels import Channel, Group
 from channels.auth import channel_session_user_from_http, channel_session_user
 
-from .models import Room
+from .models import Room, Slide
 
 from .setting import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
 from .utils import get_room_or_error, catch_client_error
 from .exceptions import ClientError
-
-"""
-# This decorator copies the user from the HTTP session (only available in
-# websocket.connect or http.request messages) to the channel session (available
-# in all consumers with the same reply_channel, so all three here)
-@channel_session_user_from_http
-def ws_connect(message):
-    message.reply_channel.send({'accept': True})
-    # Initialise their session
-    message.channel_session['room'] = []
-
-# Unpacks the JSON in the received WebSocket frame and puts it onto a channel
-# of its own with a few attributes extra so we can route it
-# This doesn't need @channel_session_user as the next consumer will have that,
-# and we preserve message.reply_channel (which that's based on)
-def ws_receive(message):
-    # All WebSocket frames have either a text or binary payload; we decode the
-    # text part here assuming it's JSON.
-    # You could easily build up a basic framework that did this encoding/decoding
-    # for you as well as handling common errors.
-    payload = json.loads(message['text'])
-    payload['reply_channel'] = message.content['reply_channel']
-    Channel("room.receive").send(payload)
-
-
-@channel_session_user
-def ws_disconnect(message):
-    # Unsubscribe from any connected rooms
-    for room_label in message.channel_session.get("room", set()):
-        try:
-            room = Room.objects.get(label=room_label)
-            # Removes us from the room's send group. If this doesn't get run,
-            # we'll get removed once our first reply message expires.
-            room.websocket_group.discard(message.reply_channel)
-        except Room.DoesNotExist:
-            pass
-"""
 
 ### Chat channel handling ###
 
@@ -104,3 +67,72 @@ def room_title_rename(message):
     room = get_room_or_error(message["room"])
 
     room.send_title(message["title"])
+
+@channel_session_user
+@catch_client_error
+def new_slide(message):
+    #need to add admin_user authentication
+    room = get_room_or_error(message["room"])
+    slide = Slide.object.create(room=room)
+    #more..
+
+@channel_session_user
+@catch_client_error
+def del_slide(message):
+    #need to add admin_user authentication
+    room = get_room_or_error(message["room"])
+    delete_slide = Slide.object.filter(room=room, now_id=message["id"])
+    slide = Slide.object.filter(room=rom, next_id=message["id"])
+    slide.next_id = delete_slide.next_id
+    
+    delete_slide.delete()
+    slide.save()
+
+"""
+@channel_session_user
+@catch_client_error
+def change_slide(message):
+    #need to add admin_user authentication
+    room = get_room_or_error(message["room"])
+    change_slide = Slide.objects.filter(room=room, now_id=message["id"])
+    #more..
+"""
+
+@channel_session_user
+@catch_client_error
+def change_slide_order(message):
+    #need to add admin_user authentication
+    room = get_room_or_error(message["room"])
+    a_slide = Slide.objects.filter(room=room, now_id=message["id"])
+    b_slide = Slide.objects.filter(room=room, now_id=message["next_id"])
+
+    temp = b_slide.next_id
+    c_slide = Slide.object.filter(room=room, next_id=message["next_id"])
+
+    if c_slide:
+        c_slide.next_id = a_slide.id
+        b_slide.next_id = a_slide.next_id
+        a_slide.next_id = temp
+        c_slide.save()
+    else:
+        b_slide.next_id = a_slide.next_id
+        a_slide.next_id = temp
+    
+    a_slide.save()
+    b_slide.save()
+
+"""
+@channel_session_user
+@catch_client_error
+def current_slide(message):
+    #need to add admin_user authentication
+""" 
+
+@channel_session_user
+@catch_client_error
+def rename_slide(message):
+    #need to add admin_user authentication
+    room = get_room_or_error(message["room"])
+    slide = Slide.object.fliter(room=room, now_id=message["id"])
+    slide.title = message["title"]
+    slide.save()
