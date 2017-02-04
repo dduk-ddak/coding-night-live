@@ -6,7 +6,7 @@ console.log("Connecting to " + ws_path);
 var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
 
 // Helpful debugging
-var connection = {
+var cnl_connection = {
   // Socket opening
   socket:onopen = function () {
     console.log("connected websocket");
@@ -34,7 +34,7 @@ var connection = {
   }
 }
 
-var communicate = {
+var cnl_communicate = {
   socket:onmessage = function (message) {
     // Decode JSON
     console.log("[Message] " + message.data);
@@ -86,7 +86,7 @@ var communicate = {
   },
 }
 
-var send = {
+var cnl_send = {
   newSlide: function() {
     room_label = window.location.pathname;
     room_label = room_label.substring(1, room_label.length-1);
