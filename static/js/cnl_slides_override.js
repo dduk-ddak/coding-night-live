@@ -6,6 +6,17 @@ cnl_slides.setSlideText = function(str) {
     cnl_globals.editor.codemirror.doc.setValue(str);
     cnl_globals.editor.codemirror.doc.setCursor(curr_cursor);
   }
+  // this user updated
+  else {
+    var diff = cnl_globals.dmp.diff_main(this.curr_slide_text, str, false);
+    var patches = cnl_globals.dmp.patch_make(this.curr_slide_text, diff);
+    var patch_text = cnl_globals.dmp.patch_toText(patches);
+    var pre_hash = cnl_globals.hash(this.curr_slide_text);
+    var curr_hash = cnl_globals.hash(str);
+    // debug: send patch_text
+    console.log(patch_text);
+    // debug end
+  }
 
   this.curr_slide_text = str;
   var out = document.getElementById("out");
@@ -32,7 +43,6 @@ cnl_slides.setNewSlide = function(data) {
   $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.setSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   cnl_slides.setSlideIndex(new_idx);
 }
-
 
 // delete slide with index "idx", then click on adjacent slide
 cnl_slides.delSlide = function(idx) {
