@@ -165,6 +165,7 @@ def get_slide_list(message):
     title_list = []
     header = Slide.objects.get(now_id=header.next_id)
     while header.next_id != 0:
-        title_list.append(str(header.title))
+        value = (str(header.title), str(header.now_id))
+        title_list.append(value)
         header = Slide.objects.get(now_id=header.next_id)
     print(title_list)
