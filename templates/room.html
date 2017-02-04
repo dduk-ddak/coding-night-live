@@ -129,7 +129,7 @@
             <h4 class="modal-title">Are you sure to delete this slide?</h4>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="delSlide()">Delete slide</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cnl_slides.delSlide()">Delete slide</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -146,7 +146,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="renameSlide()">Save</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cnl_slides.renameSlide()">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -202,8 +202,7 @@
       </ul>
 
       <!-- Drawer: "Add" button -->
-      <!--<button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>-->
-      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" id="addSlide"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_slides.getNewSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
     </nav>
 
     <!-- Contents -->
@@ -330,22 +329,16 @@
       $('#slide_list').sortable({
         update: function(event, ui) {
           var curr_slide = ui.item;
-          var prev_slide = ui.item.prev();
           var next_slide = ui.item.next();
 
           var curr_slide_idx = parseInt(curr_slide.attr('id').split('_')[1]);
-          var prev_slide_idx = 0;
           var next_slide_idx = 0;
 
-          if(prev_slide.length === 1 && typeof prev_slide.attr('id') != 'undefined' && prev_slide.attr('id').substring(0,6) === 'slide_') {
-            prev_slide_idx = parseInt(prev_slide.attr('id').split('_')[1]);
-          }
           if(next_slide.length === 1 && typeof next_slide.attr('id') != 'undefined' && next_slide.attr('id').substring(0,6) === 'slide_') {
             next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
           }
 
-          // debug: send server curr,prev,next slide idx
-          console.log(curr_slide_idx + ' ' + prev_slide_idx + ' ' + next_slide_idx);
+          cnl_slides.changeSlideOrder(curr_slide_idx, next_slide_idx);
         }
       });
 
@@ -360,24 +353,23 @@
       });
       $('#room_name_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
 
+      // chat list size init
       chatListResize();
 
-      /*
-      // debug: get lists of slides and data of each slide
-      // note: how to find out slides' titles?
-      var is_empty_slide = true;
+      // slide list init
       var first_slide_idx = 0;
+      var slide_list = $('#slide_list').children();
 
-      if(is_empty_slide) {
-        newSlide();
+      // if it is empty room
+      if(slide_list.length === 1) {
+        first_slide_idx = cnl_slides.getNewSlide();
       }
       else {
-        // debug: find out from server's response
-        first_slide_idx = 32;
-
-        clickSlide(first_slide_idx);
+        first_slide_idx = parseInt(slide_list[1].attr('id').split('_')[1]);
       }
-      */
+
+      // markdown view init
+      cnl_slides.setSlideIndex(first_slide_idx);
     });
 
     // notice show/hide
@@ -427,67 +419,6 @@
       console.log(ret_idx);
     }
 
-    var curr_slide_idx = 0;
-    function currSlideIndex(idx) {
-      if(typeof idx != 'undefined') {
-        curr_slide_idx = idx;
-      }
-      return curr_slide_idx;
-    }
-
-    function clickSlide(idx) {
-      if(idx === currSlideIndex()) {
-        return;
-      }
-
-      // debug: do something with idx and get data
-      console.log('clickSlide');
-      console.log(idx);
-      var data = '# this is title with idx ' + idx.toString() + '\n## and this is content!\n### this too!';
-      getSlideText(data);
-
-      var preclicked_slide = $('#slide_' + currSlideIndex().toString());
-      if(preclicked_slide.length !== 0) {
-        preclicked_slide.removeClass('active');
-      }
-      currSlideIndex(idx);
-      $('#slide_' + idx.toString()).addClass('active');
-
-      $('.drawer').drawer('close');
-    }
-
-    var slide_text = '';
-    function getSlideText(str) {
-      if(typeof str != 'undefined') {
-        slide_text = str;
-        cnl_globals.editor.value(str);
-      }
-      return slide_text;
-    }
-
-    function newSlide() {
-      // debug: get new_idx from server
-      var new_idx = 10;
-
-      $('#slide_list').append('<li id="slide_' + new_idx.toString() + '" class="list-group-item drawer-menu-item" onclick="clickSlide(' + new_idx.toString() + ')">Unnamed slide</li>');
-      clickSlide(new_idx);
-    }
-
-    // this function only deal with **DRAWER & TITLE**
-    function renameSlide(idx, name) {
-      // called from modal
-      if(typeof idx == 'undefined') {
-        var idx = currSlideIndex();
-        var name = $('#slide_name_input').val();
-        if(!name) name = 'unnamed slide'; // default value
-      }
-
-      $('#slide_' + idx).text(name);
-      if(idx === currSlideIndex()) {
-        $('#markdown_title').text(name);
-      }
-    }
-
     function renameRoom(name) {
       // called from modal
       //name = document.getElementById("room_name_input").value;
@@ -499,58 +430,6 @@
       $('#room_title').text(name);
     }
 
-    // this function only deal with **MDE**
-    function changeSlide(idx, patch, remote_pre_hash, remote_curr_hash) {
-      if(idx === currSlideIndex()) {
-        var local_pre_text = getSlideText();
-        var local_pre_hash = cnl_globals.hash(local_pre_text);
-
-        // Case 1: No update
-        if(local_pre_hash === remote_curr_hash) return;
-
-        // Case 2: Normal update
-        else if(local_pre_hash === remote_pre_hash) {
-          var patches = cnl_globals.dmp.patch_fromText(patch);
-          var local_curr_text = cnl_globals.dmp.patch_apply(patches, pre_text);
-          getSlideText(local_curr_text);
-        }
-
-        // Case 3: Late update
-        else {
-          // debug: send local_pre_hash
-          // this will call changeSlide again
-        }
-      }
-    }
-
-    function delSlide(idx) {
-      // called from modal
-      if(typeof idx == 'undefined') {
-        idx = currSlideIndex();
-      }
-
-      // debug: remove idx from server
-      console.log('deleted ' + idx);
-
-      var curr_slide = $('#slide_' + idx);
-      if(idx === currSlideIndex()) {
-        // No more slides
-        if($('li.drawer-menu-item').length === 1) {
-          newSlide();
-        }
-
-        var next_slide = curr_slide.next();
-        if(next_slide.length === 0) {
-          next_slide = curr_slide.prev();
-        }
-        clickSlide(parseInt(next_slide.attr('id').split('_')[1]));
-      }
-      curr_slide.remove();
-    }
-
-    function changeSlideOrder(idx, next) {
-      $('#slide_' + idx).detach().insertAfter('#slide_' + next);
-    }
 
     $(window).resize(function() {
       chatListResize();
@@ -1038,9 +917,11 @@
 
     </script>
     <script src="{% static "js/cnl_globals.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/cnl_slides.js" %}" type="text/javascript"></script>
 
     <!-- if admin -->
     <script src="{% static "js/cnl_globals_override.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/cnl_slides_override.js" %}" type="text/javascript"></script>
     <!-- endif -->
 
     <!-- get list of notice, chat and reply -->
