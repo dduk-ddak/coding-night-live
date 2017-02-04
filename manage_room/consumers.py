@@ -98,7 +98,7 @@ def del_slide(message):
 @catch_client_error
 def get_slide(message):
     room = get_room_or_error(message["room"])
-    slide = Slide.objects.filter(room=room, now_id=message["id"])
+    slide = Slide.objects.get(room=room, now_id=message["id"])
 
     message.reply_channel.send({
         "text": json.dumps({

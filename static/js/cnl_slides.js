@@ -8,13 +8,14 @@ var cnl_slides = {
       return;
     }
 
-    room_label = window.location.pathname;
-    room_label = room_label.substring(1, room_label.length-1);
+    //room_label = window.location.pathname;
+    //room_label = room_label.substring(1, room_label.length-1);
     
     console.log('view slide clicked');
     
     socket.send(JSON.stringify({
       "command": "get_slide",
+      "room": room_label,
       "id": idx
     }));
   },
