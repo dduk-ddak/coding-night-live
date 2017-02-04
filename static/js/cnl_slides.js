@@ -39,7 +39,7 @@ var cnl_slides = {
     $('blockquote').addClass('blockquote');
   },
 
-  // change slide's content with patches
+  // callback for change slide's content with patches
   changeSlideText: function(idx, patch, remote_pre_hash, remote_curr_hash) {
     if(idx === curr_slide_idx) {
       var local_pre_text = this.curr_slide_text;
@@ -70,7 +70,7 @@ var cnl_slides = {
     $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.setSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   },
 
-  // change order of slide with index "idx" to previous of slide with index "next"
+  // callback for change order of slide with index "idx" to previous of slide with index "next"
   changeSlideOrder: function(idx, next) {
     if(next !== 0) {
       $('#slide_' + idx).detach().insertBefore('#slide_' + next);
@@ -81,7 +81,7 @@ var cnl_slides = {
     }
   },
 
-  // renaming slide
+  // callback for renaming slide
   renameSlide: function(idx, name) {
     if(name != $('#slide_' + idx).text()) {
       $('#slide_' + idx).text(name);
