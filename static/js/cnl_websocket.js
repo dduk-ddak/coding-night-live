@@ -63,7 +63,7 @@ var cnl_communicate = $(function () {
       // New notice
       newNotice(data);
     } else if(data.new_slide) {
-      cnl_slides.getNewSlide(data);
+      cnl_slides.setNewSlide(data);
       //newSlide()
     } else if(data.msg_type) {
       // msg_types are defined in manage_room/setting.py
@@ -91,7 +91,7 @@ var cnl_send = {
     room_label = window.location.pathname;
     room_label = room_label.substring(1, room_label.length-1);
     
-    //console.log('add clicked');
+    console.log('add clicked');
     
     socket.send(JSON.stringify({
       "command": "new_slide",

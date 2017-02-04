@@ -13,8 +13,20 @@ cnl_slides.setSlideText = function(str) {
   $('blockquote').addClass('blockquote');
 }
 
+cnl_slides.getNewSlide = function() {
+  room_label = window.location.pathname;
+  room_label = room_label.substring(1, room_label.length-1);
+
+  console.log('add clicked');
+  
+  socket.send(JSON.stringify({
+    "command": "new_slide",
+    "room": room_label
+  }));
+}
+
 // get new slide from server
-cnl_slides.getNewSlide = function(data) {
+cnl_slides.setNewSlide = function(data) {
   // debug: get new_idx from server
   var new_idx = data;
   //var new_idx = Math.floor(Math.random() * (1000));

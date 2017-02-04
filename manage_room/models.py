@@ -64,3 +64,18 @@ class Slide(models.Model):
 
     def __str__(self):
         return str(self.now_id)
+    
+    @property
+    def websocket_group(self):
+        """
+        Returns the Channels Group that sockets should subscribe to to get sent
+        messages as they are generated.
+        """
+        return Group(str(self.idx))
+    
+    def send_idx(self):
+        final_msg = {'new_slide': str(self.now_id),}
+
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )
