@@ -10,10 +10,25 @@ var cnl_connection = $(function () {
   // Socket opening
   socket.onopen = function () {
     console.log("connected websocket");
-    
+
+    // slide list init
+    var first_slide_idx = 0;
+    var slide_list = $('#slide_list').children();
+
+    // if it is empty room
+    if(slide_list.length === 1) {
+      first_slide_idx = cnl_slides.getNewSlide();
+    }
+    else {
+      first_slide_idx = parseInt(slide_list[1].attr('id').split('_')[1]);
+    }
+
+    // markdown view init
+    cnl_slides.setSlideIndex(first_slide_idx);
+
     room_label = window.location.pathname;
     room_label = room_label.substring(1, room_label.length-1);  // Get label
-    
+
     socket.send(JSON.stringify({
       "command": "join",
       "room": room_label
