@@ -57,8 +57,15 @@ class RedirectRoomView(TemplateView):
         notices = get_notice_list(label)
         chat_and_reply = get_chat_list(label)   # [0]: chat / [1] : reply
         
+        title_list = []
+        header = Slide.objects.get(title="header@slide", room=room)
+        header = Slide.objects.get(now_id=header.next_id)
+        while header.next_id != 0:
+            value = (str(header.title), str(header.now_id))
+            title_list.append(value)
+            header = Slide.objects.get(now_id=header.next_id)
         # future ..
         # polls = get_poll_list(label)
         # return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "polls": polls}
         
-        return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1]}
+        return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "slides": title_list}

@@ -157,15 +157,3 @@ def rename_slide(message):
     slide = Slide.objects.fliter(room=room, now_id=message["id"])
     slide.title = message["title"]
     slide.save()
-
-# header slide title is "header@slide"
-def get_slide_list(message):
-    room = get_room_or_error(message["room"])
-    header = Slide.objects.get(title="header@slide", room=room)
-    title_list = []
-    header = Slide.objects.get(now_id=header.next_id)
-    while header.next_id != 0:
-        value = (str(header.title), str(header.now_id))
-        title_list.append(value)
-        header = Slide.objects.get(now_id=header.next_id)
-    print(title_list)
