@@ -367,29 +367,29 @@
       out.innerHTML = md.render(e.getValue());
       $('blockquote').addClass('blockquote');
 
-      var slide_title = '(empty)';
-      var slide_title_color = '#D8D8D8';
-
-      // if there is something inside text, change slide title
-      if($('h1').length !== 0) {
-        var user_defined_title = $('h1')[0].textContent;
-        //YJuser_defined_title = user_defined_title.match(/^[\s\S]{1,30}/g)[0];
-        if (user_defined_title.length !== 0) {
-          slide_title = user_defined_title;
-          slide_title_color = 'black';
-
-          // remove h1 at Left Div: rendered output
-          $('h1').contents()[0].remove();
-
-          // Changes title inside drawer: not dealt here!
-          // $('#slide_' + currSlideIndex()).text(slide_title);
-
-          // Changes Left Div: Slide title
-          var title = $('h4#markdown_title.card-title');
-          title.text(slide_title);
-          title.css({'color': slide_title_color});
-        }
-      }
+      // var slide_title = '(empty)';
+      // var slide_title_color = '#D8D8D8';
+      //
+      // // if there is something inside text, change slide title
+      // if($('h1').length !== 0) {
+      //   var user_defined_title = $('h1')[0].textContent;
+      //   user_defined_title = user_defined_title.match(/^[\s\S]{1,30}/g)[0];
+      //   if (user_defined_title.length !== 0) {
+      //     slide_title = user_defined_title;
+      //     slide_title_color = 'black';
+      //
+      //     // remove h1 at Left Div: rendered output
+      //     $('h1').contents()[0].remove();
+      //
+      //     // Changes title inside drawer: not dealt here!
+      //     $('#slide_' + currSlideIndex()).text(slide_title);
+      //
+      //     // Changes Left Div: Slide title
+      //     var title = $('h4#markdown_title.card-title');
+      //     title.text(slide_title);
+      //     title.css({'color': slide_title_color});
+      //   }
+      // }
     });
 
     // diff_match_patch init
