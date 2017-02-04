@@ -4,6 +4,8 @@ var ws_path = ws_scheme + "://" + window.location.host + "/room/";
 console.log("Connecting to " + ws_path);
 
 var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
+var room_label = window.location.pathname;
+room_label = room_label.substring(1, room_label.length-1);  // Get label
 
 // Helpful debugging
 var cnl_connection = $(function () {
@@ -59,13 +61,16 @@ var cnl_communicate = $(function () {
     } else if (data.chat) {
       // New chat
       newChat(data);
-    } else if(data.notice) {
+    } else if (data.notice) {
       // New notice
       newNotice(data);
-    } else if(data.new_slide) {
+    } else if (data.new_slide) {
       cnl_slides.setNewSlide(data.new_slide);
       //newSlide()
-    } else if(data.msg_type) {
+    } else if (data.get_slide) {
+      cnl_slides.setSlideIndex(data);
+      //data.md_blob
+    } else if (data.msg_type) {
       // msg_types are defined in manage_room/setting.py
       switch (data.msg_type) {
         case 4:
@@ -87,14 +92,23 @@ var cnl_communicate = $(function () {
 });
 
 var cnl_send = {
-  newSlide: function() {
-    room_label = window.location.pathname;
-    room_label = room_label.substring(1, room_label.length-1);
-    
+  newSlide: function () {
     console.log('add clicked');
     
     socket.send(JSON.stringify({
       "command": "new_slide",
+      "room": room_label
+    }));
+  },
+
+  renameRoomTitle: function () {
+    console.log('rename room title');
+
+    name = "gg"
+
+    socket.send(JSON.stringify({
+      "command": "rename_room_title",
+      "title": name,
       "room": room_label
     }));
   }

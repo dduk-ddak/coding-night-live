@@ -40,7 +40,7 @@ cnl_slides.getNewSlide = function() {
 // overriden version has setSlideIndex() (if new slide is set, automatically send it to it)
 cnl_slides.setNewSlide = function(data) {
   var new_idx = data;
-  $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.setSlideIndex(' + new_idx + ')">Unnamed slide</li>');
+  $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   cnl_slides.setSlideIndex(new_idx);
 }
 

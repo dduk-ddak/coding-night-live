@@ -94,6 +94,21 @@ def del_slide(message):
     delete_slide.delete()
     slide.save()
 
+@channel_session_user
+@catch_client_error
+def get_slide(message):
+    room = get_room_or_error(message["room"])
+    slide = Slide.objects.filter(room=room, now_id=message["id"])
+
+    message.reply_channel.send({
+        "text": json.dumps({
+            "get_slide": message["id"],
+            "md_blob": slide.md_blob,
+            "title": slide.title,
+            "idx": slide.now_id,
+        }),
+    })
+
 """
 @channel_session_user
 @catch_client_error
