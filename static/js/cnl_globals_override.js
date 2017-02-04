@@ -18,8 +18,8 @@ cnl_globals.editor = new SimpleMDE({
   "ordered-list", "unordered-list", "table", "|",
   "link", "image", "|",
   "guide"],
-}).codemirror.on("change", function(e) {
-  var out = document.getElementById("out");
-  out.innerHTML = cnl_globals.md.render(e.getValue());
-  $('blockquote').addClass('blockquote');
+});
+cnl_globals.editor.codemirror.on("change", function(e) {
+  // TODO: update for all
+  cnl_slides.setSlideText(e.getValue());
 });

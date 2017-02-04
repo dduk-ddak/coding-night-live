@@ -34,6 +34,6 @@ var cnl_globals = {
   }),
 
   // diff_match_patch function group
-  dmp: diff_match_patch(),
+  dmp: new diff_match_patch(),
 
 };
