@@ -129,8 +129,7 @@
         <!-- Drawer: Slide list: Title -->
         <li class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></li>
           {% for slide in slides %}
-            <li id="slide_{{ slide[1] }}"  class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex({{ slide[1] }})">{{ slide[0] }}</li>
-            </script>
+            <li id="slide_{{ slide.1 }}"  class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
           {% endfor %}
         <!-- Drawer: Slide list: Contents -->
       </ul>
