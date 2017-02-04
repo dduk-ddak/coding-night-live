@@ -6,9 +6,9 @@ console.log("Connecting to " + ws_path);
 var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
 
 // Helpful debugging
-var cnl_connection = {
+var cnl_connection = $(function () {
   // Socket opening
-  socket:onopen = function () {
+  socket.onopen = function () {
     console.log("connected websocket");
     
     room_label = window.location.pathname;
@@ -18,7 +18,7 @@ var cnl_connection = {
       "command": "join",
       "room": room_label
     }));
-  },
+  };
   
   // Socket closing
   socket:onclose = function () {
@@ -31,11 +31,11 @@ var cnl_connection = {
       "command": "leave",
       "room": room_label
     }));
-  }
-}
+  };
+});
 
-var cnl_communicate = {
-  socket:onmessage = function (message) {
+var cnl_communicate = $(function () {
+  socket.onmessage = function (message) {
     // Decode JSON
     console.log("[Message] " + message.data);
     var data = JSON.parse(message.data);
@@ -83,8 +83,8 @@ var cnl_communicate = {
     } else {
       console.log("Cannot handle message!");
     }
-  },
-}
+  };
+});
 
 var cnl_send = {
   newSlide: function() {
