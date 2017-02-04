@@ -718,47 +718,6 @@
       return to_be_scrolled_position;
     }
 
-    function newChat(obj) {
-      // debug: get with websocket. currently newChat(1) will add new chat, newChat(0) will add reply to hash_value
-      //obj = {hash_value: 'this_is_hash_val', time: '2013.01.05. 13:32', description: 'chat description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', is_reply: obj===0};
-      console.log(obj);
-
-      var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
-      var appended_elem = 0;
-      if(obj.is_reply) {
-        appended_elem = $('\
-                  <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>\
-                  <div class="card" style="margin-left:30px;">\
-                    <div class="card-block">\
-                      <p class="card-text">' + obj.description + '</p>\
-                    </div>\
-                  </div>');
-        $('#chat_list_items').find('#chat_' + obj.hash_value).append(appended_elem);
-      }
-      else {
-        appended_elem = $('\
-                <div id="chat_' + obj.hash_value + '">\
-                  <div class="card">\
-                    <div class="card-header" style="padding-left: .5rem;">\
-                      <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> ' + obj.hash_value + '</div> <div style="margin:0;font-size:.5em;" align="right">' + obj.time + '</div>\
-                    </div>\
-                    <div class="card-block">\
-                      <p class="card-text">' + obj.description + '</p>\
-                    </div>\
-                  </div>');
-        $('#chat_list_items').append(appended_elem);
-      }
-      if(is_end_of_scroll) {
-        $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'slow');
-      }
-      else {
-        if($('#chat_scroll_button').css('visibility') == 'hidden') {
-          toBeScrolledPosition(appended_elem.position().top);
-          $('#chat_scroll_button').css('visibility', 'visible');
-        }
-      }
-    }
-
     function newPoll(obj) {
       // debug
       obj = {hash_value: 'this_is_hash_val', time: '2013.01.05. 13:32', question: 'poll description',
@@ -834,6 +793,7 @@
     </script>
     <script src="{% static "js/cnl_globals.js" %}" type="text/javascript"></script>
     <script src="{% static "js/cnl_slides.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/cnl_chats.js" %}" type="text/javascript"></script>
 
     <!-- if admin -->
     <script src="{% static "js/cnl_globals_override.js" %}" type="text/javascript"></script>
@@ -843,19 +803,19 @@
     <!-- get list of notice, chat and reply -->
     {% for notice in notices %}
     <script type="text/javascript">
-      newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
+      cnl_notices.newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
     </script>
     {% endfor %}
 
     {% for chat in chats %}
     <script type="text/javascript">
-      newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
+      cnl_notices.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
     </script>
     {% endfor %}
 
     {% for reply in replys %}
     <script type="text/javascript">
-      newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
+      cnl_notices.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
     </script>
     {% endfor %}
 
