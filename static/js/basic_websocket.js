@@ -24,8 +24,12 @@ $(function () {
       console.log("Leaving room " + data.leave);
       data.leave.remove();
       // Handle getting a message
-    } else if(data.rename_title) {
+    } else if(data.rename_title) {  // Rename room title
       setRoomTitle(data.title)
+    }  else if (data.chat) {  // New chat
+      newChat(data)
+    } else if (data.notice) { //New Notice
+      newNotice(data)
     } else if (data.msg_type != 0) {
       // msg types are defined in manage_room/setting.py
       switch (data.msg_type) {
@@ -46,23 +50,83 @@ $(function () {
     }
   };
 
-  /*
-   // rename title test
-   $("#rename_title_room").click(function () {
-     room_label = window.location.pathname;
-     room_label = room_label.substring(1, room_label.length-1);
-     
-     name = document.getElementById("room_name_input").value;
-     
-     renameRoom(name);
-     
-     socket.send(JSON.stringify({
-       "command": "rename_room_title",
-       "title": name,
-       "room": room_label
-     }));
-   });
-   */
+  // rename title test
+  $("#rename_title_room").click(function () {
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);
+    
+    name = document.getElementById("room_name_input").value;
+    
+    renameRoom(name);
+    
+    socket.send(JSON.stringify({
+      "command": "rename_room_title",
+      "title": name,
+      "room": room_label
+    }));
+  });
+
+  // message sending test ;
+  $("#send-btn").click(function () {
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);
+    
+    //console.log('send clicked / ' + $("#chat_input").val());
+    
+    /* notice sending test
+    socket.send(JSON.stringify({
+      "command": "notice",
+      "description": $("#chat_input").val(),
+      "room": room_label
+    }));
+    */
+    
+    /* chat sending test
+    socket.send(JSON.stringify({
+      "command": "chat",
+      "is_reply": false,
+      "description": $("#chat_input").val(),
+      "room": room_label
+    }));
+    */
+    
+    /* reply sending test
+    socket.send(JSON.stringify({
+      "command": "chat",
+      "is_reply": true,
+      "hash": "sdfasdf",  //existing hash
+      "description": $("#chat_input").val(),
+      "room": room_label
+    }));
+    */
+  });
+
+  // add slide test
+  $("#addSlide").click(function () {
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);
+    
+    //console.log('add clicked');
+    
+    socket.send(JSON.stringify({
+      "command": "new_slide",
+      "room": room_label
+    }));
+    newSlide();
+  });
+  
+  // get list of slide test
+  $("#getList").click(function () {
+    room_label = window.location.pathname;
+    room_label = room_label.substring(1, room_label.length-1);
+    
+    //console.log('getting list clicked');
+    
+    socket.send(JSON.stringify({
+      "command": "get_slide_list",
+      "room": room_label
+    }));
+  });
   
   // Helpful debugging
   socket.onopen = function () {
