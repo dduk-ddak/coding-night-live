@@ -63,7 +63,7 @@ var cnl_communicate = $(function () {
       // New notice
       newNotice(data);
     } else if(data.new_slide) {
-      cnl_slides.setNewSlide(data);
+      cnl_slides.setNewSlide(data.new_slide);
       //newSlide()
     } else if(data.msg_type) {
       // msg_types are defined in manage_room/setting.py

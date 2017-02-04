@@ -71,7 +71,7 @@ class Slide(models.Model):
         Returns the Channels Group that sockets should subscribe to to get sent
         messages as they are generated.
         """
-        return Group(str(self.idx))
+        return Group(self.room.label)
     
     def send_idx(self):
         final_msg = {'new_slide': str(self.now_id),}

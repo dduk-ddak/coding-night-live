@@ -1,6 +1,7 @@
 # WebSocket handling
 import json
 
+from django.db import transaction
 from channels import Channel, Group
 from channels.auth import channel_session_user_from_http, channel_session_user
 
@@ -74,9 +75,10 @@ def new_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
     last_slide = Slide.objects.get(next_id=0, room=room)
-    slide = Slide.objects.create(room=room)
-    last_slide.next_id = slide.now_id
-    last_slide.save()
+    with transaction.atomic():
+        slide = Slide.objects.create(room=room)
+        last_slide.next_id = slide.now_id
+        last_slide.save()
 
     slide.send_idx()
 
