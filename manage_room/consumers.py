@@ -78,6 +78,12 @@ def new_slide(message):
     last_slide.next_id = slide.now_id
     last_slide.save()
 
+    message.reply_channel.send({
+        "text": json.dumps({
+            "new_slide": str(slide.now_id),
+        }),
+    })
+
 @channel_session_user
 @catch_client_error
 def del_slide(message):
