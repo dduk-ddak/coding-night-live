@@ -15,14 +15,13 @@ var cnl_connection = $(function () {
 
     // slide list init
     var first_slide_idx = 0;
-    var slide_list = $('#slide_list').children();
 
     // if it is empty room
     if(slide_list.length === 1) {
       first_slide_idx = cnl_slides.getNewSlide();
     }
     else {
-      first_slide_idx = parseInt(slide_list[1].attr('id').split('_')[1]);
+      first_slide_idx = parseInt($('#slide_list li:nth-child(2)').attr('id').split('_')[1]);
     }
 
     // markdown view init
