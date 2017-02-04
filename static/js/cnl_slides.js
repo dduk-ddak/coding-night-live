@@ -14,8 +14,8 @@ var cnl_slides = {
     console.log('view slide clicked');
     
     socket.send(JSON.stringify({
-      "command": "new_slide",
-      "room": room_label
+      "command": "get_slide",
+      "id": idx
     }));
   },
 

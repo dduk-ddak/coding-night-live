@@ -41,7 +41,7 @@ cnl_slides.getNewSlide = function() {
 cnl_slides.setNewSlide = function(data) {
   var new_idx = data;
   $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
-  cnl_slides.setSlideIndex(new_idx);
+  cnl_slides.getSlideIndex(new_idx);
 }
 
 // delete slide with index "idx", then click on adjacent slide
