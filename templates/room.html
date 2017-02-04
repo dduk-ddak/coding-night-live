@@ -30,7 +30,6 @@
     <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
     <script src="{% static "js/reconnecting-websocket.min.js" %}" type="text/javascript"></script>
     <script src="{% static "js/diff_match_patch.min.js" %}" type="text/javascript"></script>
-    <script src="{% static "js/java-hashcode-conv.js" %}" type="text/javascript"></script>
 
   </head>
   <style>
@@ -313,88 +312,6 @@
     -->
 
    <script>
-    // highlight.js init
-    hljs.initHighlightingOnLoad();
-
-    // markdownit init
-    var md = markdownit({
-      html: true,
-      breaks: false,
-      highlight: function(str, lang){
-        // add line numbers for result
-        var line_numbers = str.split('\n').length - 1;
-        if(str[str.length-1] !== '\n') line_numbers += 1;
-        var ret_lines = '';
-        for(i=1; i<=line_numbers; i++) {
-          ret_lines += '<p style="text-align:right; margin-bottom:0;">' + i + '</p>';
-        }
-        if(lang && hljs.getLanguage(lang)){
-          try {
-            // Return string **has** to be a one-liner
-            return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + hljs.highlight(lang, str).value + '</div></div>';
-          } catch(_){}
-        }
-        return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + str + '</div></div>';
-      },
-    });
-
-    // codemirror init
-    var editor = new SimpleMDE({
-      element: document.getElementById("code"),
-      autofocus: true,
-      spellChecker: true,
-      forceSync: true,
-      lineNumbers: true,
-      toolbarTips: false,
-      promptURLs: false,
-
-      insertTexts: {
-        image: ["![enter image description here](http://", ")"],
-        link: ["[enter link description here](http://", ")"],
-        horizontalRule: ["", "\n\n-----\n\n"],
-        table: ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"],
-      },
-      toolbar: ["bold", "italic", "strikethrough", "heading", "|",
-      "code", "quote", "horizontal-rule", "|",
-      "ordered-list", "unordered-list", "table", "|",
-      "link", "image", "|",
-      "guide"],
-    });
-
-    editor.codemirror.on("change", function(e) {
-      var out = document.getElementById("out");
-      // TODO!important: change e.getValue() (remove # sth)
-      out.innerHTML = md.render(e.getValue());
-      $('blockquote').addClass('blockquote');
-
-      // var slide_title = '(empty)';
-      // var slide_title_color = '#D8D8D8';
-      //
-      // // if there is something inside text, change slide title
-      // if($('h1').length !== 0) {
-      //   var user_defined_title = $('h1')[0].textContent;
-      //   user_defined_title = user_defined_title.match(/^[\s\S]{1,30}/g)[0];
-      //   if (user_defined_title.length !== 0) {
-      //     slide_title = user_defined_title;
-      //     slide_title_color = 'black';
-      //
-      //     // remove h1 at Left Div: rendered output
-      //     $('h1').contents()[0].remove();
-      //
-      //     // Changes title inside drawer: not dealt here!
-      //     $('#slide_' + currSlideIndex()).text(slide_title);
-      //
-      //     // Changes Left Div: Slide title
-      //     var title = $('h4#markdown_title.card-title');
-      //     title.text(slide_title);
-      //     title.css({'color': slide_title_color});
-      //   }
-      // }
-    });
-
-    // diff_match_patch init
-    var dmp = diff_match_patch();
-
     $(document).ready(function() {
       // drawer init
       $('.drawer').drawer({
@@ -443,6 +360,9 @@
       });
       $('#room_name_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
 
+      chatListResize();
+
+      /*
       // debug: get lists of slides and data of each slide
       // note: how to find out slides' titles?
       var is_empty_slide = true;
@@ -457,8 +377,7 @@
 
         clickSlide(first_slide_idx);
       }
-
-      chatListResize();
+      */
     });
 
     // notice show/hide
@@ -473,9 +392,9 @@
         $('#notice-toggler').removeClass('fa-sort-asc');
         $('#notice-toggler').addClass('fa-sort-desc');
       }
-      chatListResize();
     }
 
+    // responsive chat list
     function chatListResize() {
       var viewport_height = $(window).height();
       var start_height = $('#notice_card').height() + $('#notice_card').offset().top;
@@ -541,7 +460,7 @@
     function getSlideText(str) {
       if(typeof str != 'undefined') {
         slide_text = str;
-        editor.value(str);
+        cnl_globals.editor.value(str);
       }
       return slide_text;
     }
@@ -584,15 +503,15 @@
     function changeSlide(idx, patch, remote_pre_hash, remote_curr_hash) {
       if(idx === currSlideIndex()) {
         var local_pre_text = getSlideText();
-        var local_pre_hash = javaHash.hash(local_pre_text);
+        var local_pre_hash = cnl_globals.hash(local_pre_text);
 
         // Case 1: No update
         if(local_pre_hash === remote_curr_hash) return;
 
         // Case 2: Normal update
         else if(local_pre_hash === remote_pre_hash) {
-          var patches = dmp.patch_fromText(patch);
-          var local_curr_text = dmp.patch_apply(patches, pre_text);
+          var patches = cnl_globals.dmp.patch_fromText(patch);
+          var local_curr_text = cnl_globals.dmp.patch_apply(patches, pre_text);
           getSlideText(local_curr_text);
         }
 
@@ -1118,6 +1037,11 @@
     }
 
     </script>
+    <script src="{% static "js/cnl_globals.js" %}" type="text/javascript"></script>
+
+    <!-- if admin -->
+    <script src="{% static "js/cnl_globals_override.js" %}" type="text/javascript"></script>
+    <!-- endif -->
 
     <!-- get list of notice, chat and reply -->
     {% for notice in notices %}
