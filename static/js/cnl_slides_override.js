@@ -25,15 +25,12 @@ cnl_slides.getNewSlide = function() {
   }));
 }
 
-// get new slide from server
+// callback when new slide is generated
+// overriden version has setSlideIndex() (if new slide is set, automatically send it to it)
 cnl_slides.setNewSlide = function(data) {
-  // debug: get new_idx from server
   var new_idx = data;
-  //var new_idx = Math.floor(Math.random() * (1000));
-  console.log('got new index from server : ' + new_idx);
-  // debug end
   $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.setSlideIndex(' + new_idx + ')">Unnamed slide</li>');
-  return new_idx;
+  setSlideIndex(new_idx);
 }
 
 
