@@ -218,53 +218,54 @@ def change_slide(message):
     #need to add admin_user authentication
 
     # cache is expired, moved to redis->sqlite
-    if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
+    with transaction.atomic():
+        if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
+            room = get_room_or_error(message["room"])
+            slide = Slide.objects.get(room=room, now_id=message["id"])
+            hash_blob = javaHash(slide.md_blob)
+            cache.set("%s/%s" % (message["room"], message["id"]), slide.md_blob, timeout=60)
+            cache.set("%s/%s/%s" % (message["room"], message["id"], hash_blob), slide.md_blob, timeout=60)
+        else:
+            cache.expire("%s/%s" % (message["room"], message["id"]), timeout=60)
+
+        if cache.ttl("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"])) == 0:
+            pre_text = cache.get("%s/%d" % (message["room"], message["id"]))
+        else:
+            cache.expire("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]), timeout=60)
+            pre_text = cache.get("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]))
+
+        dmp = diff_match_patch()
+        patch_text = message["patch_text"]
+        patches = dmp.patch_fromText(message["patch_text"])
+        curr_text = dmp.patch_apply(patches, pre_text)[0]
+        pre_hash = javaHash(pre_text)
+        curr_hash = javaHash(curr_text)
+
+        if curr_hash != message["curr_hash"] or pre_hash != message["pre_hash"]:
+            diff = dmp.diff_main(pre_text, curr_text)
+            patches = dmp.patch_make(pre_text, diff)
+            patch_text = dmp.patch_toText(patches)
+            print('something is wrong')
+            pass # something wrong. broadcast whole string to everybody
+        else:
+            message.reply_channel.send({
+                "text": json.dumps({
+                    "change_slide": "true",
+                    "room": message["room"],
+                    "id": message["id"],
+                    "patch_text": patch_text,
+                    "pre_hash": pre_hash,
+                    "curr_hash": curr_hash,
+                }),
+            })
+
+
+        # update redis
+        cache.set("%s/%s" % (message["room"], message["id"]), curr_text)
+        cache.set("%s/%s/%s" % (message["room"], message["id"], curr_hash), curr_text)
+
+        # update sqlite
         room = get_room_or_error(message["room"])
         slide = Slide.objects.get(room=room, now_id=message["id"])
-        hash_blob = javaHash(slide.md_blob)
-        cache.set("%s/%s" % (message["room"], message["id"]), slide.md_blob, timeout=60)
-        cache.set("%s/%s/%s" % (message["room"], message["id"], hash_blob), slide.md_blob, timeout=60)
-    else:
-        cache.expire("%s/%s" % (message["room"], message["id"]), timeout=60)
-
-    if cache.ttl("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"])) == 0:
-        pre_text = cache.get("%s/%d" % (message["room"], message["id"]))
-    else:
-        cache.expire("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]), timeout=60)
-        pre_text = cache.get("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]))
-
-    dmp = diff_match_patch()
-    patch_text = message["patch_text"]
-    patches = dmp.patch_fromText(message["patch_text"])
-    curr_text = dmp.patch_apply(patches, pre_text)[0]
-    pre_hash = javaHash(pre_text)
-    curr_hash = javaHash(curr_text)
-
-    if curr_hash != message["curr_hash"] or pre_hash != message["pre_hash"]:
-        diff = dmp.diff_main(pre_text, curr_text)
-        patches = dmp.patch_make(pre_text, diff)
-        patch_text = dmp.patch_toText(patches)
-        print('something is wrong')
-        pass # something wrong. broadcast whole string to everybody
-    else:
-        message.reply_channel.send({
-            "text": json.dumps({
-                "change_slide": "true",
-                "room": message["room"],
-                "id": message["id"],
-                "patch_text": patch_text,
-                "pre_hash": pre_hash,
-                "curr_hash": curr_hash,
-            }),
-        })
-
-
-    # update redis
-    cache.set("%s/%s" % (message["room"], message["id"]), curr_text)
-    cache.set("%s/%s/%s" % (message["room"], message["id"], curr_hash), curr_text)
-
-    # update sqlite
-    room = get_room_or_error(message["room"])
-    slide = Slide.objects.get(room=room, now_id=message["id"])
-    slide.md_blob = curr_text
-    slide.save()
+        slide.md_blob = curr_text
+        slide.save()
