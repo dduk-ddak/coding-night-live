@@ -21,20 +21,20 @@ var cnl_slides = {
     var title = data.title;
     var content = data.md_blob;
     var idx = data.idx;
+    var preclicked_idx = this.curr_slide_idx;
+
+    this.curr_slide_idx = idx;
 
     $('#markdown_title').text(title);
     this.setSlideText(content);
 
-    var preclicked_slide = $('#slide_' + this.curr_slide_idx);
+    var preclicked_slide = $('#slide_' + preclicked_idx);
     if(preclicked_slide.length !== 0) {
       preclicked_slide.removeClass('active');
     }
-    $('#slide_' + idx.toString()).addClass('active');
+    $('#slide_' + idx).addClass('active');
 
     $('.drawer').drawer('close');
-
-    // update curr_slide_idx here. we have to use the previous value.
-    this.curr_slide_idx = idx;
   },
 
   // current showing slide's text & setter

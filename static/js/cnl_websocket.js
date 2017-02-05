@@ -20,7 +20,6 @@ var cnl_connection = $(function () {
 
     // markdown view init
     var first_slide_idx = parseInt($('#slide_list li:nth-child(2)').attr('id').split('_')[1]);
-    console.log(first_slide_idx);
     cnl_slides.getSlideIndex(first_slide_idx);
   };
   

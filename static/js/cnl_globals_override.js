@@ -20,6 +20,5 @@ cnl_globals.editor = new SimpleMDE({
   "guide"],
 });
 cnl_globals.editor.codemirror.on("change", function(e) {
-  // TODO: update for all
   cnl_slides.setSlideText(e.getValue());
 });
