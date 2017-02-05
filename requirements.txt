@@ -13,3 +13,4 @@ social-auth-core==0.2.1
 channels
 asgi_redis
 pyhaikunator
+django-redis
