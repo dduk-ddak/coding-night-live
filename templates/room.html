@@ -129,15 +129,14 @@
       <ul id="slide_list" class="drawer-menu list-group">
         <!-- Drawer: Slide list: Title -->
         <li class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></li>
+          <!-- Drawer: Slide list: Contents -->
           {% for slide in slides %}
             <li id="slide_{{ slide.1 }}"  class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
           {% endfor %}
-        <!-- Drawer: Slide list: Contents -->
-      </ul>
 
-      <!-- Drawer: "Add" button -->
-      <!--<button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_slides.getNewSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>-->
-      <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_send.newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+          <!-- Drawer: "Add" button -->
+          <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_send.newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      </ul>
     </nav>
 
     <!-- Contents -->
@@ -255,7 +254,10 @@
         },
         iscroll: {
           mouseWheel: true,
-          preventDefault: false
+          preventDefault: false,
+          disableMouse: true,
+          disablePointer: true,
+          disableTouch: true,
         },
         showOverlay: true
       });

@@ -18,16 +18,9 @@ var cnl_slides = {
   },
 
   setSlideIndex: function (data) {
-    // debug: do something with idx and get data
-    console.log('setSlideIndex');
-    console.log(data);
-
     var title = data.title;
     var content = data.md_blob;
     var idx = data.idx;
-    //var title = 'this is title of idx ' + idx.toString();
-    //var content = '# this is title with idx ' + idx.toString() + '\n## and this is content!\n### this too!';
-    // debug: end
 
     $('#markdown_title').text(title);
     this.setSlideText(content);
@@ -82,7 +75,7 @@ var cnl_slides = {
   // callback when new slide is generated
   setNewSlide: function (data) {
     var new_idx = data;
-    $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
+    $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   },
 
   // callback for change order of slide with index "idx" to previous of slide with index "next"
