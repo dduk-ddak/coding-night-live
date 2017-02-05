@@ -135,6 +135,19 @@ def change_slide(message):
 @catch_client_error
 def change_slide_order(message):
     #need to add admin_user authentication
+    room = get_room_or_error(message["room"])
+    movable = Slide.objects.get(room=room, now_id=message["id"])
+    pre_movable = Slide.objects.get(room=room, next_id=message["id"])
+    pre_next = Slide.objects.get(room=room, next_id=message["next_id"])
+    
+    pre_movable.next_id = movable.next_id
+    pre_next.next_id = message["id"]
+    
+    movable.next_id = message["next_id"]
+
+    pre_next.save()
+    pre_movable.save()
+    movable.save()
     """
     room = get_room_or_error(message["room"])
     a_slide = Slide.objects.get(room=room, now_id=message["id"])
