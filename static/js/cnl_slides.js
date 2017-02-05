@@ -82,7 +82,7 @@ var cnl_slides = {
   // callback when new slide is generated
   setNewSlide: function (data) {
     var new_idx = data;
-    $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
+    $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   },
 
   // callback for change order of slide with index "idx" to previous of slide with index "next"
