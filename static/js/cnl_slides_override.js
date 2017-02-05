@@ -59,12 +59,11 @@ cnl_slides.delSlide = function (idx) {
   // debug end
 
   var curr_slide = $('#slide_' + idx);
-  var next_slide_idx = 0;
 
   if(idx === this.curr_slide_idx) {
     // If more slides, get new one
     if($('li.drawer-menu-item').length === 1) {
-      next_slide_idx = this.getNewSlide();
+      this.getNewSlide();
     }
     // Else, find adjacent slides
     else {
@@ -72,10 +71,9 @@ cnl_slides.delSlide = function (idx) {
       if(next_slide.length === 0) {
         next_slide = curr_slide.prev();
       }
-      next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
+      var next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
+      this.getSlideIndex(next_slide_idx);
     }
-    // move to selected slide
-    this.setSlideIndex(next_slide_idx);
   }
 
   // remove from drawer
