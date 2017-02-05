@@ -129,14 +129,20 @@ def change_slide_order(message):
 
     temp = a_slide.next_id
     c_slide = Slide.objects.get(room=room, next_id=message["next_id"])
+    
     is_header = Slide.objects.get(room=room, next_id=message["id"])
-
     if is_header.title == "header@slide":
         print("please modifiy header slide's next_id")
+        is_header.next_id = b_slide.now_id
+        is_header.save()
+    
+    if c_slide == a_slide:
+        a_slide.next_id = b_slide.next_id
+        b_slide.next_id = a_slide.now_id
     else:
-        print("do not modifiy header slide's next_id")
-
-
+        a_slide.next_id = b_slide.next_id
+        b_slide.next_id = temp
+        c_slide.next_id = a_slide.now_id
 
     a_slide.save()
     b_slide.save()
