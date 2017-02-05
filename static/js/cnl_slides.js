@@ -7,7 +7,7 @@ var cnl_slides = {
     if(idx === this.curr_slide_idx) {
       return;
     }
-    
+
     console.log('view slide clicked');
     
     socket.send(JSON.stringify({

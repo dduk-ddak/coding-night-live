@@ -154,6 +154,8 @@ def current_slide(message):
 def rename_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    slide = Slide.objects.fliter(room=room, now_id=message["id"])
+    slide = Slide.objects.get(room=room, now_id=message["id"])
     slide.title = message["title"]
     slide.save()
+
+    slide.send_title()

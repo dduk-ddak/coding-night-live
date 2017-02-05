@@ -1,5 +1,5 @@
 // another person may have been updated the editor string
-cnl_slides.setSlideText = function(str) {
+cnl_slides.setSlideText = function (str) {
   // another person updated
   if(str != cnl_globals.editor.codemirror.doc.getValue()) {
     var curr_cursor = cnl_globals.editor.codemirror.doc.getCursor();
@@ -24,7 +24,7 @@ cnl_slides.setSlideText = function(str) {
   $('blockquote').addClass('blockquote');
 }
 
-cnl_slides.getNewSlide = function() {
+cnl_slides.getNewSlide = function () {
   console.log('add clicked');
   
   socket.send(JSON.stringify({
@@ -35,14 +35,14 @@ cnl_slides.getNewSlide = function() {
 
 // callback when new slide is generated
 // overriden version has setSlideIndex() (if new slide is set, automatically send it to it)
-cnl_slides.setNewSlide = function(data) {
+cnl_slides.setNewSlide = function (data) {
   var new_idx = data;
   $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   cnl_slides.getSlideIndex(new_idx);
 }
 
 // delete slide with index "idx", then click on adjacent slide
-cnl_slides.delSlide = function(idx) {
+cnl_slides.delSlide = function (idx) {
   // called from modal
   if(typeof idx == 'undefined') {
     idx = this.curr_slide_idx;
@@ -78,7 +78,7 @@ cnl_slides.delSlide = function(idx) {
 
 // change order of slide with index "idx" to previous of slide with index "next"
 // overriden version should have websocket
-cnl_slides.changeSlideOrder = function(idx, next) {
+cnl_slides.changeSlideOrder = function (idx, next) {
   // debug: send idx, next
   console.log(idx + ' and ' + next + ' send to server');
   // debug end
@@ -92,9 +92,10 @@ cnl_slides.changeSlideOrder = function(idx, next) {
   }
 }
 
+/*
 // renaming slide
 // overriden version should have websocket & modal consideration
-cnl_slides.renameSlide = function(idx, name) {
+cnl_slides.renameSlide = function (idx, name) {
   // called from modal
   if(typeof idx == 'undefined') {
     var idx = this.curr_slide_idx;
@@ -111,5 +112,27 @@ cnl_slides.renameSlide = function(idx, name) {
       $('#markdown_title').text(name);
     }
   }
+}*/
+
+cnl_slides.setRenameSlide = function (data) {
+  console.log(data+ "-------------" + this.curr_slide_idx);
+  var idx = data.rename_slide;
+  var name = data.title;
+
+  $('#slide_' + idx).text(name);
+  if(idx == this.curr_slide_idx) {
+    $('#markdown_title').text(name);
+  }
 }
 
+cnl_slides.getRenameSlide = function () {
+  var idx = this.curr_slide_idx;
+  var name = $('#slide_name_input').val();
+  
+  socket.send(JSON.stringify({
+      "command": "rename_slide_title",
+      "title": name,
+      "id": idx,
+      "room": room_label
+    }));
+}

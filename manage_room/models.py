@@ -74,7 +74,14 @@ class Slide(models.Model):
         return Group(self.room.label)
     
     def send_idx(self):
-        final_msg = {'new_slide': str(self.now_id),}
+        final_msg = {'new_slide': str(self.now_id),}    # Return idx
+
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )
+    
+    def send_title(self):
+        final_msg = {'rename_slide': str(self.now_id), 'title': str(self.title)}    # Return idx and title
 
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}

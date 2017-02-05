@@ -28,9 +28,6 @@ var cnl_connection = $(function () {
     cnl_slides.getSlideIndex(first_slide_idx);
     */
 
-    room_label = window.location.pathname;
-    room_label = room_label.substring(1, room_label.length-1);  // Get label
-
     socket.send(JSON.stringify({
       "command": "join",
       "room": room_label
@@ -40,9 +37,6 @@ var cnl_connection = $(function () {
   // Socket closing
   socket:onclose = function () {
     console.log("disconnected websocket");
-    
-    room_label = window.location.pathname;
-    room_label = room_label.substring(1, room_label.length-1);  // Get label
     
     socket.send(JSON.stringify({
       "command": "leave",
@@ -85,6 +79,8 @@ var cnl_communicate = $(function () {
     } else if (data.get_slide) {
       cnl_slides.setSlideIndex(data);
       //data.md_blob
+    } else if (data.rename_slide) {
+      cnl_slides.setRenameSlide(data);
     } else if (data.msg_type) {
       // msg_types are defined in manage_room/setting.py
       switch (data.msg_type) {
@@ -122,7 +118,7 @@ var cnl_send = {
     name = "gg"
 
     socket.send(JSON.stringify({
-      "command": "rename_room_title",
+      "command": "rename_slide",
       "title": name,
       "room": room_label
     }));
