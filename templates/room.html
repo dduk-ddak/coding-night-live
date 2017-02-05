@@ -273,7 +273,8 @@
             next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
           }
 
-          cnl_slides.changeSlideOrder(curr_slide_idx, next_slide_idx);
+          //cnl_slides.changeSlideOrder(curr_slide_idx, next_slide_idx);
+          cnl_slides.getChangeSlideOrder(curr_slide_idx, next_slide_idx);
         }
       });
 

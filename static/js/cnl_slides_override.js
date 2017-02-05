@@ -76,6 +76,7 @@ cnl_slides.delSlide = function (idx) {
   curr_slide.remove();
 }
 
+/*
 // change order of slide with index "idx" to previous of slide with index "next"
 // overriden version should have websocket
 cnl_slides.changeSlideOrder = function (idx, next) {
@@ -90,6 +91,31 @@ cnl_slides.changeSlideOrder = function (idx, next) {
     // it is last element
     $('#slide_' + idx).detach().appendTo('#slide_list');
   }
+}
+*/
+
+cnl_slides.setChangeSlideOrder = function (data) {
+  var idx = data.id;
+  var next = data.next_id;
+
+  console.log('id : ' + idx + '/ next : ' + next)
+
+  if (next !== 0) {
+    $('#slide_' + idx).detach().insertBefore('#slide_' + next);
+  }
+  else {
+    $('#slie_' + idx).detach().appendTo('#slide_list')
+  }
+}
+
+cnl_slides.getChangeSlideOrder = function (idx, next) {
+  console.log('id : ' + idx + '/ next : ' + next)
+  socket.send(JSON.stringify({
+    "command": "change_slide_order",
+    "id": idx,
+    "next_id": next-1,
+    "room": room_label
+  }));
 }
 
 /*
@@ -115,7 +141,6 @@ cnl_slides.renameSlide = function (idx, name) {
 }*/
 
 cnl_slides.setRenameSlide = function (data) {
-  console.log(data+ "-------------" + this.curr_slide_idx);
   var idx = data.rename_slide;
   var name = data.title;
 

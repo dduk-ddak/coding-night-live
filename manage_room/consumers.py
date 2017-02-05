@@ -124,14 +124,32 @@ def change_slide(message):
 def change_slide_order(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    a_slide = Slide.objects.filter(room=room, now_id=message["id"])
-    b_slide = Slide.objects.filter(room=room, now_id=message["next_id"])
+    a_slide = Slide.objects.get(room=room, now_id=message["id"])
+    b_slide = Slide.objects.get(room=room, now_id=message["next_id"])
+
+    temp = a_slide.next_id
+    c_slide = Slide.objects.get(room=room, next_id=message["next_id"])
+    is_header = Slide.objects.get(room=room, next_id=message["id"])
+
+    if is_header.title == "header@slide":
+        print("please modifiy header slide's next_id")
+    else:
+        print("do not modifiy header slide's next_id")
+
+
+
+    a_slide.save()
+    b_slide.save()
+    """
+    room = get_room_or_error(message["room"])
+    a_slide = Slide.objects.get(room=room, now_id=message["id"])
+    b_slide = Slide.objects.get(room=room, now_id=message["next_id"])
 
     temp = b_slide.next_id
-    c_slide = Slide.objects.filter(room=room, next_id=message["next_id"])
+    c_slide = Slide.objects.get(room=room, next_id=message["next_id"])
 
     if c_slide:
-        c_slide.next_id = a_slide.id
+        c_slide.next_id = a_slide.now_id
         b_slide.next_id = a_slide.next_id
         a_slide.next_id = temp
         c_slide.save()
@@ -141,6 +159,7 @@ def change_slide_order(message):
     
     a_slide.save()
     b_slide.save()
+    """
 
 """
 @channel_session_user

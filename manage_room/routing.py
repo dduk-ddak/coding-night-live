@@ -9,7 +9,7 @@ custom_routing = [
     route("room.receive", new_slide, command="^new_slide$"),
     route("room.receive", get_slide, command="^get_slide$"), 
     route("room.receive", del_slide, command="^del_slide$"),
-    route("room.receive", change_slide_order, command="^change_order$"),
+    route("room.receive", change_slide_order, command="^change_slide_order$"),
     route("room.receive", rename_slide, command="^rename_slide_title$"),
     #route("room.receive", get_slide_list, command="^get_slide_list$"),
 ]

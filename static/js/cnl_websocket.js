@@ -81,6 +81,8 @@ var cnl_communicate = $(function () {
       //data.md_blob
     } else if (data.rename_slide) {
       cnl_slides.setRenameSlide(data);
+    } else if (data.change_slide_order) {
+      cnl_slides.setChangeSlideOrder(data);
     } else if (data.msg_type) {
       // msg_types are defined in manage_room/setting.py
       switch (data.msg_type) {
