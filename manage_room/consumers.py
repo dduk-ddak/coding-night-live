@@ -84,17 +84,18 @@ def new_slide(message):
         last_slide.next_id = slide.now_id
         last_slide.save()
 
-    slide.send_idx()
+    slide.send_idx(message["command"])
 
 @channel_session_user
 @catch_client_error
 def del_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    delete_slide = Slide.objects.filter(room=room, now_id=message["id"])
-    slide = Slide.objects.filter(room=room, next_id=message["id"])
+    delete_slide = Slide.objects.get(room=room, now_id=message["id"])
+    slide = Slide.objects.get(room=room, next_id=message["id"])
     slide.next_id = delete_slide.next_id
     
+    delete_slide.send_idx(message["command"])
     delete_slide.delete()
     slide.save()
 

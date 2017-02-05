@@ -64,8 +64,11 @@ var cnl_communicate = $(function () {
       // New notice
       newNotice(data);
     } else if (data.new_slide) {
+      // New Slide
       cnl_slides.setNewSlide(data.new_slide);
-      //newSlide()
+    } else if (data.del_slide) {
+      // Delete Slide
+      cnl_slides.setDelSlide(data.idx);
     } else if (data.get_slide) {
       cnl_slides.setSlideIndex(data);
       //data.md_blob

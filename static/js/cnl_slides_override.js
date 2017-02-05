@@ -47,13 +47,13 @@ cnl_slides.setNewSlide = function (data) {
   cnl_slides.getSlideIndex(new_idx);
 }
 
+/*
 // delete slide with index "idx", then click on adjacent slide
 cnl_slides.delSlide = function (idx) {
   // called from modal
   if(typeof idx == 'undefined') {
     idx = this.curr_slide_idx;
   }
-
   // debug: remove idx from server
   console.log('deleted ' + idx);
   // debug end
@@ -76,8 +76,46 @@ cnl_slides.delSlide = function (idx) {
     }
   }
 
+  //밑에 다 콜백
   // remove from drawer
   curr_slide.remove();
+}
+*/
+
+cnl_slides.getDelSlide = function (idx) {
+  // called from modal
+  if (typeof idx == 'undefined') {
+    idx = this.curr_slide_idx;
+  }
+
+  var curr_slide = $('#slide_' + idx);
+
+  if (idx === this.curr_slide_idx) {
+    // If more slides, get new one
+    if($('li.drawer-menu-item').length === 1) {
+      this.getNewSlide();
+    }
+    // Else, find adjacent slides
+    else {
+      var next_slide = curr_slide.next();
+      if(next_slide.length === 0) {
+        next_slide = curr_slide.prev();
+      }
+      var next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
+      this.getSlideIndex(next_slide_idx);
+    }
+  }
+
+  socket.send(JSON.stringify({
+    "command": "del_slide",
+    "id": idx,
+    "room": room_label
+  }));
+}
+
+cnl_slides.setDelSlide = function (data) {
+  var curr_slide = $('#slide_' + data);
+  curr_slide.remove()
 }
 
 /*
