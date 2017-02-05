@@ -138,6 +138,18 @@ def change_slide_order(message):
     """
     room = get_room_or_error(message["room"])
     a_slide = Slide.objects.get(room=room, now_id=message["id"])
+    b_slide = Slide.objects.get(room=room, next_id=message["next_id"])
+
+    temp = a_slide.next_id
+    a_slide.next_id = b_slide.next_id
+    b_slide.next_id = a_slide.now_id
+
+    a_slide.save()
+    b_slide.save()
+    """
+    """
+    room = get_room_or_error(message["room"])
+    a_slide = Slide.objects.get(room=room, now_id=message["id"])
     b_slide = Slide.objects.get(room=room, now_id=message["next_id"])
 
     temp_title = a_slide.title
