@@ -121,90 +121,23 @@ def get_slide(message):
         }),
     })
 
-"""
-@channel_session_user
-@catch_client_error
-def change_slide(message):
-    #need to add admin_user authentication
-    room = get_room_or_error(message["room"])
-    change_slide = Slide.objects.filter(room=room, now_id=message["id"])
-    #more..
-"""
-
 @channel_session_user
 @catch_client_error
 def change_slide_order(message):
     #need to add admin_user authentication
-    """
     room = get_room_or_error(message["room"])
-    a_slide = Slide.objects.get(room=room, now_id=message["id"])
-    b_slide = Slide.objects.get(room=room, next_id=message["next_id"])
-
-    temp = a_slide.next_id
-    a_slide.next_id = b_slide.next_id
-    b_slide.next_id = a_slide.now_id
-
-    a_slide.save()
-    b_slide.save()
-    """
-    """
-    room = get_room_or_error(message["room"])
-    a_slide = Slide.objects.get(room=room, now_id=message["id"])
-    b_slide = Slide.objects.get(room=room, now_id=message["next_id"])
-
-    temp_title = a_slide.title
-    temp_md_blob = a_slide.md_blob
-
-    a_slide.title = b_slide.title
-    a_slide.md_blob = b_slide.md_blob
-    b_slide.title = temp_title
-    b_slide.md_blob = temp_md_blob
-
-    a_slide.save()
-    b_slide.save()
-    """
-    """
-    idx = int(message["next_id"]) - 1
-
-    room = get_room_or_error(message["room"])
-    a_slide = Slide.objects.get(room=room, now_id=message["id"])
-    b_slide = Slide.objects.get(room=room, next_id=message["next_id"])
-    c_slide = Slide.objects.get(room=room, next_id=idx)
+    movable = Slide.objects.get(room=room, now_id=message["id"])
+    pre_movable = Slide.objects.get(room=room, next_id=message["id"])
+    pre_next = Slide.objects.get(room=room, next_id=message["next_id"])
     
-    is_header = Slide.objects.get(room=room, next_id=message["id"])
-    if is_header.title == "header@slide":
-        print("please modifiy header slide's next_id")
-        is_header.next_id = b_slide.now_id
-        is_header.save()
+    pre_movable.next_id = movable.next_id
+    pre_next.next_id = message["id"]
     
-    temp = a_slide.next_id
-    a_slide.next_id = b_slide.now_id
-    b_slide.next_id = a_slide.now_id
-    c_slide.next_id = temp
+    movable.next_id = message["next_id"]
 
-    a_slide.save()
-    b_slide.save()
-    """
-    """
-    room = get_room_or_error(message["room"])
-    a_slide = Slide.objects.get(room=room, now_id=message["id"])
-    b_slide = Slide.objects.get(room=room, now_id=message["next_id"])
-
-    temp = b_slide.next_id
-    c_slide = Slide.objects.get(room=room, next_id=message["next_id"])
-
-    if c_slide:
-        c_slide.next_id = a_slide.now_id
-        b_slide.next_id = a_slide.next_id
-        a_slide.next_id = temp
-        c_slide.save()
-    else:
-        b_slide.next_id = a_slide.next_id
-        a_slide.next_id = temp
-    
-    a_slide.save()
-    b_slide.save()
-    """
+    pre_next.save()
+    pre_movable.save()
+    movable.save()
 
 """
 @channel_session_user
@@ -270,8 +203,7 @@ def change_slide(message):
                     "curr_hash": curr_hash,
                 }),
             })
-
-
+        
         # update redis
         cache.set("%s/%s" % (message["room"], message["id"]), curr_text)
         cache.set("%s/%s/%s" % (message["room"], message["id"], curr_hash), curr_text)
@@ -294,4 +226,3 @@ def rename_room(message):
             "rename_room": message["title"],
         }),
     })
-    
