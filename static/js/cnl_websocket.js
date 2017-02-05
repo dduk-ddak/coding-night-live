@@ -74,8 +74,9 @@ var cnl_communicate = $(function () {
     } else if (data.change_slide_order) {
       cnl_slides.setChangeSlideOrder(data);
     } else if (data.change_slide) {
-      console.log(data);
       cnl_slides.changeSlideText(data);
+    } else if (data.rename_room) {
+      cnl_rooms.renameRoom(data.rename_room);
     } else if (data.msg_type) {
       // msg_types are defined in manage_room/setting.py
       switch (data.msg_type) {

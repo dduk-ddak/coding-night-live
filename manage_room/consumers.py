@@ -281,3 +281,17 @@ def change_slide(message):
         slide = Slide.objects.get(room=room, now_id=message["id"])
         slide.md_blob = curr_text
         slide.save()
+
+@channel_session_user
+@catch_client_error
+def rename_room(message):
+    # need to add admin_user authentication
+    room = get_room_or_error(message["room"])
+    room.title = message["title"]
+    room.save()
+    Group(message["room"]).send({
+        "text": json.dumps({
+            "rename_room": message["title"],
+        }),
+    })
+    
