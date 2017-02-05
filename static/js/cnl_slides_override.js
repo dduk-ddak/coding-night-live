@@ -98,7 +98,7 @@ cnl_slides.getDelSlide = function (idx) {
     // Else, find adjacent slides
     else {
       var next_slide = curr_slide.next();
-      if(next_slide.length === 0) {
+      if(next_slide.prop('tagName') == 'BUTTON') {
         next_slide = curr_slide.prev();
       }
       var next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);

@@ -68,7 +68,7 @@ var cnl_communicate = $(function () {
       cnl_slides.setNewSlide(data.new_slide);
     } else if (data.del_slide) {
       // Delete Slide
-      cnl_slides.setDelSlide(data.idx);
+      cnl_slides.setDelSlide(data.del_slide);
     } else if (data.get_slide) {
       cnl_slides.setSlideIndex(data);
       //data.md_blob
