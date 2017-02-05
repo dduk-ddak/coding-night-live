@@ -817,19 +817,19 @@
     <!-- get list of notice, chat and reply -->
     {% for notice in notices %}
     <script type="text/javascript">
-      cnl_notices.newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
+      cnl_chats.newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
     </script>
     {% endfor %}
 
     {% for chat in chats %}
     <script type="text/javascript">
-      cnl_notices.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
+      cnl_chats.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
     </script>
     {% endfor %}
 
     {% for reply in replys %}
     <script type="text/javascript">
-      cnl_notices.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
+      cnl_chats.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
     </script>
     {% endfor %}
 

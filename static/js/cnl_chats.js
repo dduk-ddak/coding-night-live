@@ -1,4 +1,4 @@
-var cnl_notices = {
+var cnl_chats = {
   newNotice: function(obj) {
     var preappended_elem = $('#shown-notice').find('div.notice-with-time').detach();
     if(preappended_elem.length !== 0) {
