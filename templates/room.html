@@ -125,17 +125,18 @@
     <!-- Drawer -->
     <nav class="drawer-nav" role="navigation" style="z-index:5">
 
+      <!-- Drawer: Slide list: Title -->
+      <div class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></div>
+
       <!-- Drawer: Slide list -->
       <ul id="slide_list" class="drawer-menu list-group">
-        <!-- Drawer: Slide list: Title -->
-        <li class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></li>
-          <!-- Drawer: Slide list: Contents -->
-          {% for slide in slides %}
-            <li id="slide_{{ slide.1 }}"  class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
-          {% endfor %}
+        <!-- Drawer: Slide list: Contents -->
+        {% for slide in slides %}
+          <li id="slide_{{ slide.1 }}"  class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
+        {% endfor %}
 
-          <!-- Drawer: "Add" button -->
-          <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_send.newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <!-- Drawer: "Add" button -->
+        <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_send.newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
       </ul>
     </nav>
 
@@ -267,6 +268,12 @@
         update: function(event, ui) {
           var curr_slide = ui.item;
           var next_slide = ui.item.next();
+          var prev_slide = ui.item.prev();
+
+          // below than button
+          if(prev_slide.prop('tagName') == 'BUTTON') {
+            curr_slide.detach().insertBefore(prev_slide);
+          }
 
           var curr_slide_idx = parseInt(curr_slide.attr('id').split('_')[1]);
           var next_slide_idx = 0;
