@@ -352,344 +352,24 @@
       chatListResize();
     });
 
-    var valid_syntax = {
-      help: "@help",
-      notice: "@notice [<args>]",
-      poll: "@poll [-t <\"title\">] <\"options\", ...>",
-    };
-
-    var valid_syntax_regex_pattern = [
-      /^(\s)*@help\s*$/g,
-      /^(\s)*@notice\s+.*$/g,
-      /^(\s)*@poll\s+(-t\s*\"[^\"\']*\")?.*$/g,
-    ];
-
-    var help_regex = [
-      /@/g, /@h/g, /@he/g,
-      /@hel/g, /@help/g,
-      /^(\s)*@help\s*$/g,
-    ];
-
-    var notice_regex = [
-      /@/g, /@n/g, /@no/g,
-      /@not/g, /@noti/g, /@notic/g,
-      /@notice/g, /^(\s)*@notice\s+.*$/g,
-    ];
-
-    function validate_notice_syntax(command, matches) {
-      var len = command.length,
-          upper_bound = 7, // length of '@notice'
-          is_valid = false,
-          text = "@notice ",
-          notice = "";
-
-      if(len <= upper_bound) {
-        // user is still typing the command;
-        // check for partial syntax.
-        is_valid = !!command.match(notice_regex[len-1]);
-      } else {
-        // check for full syntax
-        is_valid = !!command.match(notice_regex[upper_bound]);
-        // to retrieve only the notice message:
-        // command.replace(/^(@notice\s*)/g, "");
-        notice = command.replace(/^(@notice\s*)/g, "");
-        text += notice;
-      }
-
-      if(is_valid === true) {
-        matches = matches.concat([{label: valid_syntax.notice,
-                                   value: text}]);
-      } return matches;
-    }
-
-    function validate_help_syntax(command, matches) {
-      var len = command.length,
-          upper_bound = 5, // length of '@help'
-          is_valid = false,
-          text = "@help";
-
-      if(len <= upper_bound) {
-        // user is still typing the command;
-        // check for partial syntax.
-        is_valid = !!command.match(help_regex[len-1]);
-      } else {
-        // check for full systax
-        is_valid = !!command.match(help_regex[upper_bound]);
-      }
-      if(is_valid === true) {
-        matches = matches.concat([{label: valid_syntax.help,
-                                   value: text}]);
-      }
-      return matches;
-    }
-    var poll_regex = [
-      /^@$/g, /^@p$/g, /^@po$/g,
-      /^@pol$/g, /^@poll$/g,
-      /^@poll\s$/g,
-    ];
-    var poll_opt_regex = [
-      /^-t\s*(?![^\"\'])/g,
-      /^-(?![^t])/g,
-    ];
-    function validate_poll_syntax(command, matches) {
-      var len = 0,
-          upper_bound = 6,          // length of '@poll '
-          is_valid = false,
-          title_given = false,
-          text = "@poll ",
-          title = null,
-          quotation_choice = "\"",  // either ' || "
-          options = [];
-
-      // remove leading white spaces
-      command = command.replace(/^\s*/g, "");
-      len = command.length;
-
-      if(len <= upper_bound) {
-        // user is still typing the command;
-        // valid commands include: @, @p, @po, @pol, @poll
-        if(!!command.match(poll_regex[len-1]))
-          return matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-        else
-          return matches;
-      } else {
-        if(!!!command.match(/^@poll\s+(?![^-\'\"])/g)) {
-          // command doesn't start with '@poll '
-          // or the first character after '@poll ' is invalid
-          return matches;
-        }
-        // command starts with '@poll '
-        // remove '@poll ' from the command
-        command = command.replace(/^@poll\s+/g, "");
-        if(command.length === 0) {
-          // input command is '@poll '
-          matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-          return matches;
-        } else {
-          command = command.trim();
-        }
-
-        if(!!command.match(/^-(?=[^t])/g)) {
-          // check for invalid option
-          return matches;
-        }
-        for(var i=0; i<poll_opt_regex.length; i+=1) {
-          // title option is given before "","",...
-          // if title given, sets title_given to true
-          // console.log("[debug] checking for early title option");
-
-          if(!!command.match(poll_opt_regex[i])) {
-            title_given = true;
-            command = command.replace(poll_opt_regex[i], "");
-            text += "-t ";
-            if(command.length === 0) {
-              // input command is '@poll -t'
-              text += (quotation_choice+quotation_choice);
-              matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-              return matches;
-            } else break;
-          }
-        }
-
-        // console.log("[debug] checking for quotation choice");
-        if(command[0] !== '"' && command[0] !== "'") {
-          return matches;
-        } else {
-          quotation_choice = command[0];
-        }
-
-        if (title_given === true) {
-          // console.log("[debug] retrieving early title");
-
-          var finished = false;
-          for(var i=1; i<command.length; i+=1) {
-            if(command[i] === quotation_choice && command[i-1] !== "\\") {
-              // user has finished typing title
-              title = command.substring(1, i);
-              title = title.trim();
-              command = command.substring(i+1);
-              finished = true; break;
-            }
-          }
-          if(command.length === 0) {
-            // user has given only the title
-            text += quotation_choice + title + quotation_choice + " ";
-            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-            return matches;
-          } else if(finished === false) {
-            // user is in the middle of typing the title
-            // delete the leading quotation mark and trim the white spaces
-            command = command.substring(1);
-            command = command.trim();
-            text += quotation_choice+ command + quotation_choice + " ";
-            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-            return matches;
-          } else if(finished === true) {
-            // user has given the title, and there is more to come...
-            text += quotation_choice + title + quotation_choice + " ";
-          }
-        } // end of if (title_given === true)
-
-        // remove leading white spaces
-        command = command.replace(/^\s*/g, "");
-        if(command[0] !== quotation_choice)
-          return matches;
-
-        var option = "", finished = false;
-        do {
-          option = "", finished = false;
-          for(var i=1; i<command.length; i+=1) {
-            if(command[i] === quotation_choice && command[i-1] !== "\\") {
-              // user has finished typing title
-              option = command.substring(1, i);
-              option = option.trim();
-              if(option.length !== 0) options.push(option);
-              command = command.substring(i+1);
-              finished = true; break;
-            }
-          }
-          if(command.length === 0) {
-            // this option marks the end of user input
-            for(var i=0; i<options.length; i+=1) {
-              text += quotation_choice + options[i] + quotation_choice;
-              if(i !== options.length-1) text += ', ';
-              else if (i !== 0) text += ' ';
-            }
-            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-            return matches;
-          } else if(finished === false) {
-            // user is in the middle of typing the option
-            // delete the leading quotation mark and trim the white spaces
-            command = command.substring(1);
-            command = command.trim();
-            options.push(command);
-            for(var i=0; i<options.length; i+=1) {
-              text += quotation_choice + options[i] + quotation_choice;
-              if(i !== options.length-1) text += ', ';
-            }
-            matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-            return matches;
-          } else if(finished === true) {
-            // user has given the option, and there is more to come...
-            command = command.replace(/^\s*/g, "");
-            if(command[0] === ',') {
-              command = command.replace(/^,\s*/g, "");
-              if(command.length !== 0) {
-                if(command[0] !== quotation_choice)
-                  return matches;
-              } else {
-                for(var i=0; i<options.length; i+=1) {
-                  text += quotation_choice + options[i] + quotation_choice;
-                  text += ', ';
-                } text += quotation_choice + quotation_choice;
-                matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-                return matches;
-              }
-            } else if (title_given === false && command[0] === '-') {
-              break;
-            } else {
-              return matches;
-            }
-          }
-        } while(true);
-
-        // if you are here, options are taken care of,
-        // and user has not given the title option yet.
-        // command should start with "-"
-        if(!!command.match(/^-(?=[^t])/g)) {
-          // check for invalid option
-          return matches;
-        }
-        title = "";
-        for(var i=0; i<poll_opt_regex.length; i+=1) {
-          // title option is given after "","",...
-
-          if(!!command.match(poll_opt_regex[i])) {
-            command = command.replace(poll_opt_regex[i], "");
-            text += "-t ";
-            if(command.length === 0) {
-              // input command is '@poll -t'
-              text += (quotation_choice+quotation_choice+' ');
-              for(var i=0; i<options.length; i+=1) {
-                text += quotation_choice + options[i] + quotation_choice;
-                if(i !== options.length-1) text += ', ';
-              }
-              matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-              return matches;
-            } else break;
-          }
-        }
-        if(command[0] !== quotation_choice)
-          return matches;
-
-        var finished = false;
-        for(var i=1; i<command.length; i+=1) {
-          if(command[i] === quotation_choice && command[i-1] !== "\\") {
-            // user has finished typing title
-            title = command.substring(1, i);
-            title = title.trim();
-            command = command.substring(i+1);
-            finished = true; break;
-          }
-        }
-        if(command.length === 0) {
-          // user has given only the title
-          text += quotation_choice + title + quotation_choice + " ";
-        } else if(finished === false) {
-          // user is in the middle of typing the title
-          // delete the leading quotation mark and trim the white spaces
-          command = command.substring(1);
-          command = command.trim();
-          text += quotation_choice+ command + quotation_choice + " ";
-          for(var i=0; i<options.length; i+=1) {
-            text += quotation_choice + options[i] + quotation_choice;
-            if(i !== options.length-1) text += ', ';
-          }
-          matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-          return matches;
-        } else if(finished === true) {
-          // user has given the title, and there is more to come...
-          text += quotation_choice + title + quotation_choice + " ";
-        }
-        // title and options all taken care of
-        // there should be no remaining characters in command
-        if(command.length !== 0)
-          return matches;
-      } // if(len <= upper_bound) else
-      // for debugging: print title, options
-      // console.log('title == ', title);
-      // console.log('options == ', options);
-      for(var i=0; i<options.length; i+=1) {
-        text += quotation_choice + options[i] + quotation_choice;
-        if(i !== options.length-1) text += ', ';
-      }
-      matches = matches.concat([{label: valid_syntax.poll, value: text}]);
-      return matches;
-    }
-
     $('#chat_form').submit(function (e) {
       // remove the leading white spaces
-      var comment = $("#chat_input").val().replace(/^\s*/g, "");
+      var command = $("#chat_input").val().replace(/^\s*/g, "");
+      var operation_idx = cnl_chats.operationEnum.error;
       $('#chat_input').val('');
       e.preventDefault();
-      console.log(comment);
-      // debug: check send comment (whether its syntax is correct)
-      // check syntax here
-      // -> if correct, print the comment on console
-      // -> if incorrect, print help message on console
-      // var is_valid = false;
-      // for(var i=0; i<valid_syntax_regex_pattern.length; i+=1) {
-      //   is_valid = !!comment.match(valid_syntax_regex_pattern[i]);
-      //   if(is_valid === true) {
-      //     break;
-      //   }
-      // }
-      // if(is_valid === true) {
-      //   console.log(comment);
-      // } else {
-      //   comment = "'" + comment + "'";
-      //   console.log(comment, "is not a valid command. See '@help'.");
-      // }
+
+      console.log(command);
+
+      operation_idx = cnl_chats.classifyOperation();
+
+      if(operation_idx === cnl_chats.operationEnum.error) {
+        command = "'" + command + "'";
+        console.log(command, "is not a valid command. See '@help'.");
+      }
+      else {
+        cnl_chats.operationTable[operation_idx](command);
+      }
     });
 
     $('#chat_input').autocomplete({
@@ -700,12 +380,11 @@
 
         // debug: return with list of dict
         // remove the leading white spaces
+
         var command = request.term.replace(/^\s*/g, ""),
             matches = [];
-        matches = validate_help_syntax(command, matches);
-        matches = validate_notice_syntax(command, matches);
-        matches = validate_poll_syntax(command, matches);
 
+        matches = cnl_chats.getAutocompletion(command, matches);
         response(matches);
       },
       delay: 0,
@@ -719,67 +398,9 @@
       return to_be_scrolled_position;
     }
 
-    function newPoll(obj) {
-      // debug
-      obj = {hash_value: 'this_is_hash_val', time: '2013.01.05. 13:32', question: 'poll description',
-        answers: ['answer 1', 'answer 2', 'answer 3 - which is very long indeed!', 'ans4']};
-
-      var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
-
-      var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
-      $('#chat_list_items').append(ctx);
-      var pollChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: obj.answers,
-          datasets: [{
-            label: '',
-            data: [13, 43, 92, 13],//data: Array.apply(null, {length: obj.answers.length}).map(function() {return 0;}),
-          }],
-        },
-        options: {
-          responiveAnimationDuration: 100,
-          text: obj.question,
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
-      });
-
-      if(is_end_of_scroll) {
-        $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
-      }
-      else {
-        if($('#chat_scroll_button').css('visibility') == 'hidden') {
-          toBeScrolledPosition(ctx.position().top);
-          $('#chat_scroll_button').css('visibility', 'visible');
-        }
-      }
-    }
-
     function scrollDownToLastest() {
       $('#chat_list_scroll').animate({scrollTop: toBeScrolledPosition()}, 'slow');
       $('#chat_scroll_button').css('visibility', 'hidden');
-    }
-
-    function newNotice(obj) {
-      // debug: get with websocket.
-      //obj = {time: '2013.01.05. 13:32', description: 'notice description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'};
-
-      var preappended_elem = $('#shown-notice').find('div.notice-with-time').detach();
-      if(preappended_elem.length !== 0) {
-        preappended_elem.prependTo('#hidden-notice');
-      }
-
-      $('#shown-notice').append('\
-              <div class="notice-with-time">\
-                <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
-                <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
-              </div>');
     }
 
     function setRoomTitle(str) {
