@@ -25,9 +25,6 @@ cnl_slides.setSlideText = function(str) {
 }
 
 cnl_slides.getNewSlide = function() {
-  //room_label = window.location.pathname;
-  //room_label = room_label.substring(1, room_label.length-1);
-
   console.log('add clicked');
   
   socket.send(JSON.stringify({

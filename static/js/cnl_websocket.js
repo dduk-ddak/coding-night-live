@@ -12,7 +12,7 @@ var cnl_connection = $(function () {
   // Socket opening
   socket.onopen = function () {
     console.log("connected websocket");
-
+    /*
     // slide list init
     var first_slide_idx = 0;
 
@@ -26,6 +26,7 @@ var cnl_connection = $(function () {
 
     // markdown view init
     cnl_slides.getSlideIndex(first_slide_idx);
+    */
 
     room_label = window.location.pathname;
     room_label = room_label.substring(1, room_label.length-1);  // Get label

@@ -7,9 +7,6 @@ var cnl_slides = {
     if(idx === this.curr_slide_idx) {
       return;
     }
-
-    //room_label = window.location.pathname;
-    //room_label = room_label.substring(1, room_label.length-1);
     
     console.log('view slide clicked');
     
