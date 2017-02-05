@@ -123,12 +123,29 @@ def change_slide(message):
 @catch_client_error
 def change_slide_order(message):
     #need to add admin_user authentication
+    """
     room = get_room_or_error(message["room"])
     a_slide = Slide.objects.get(room=room, now_id=message["id"])
     b_slide = Slide.objects.get(room=room, now_id=message["next_id"])
 
-    temp = a_slide.next_id
-    c_slide = Slide.objects.get(room=room, next_id=message["next_id"])
+    temp_title = a_slide.title
+    temp_md_blob = a_slide.md_blob
+
+    a_slide.title = b_slide.title
+    a_slide.md_blob = b_slide.md_blob
+    b_slide.title = temp_title
+    b_slide.md_blob = temp_md_blob
+
+    a_slide.save()
+    b_slide.save()
+    """
+    """
+    idx = int(message["next_id"]) - 1
+
+    room = get_room_or_error(message["room"])
+    a_slide = Slide.objects.get(room=room, now_id=message["id"])
+    b_slide = Slide.objects.get(room=room, next_id=message["next_id"])
+    c_slide = Slide.objects.get(room=room, next_id=idx)
     
     is_header = Slide.objects.get(room=room, next_id=message["id"])
     if is_header.title == "header@slide":
@@ -136,16 +153,14 @@ def change_slide_order(message):
         is_header.next_id = b_slide.now_id
         is_header.save()
     
-    if c_slide == a_slide:
-        a_slide.next_id = b_slide.next_id
-        b_slide.next_id = a_slide.now_id
-    else:
-        a_slide.next_id = b_slide.next_id
-        b_slide.next_id = temp
-        c_slide.next_id = a_slide.now_id
+    temp = a_slide.next_id
+    a_slide.next_id = b_slide.now_id
+    b_slide.next_id = a_slide.now_id
+    c_slide.next_id = temp
 
     a_slide.save()
     b_slide.save()
+    """
     """
     room = get_room_or_error(message["room"])
     a_slide = Slide.objects.get(room=room, now_id=message["id"])

@@ -113,7 +113,7 @@ cnl_slides.getChangeSlideOrder = function (idx, next) {
   socket.send(JSON.stringify({
     "command": "change_slide_order",
     "id": idx,
-    "next_id": next-1,
+    "next_id": next,
     "room": room_label
   }));
 }
