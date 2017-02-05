@@ -4,7 +4,6 @@ def javaHash(s):
     if not s: return 0
     for ch in s:
         ch = ord(ch)
-        print(ch)
         h = ((h<<5)-h) + ch
         h %= max_h
     return h

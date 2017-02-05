@@ -48,7 +48,12 @@ var cnl_slides = {
   },
 
   // callback for change slide's content with patches
-  changeSlideText: function (idx, patch, remote_pre_hash, remote_curr_hash) {
+  changeSlideText: function (obj) {
+    var idx = obj.id;
+    var patch = obj.patch_text;
+    var remote_pre_hash = obj.pre_hash;
+    var remote_curr_hash = obj.curr_hash;
+
     if(idx === curr_slide_idx) {
       var local_pre_text = this.curr_slide_text;
       var local_pre_hash = cnl_globals.hash(local_pre_text);
@@ -59,7 +64,7 @@ var cnl_slides = {
       // Case 2: Normal update
       else if(local_pre_hash === remote_pre_hash) {
         var patches = cnl_globals.dmp.patch_fromText(patch);
-        var local_curr_text = cnl_globals.dmp.patch_apply(patches, pre_text);
+        var local_curr_text = cnl_globals.dmp.patch_apply(patches, pre_text)[0];
         this.curr_slide_text = local_curr_text;
       }
 

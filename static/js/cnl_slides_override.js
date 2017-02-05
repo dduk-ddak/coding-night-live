@@ -13,9 +13,15 @@ cnl_slides.setSlideText = function (str) {
     var patch_text = cnl_globals.dmp.patch_toText(patches);
     var pre_hash = cnl_globals.hash(this.curr_slide_text);
     var curr_hash = cnl_globals.hash(str);
-    // debug: send patch_text
-    console.log(patch_text);
-    // debug end
+
+    socket.send(JSON.stringify({
+      "command": "change_slide",
+      "room": room_label,
+      "id": this.curr_slide_idx,
+      "patch_text": patch_text,
+      "pre_hash": pre_hash,
+      "curr_hash": curr_hash,
+    }));
   }
 
   this.curr_slide_text = str;
