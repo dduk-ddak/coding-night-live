@@ -29,7 +29,11 @@ def RoomCreateView(request):
                 continue
             url += share_link
             room = Room.objects.create(title=share_link, admin_user=request.user, link=url, label=share_link)
-    Slide.objects.create(title="header@slide", room=room)  # Create header slide
+    header = Slide.objects.create(title="header@slide", room=room)  # Create header slide
+    first_slide = Slide.objects.create(room=room)
+    header.next_id = first_slide.now_id
+    header.save()
+
 
     return HttpResponseRedirect(url)
 
