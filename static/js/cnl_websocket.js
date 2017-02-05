@@ -12,26 +12,16 @@ var cnl_connection = $(function () {
   // Socket opening
   socket.onopen = function () {
     console.log("connected websocket");
-    /*
-    // slide list init
-    var first_slide_idx = 0;
-
-    // if it is empty room
-    if(slide_list.length === 1) {
-      first_slide_idx = cnl_slides.getNewSlide();
-    }
-    else {
-      first_slide_idx = parseInt($('#slide_list li:nth-child(2)').attr('id').split('_')[1]);
-    }
-
-    // markdown view init
-    cnl_slides.getSlideIndex(first_slide_idx);
-    */
 
     socket.send(JSON.stringify({
       "command": "join",
       "room": room_label
     }));
+
+    // markdown view init
+    var first_slide_idx = parseInt($('#slide_list li:nth-child(2)').attr('id').split('_')[1]);
+    console.log(first_slide_idx);
+    cnl_slides.getSlideIndex(first_slide_idx);
   };
   
   // Socket closing

@@ -18,16 +18,9 @@ var cnl_slides = {
   },
 
   setSlideIndex: function (data) {
-    // debug: do something with idx and get data
-    console.log('setSlideIndex');
-    console.log(data);
-
     var title = data.title;
     var content = data.md_blob;
     var idx = data.idx;
-    //var title = 'this is title of idx ' + idx.toString();
-    //var content = '# this is title with idx ' + idx.toString() + '\n## and this is content!\n### this too!';
-    // debug: end
 
     $('#markdown_title').text(title);
     this.setSlideText(content);
