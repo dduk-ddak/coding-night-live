@@ -64,8 +64,11 @@ var cnl_slides = {
       // Case 2: Normal update
       else if(local_pre_hash === remote_pre_hash) {
         var patches = cnl_globals.dmp.patch_fromText(patch);
-        var local_curr_text = cnl_globals.dmp.patch_apply(patches, pre_text)[0];
+        var local_curr_text = cnl_globals.dmp.patch_apply(patches, this.curr_slide_text)[0];
         this.curr_slide_text = local_curr_text;
+
+        console.log('LOCAL UPDATE : ' + local_curr_text);
+        this.setSlideText(local_curr_text);
       }
 
       // Case 3: Late update

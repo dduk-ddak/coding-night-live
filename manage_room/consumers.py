@@ -260,7 +260,7 @@ def change_slide(message):
             print('something is wrong')
             pass # something wrong. broadcast whole string to everybody
         else:
-            message.reply_channel.send({
+            Group(message["room"]).send({
                 "text": json.dumps({
                     "change_slide": "true",
                     "room": message["room"],
