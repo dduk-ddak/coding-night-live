@@ -54,7 +54,7 @@ var cnl_slides = {
     var remote_pre_hash = obj.pre_hash;
     var remote_curr_hash = obj.curr_hash;
 
-    if(idx === curr_slide_idx) {
+    if(idx === this.curr_slide_idx) {
       var local_pre_text = this.curr_slide_text;
       var local_pre_hash = cnl_globals.hash(local_pre_text);
 
