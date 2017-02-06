@@ -209,13 +209,8 @@ var cnl_chats = {
   },
 
   helpWrapper: function(command) {
-    var valid_syntax = [
-      "@help",
-      "@notice [<args>]",
-      "@poll [-t <\"title\">] <\"options\", ...>",
-    ];
 
-    console.log(valid_syntax);
+    console.log(cnl_chats.valid_syntax);
   },
 
   getDateString: function() {
