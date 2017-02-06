@@ -109,7 +109,9 @@
       <!-- Navbar: Title -->
       <h3 id="room_title" class="navbar-text" style="color:white">{{ title }}</h3>
       <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
-      <a href="#" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <!-- Copy a url -->
+      <a onclick="window.prompt('Copy to Clipboard: Ctrl+C, Enter', document.location.href);" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <!-- Download PDF file -->
       <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
 
       <!-- Navbar: People count -->

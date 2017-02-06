@@ -1,6 +1,6 @@
 var cnl_globals = {
   // hash function that converts string --> integer
-  hash: function java_hash_conv(str) {
+  hash: function java_hash_conv (str) {
     var hash = 0, i, chr, len;
     if (str.length === 0) return hash;
     for (i = 0, len = str.length; i < len; i++) {
@@ -15,7 +15,7 @@ var cnl_globals = {
   md: markdownit({
     html: true,
     breaks: false,
-    highlight: function(str, lang){
+    highlight: function (str, lang){
       // add line numbers for result
       var line_numbers = str.split('\n').length - 1;
       if(str[str.length-1] !== '\n') line_numbers += 1;

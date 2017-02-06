@@ -24,10 +24,10 @@ cnl_globals.typing_latency = 1000;
 cnl_globals.typing_timer;
 cnl_globals.typing_buffer;
 
-cnl_globals.editor.codemirror.on("change", function(e) {
+cnl_globals.editor.codemirror.on("change", function (e) {
   cnl_globals.typing_buffer = e.getValue();
   clearTimeout(cnl_globals.typing_timer);
-  cnl_globals.typing_timer = setTimeout(function() {
+  cnl_globals.typing_timer = setTimeout(function () {
     cnl_slides.setSlideText(cnl_globals.typing_buffer);
   }, cnl_globals.typing_latency);
 });
