@@ -274,19 +274,6 @@ var cnl_chats = {
     "See '@help' for the list of available commands.");
   },
 
-  newNotice: function(obj) {
-    var preappended_elem = $('#shown-notice').find('div.notice-with-time').detach();
-    if(preappended_elem.length !== 0) {
-      preappended_elem.prependTo('#hidden-notice');
-    }
-
-    $('#shown-notice').append('\
-        <div class="notice-with-time">\
-        <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
-        <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
-        </div>');
-  },
-
   newChat: function(obj) {
     var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var appended_elem = 0;
@@ -323,44 +310,6 @@ var cnl_chats = {
       }
     }
   },
-
-  newPoll: function (obj) {
-    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
-    var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
-    $('#chat_list_items').append(ctx);
-    var pollChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: obj.answers,
-        datasets: [{
-          label: '',
-          data: [13, 43, 92, 13],//data: Array.apply(null, {length: obj.answers.length}).map(function() {return 0;}),
-        }],
-      },
-      options: {
-        responiveAnimationDuration: 100,
-        text: obj.question,
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    });
-
-    if(is_end_of_scroll) {
-      $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
-    }
-    else {
-      if($('#chat_scroll_button').css('visibility') == 'hidden') {
-        toBeScrolledPosition(ctx.position().top);
-        $('#chat_scroll_button').css('visibility', 'visible');
-      }
-    }
-  },
-
 };
 
 cnl_chats.chatHashList = [];
