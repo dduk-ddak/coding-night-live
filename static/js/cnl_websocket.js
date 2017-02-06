@@ -25,7 +25,7 @@ var cnl_connection = $(function () {
   };
   
   // Socket closing
-  socket:onclose = function () {
+  socket.onclose = function () {
     console.log("disconnected websocket");
     
     socket.send(JSON.stringify({
@@ -80,6 +80,8 @@ var cnl_communicate = $(function () {
       cnl_slides.changeSlideText(data);
     } else if (data.rename_room) {
       cnl_rooms.renameRoom(data.rename_room);
+    } else if (data.count_user) {
+      cnl_rooms.countUser(data.count_user);
     } else if (data.msg_type) {
       // msg_types are defined in manage_room/setting.py
       switch (data.msg_type) {

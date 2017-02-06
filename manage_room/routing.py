@@ -4,7 +4,7 @@ from .consumers import room_join, room_leave, room_title_rename, new_slide, del_
 # Websocket command : join => call room_join
 custom_routing = [
     route("room.receive", room_join, command="^join$"),
-    route("room.receive", room_leave, command="^leave"),
+    route("room.receive", room_leave, command="^leave$"),
     route("room.receive", room_title_rename, command="^rename_room_title$"),
     route("room.receive", new_slide, command="^new_slide$"),
     route("room.receive", get_slide, command="^get_slide$"), 

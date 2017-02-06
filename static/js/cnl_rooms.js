@@ -1,6 +1,5 @@
 var cnl_rooms = {
   renameRoom: function (title) {
-    console.log("OK for cnl_rooms");
     // called from modal
     if(typeof title == 'undefined') {
       var title = $('#room_title_input').val();
@@ -14,5 +13,10 @@ var cnl_rooms = {
     }
     console.log(title);
     $('#room_title').text(title);
+    $('#head_title').text(str + ' :: coding-night-live');
+  },
+
+  countUser: function (cnt) {
+    $('#user_count').text(cnt);
   },
 };

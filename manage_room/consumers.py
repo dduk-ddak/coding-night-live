@@ -47,6 +47,17 @@ def room_join(message):
         }),
     })
 
+    curr_tot = cache.get(message["room"])
+    if not curr_tot:
+        curr_tot = 0
+
+    cache.set(message["room"], curr_tot + 1, timeout=None)
+    Group(message["room"]).send({
+        "text": json.dumps({
+            "count_user": curr_tot + 1,
+        }),
+    })
+
 @channel_session_user
 @catch_client_error
 def room_leave(message):
@@ -65,6 +76,19 @@ def room_leave(message):
             "leave": str(room.label),
         }),
     })
+
+    curr_tot = cache.get(message["room"])
+    if curr_tot < 2:
+        cache.expire(message["room"], timeout=0)
+    else:
+        cache.set(message["room"], curr_tot - 1, timeout=None)
+
+    Group(message["room"]).send({
+        "text": json.dumps({
+            "count_user": curr_tot - 1,
+        }),
+    })
+    print('room_leave')
 
 @channel_session_user
 @catch_client_error
