@@ -28,10 +28,10 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [`python`](https://www.python.org/) 3.x
 * [`django`](https://github.com/django/django) 1.9 or later
 * [`django-allauth`](https://github.com/pennersr/django-allauth)
+* [`django-redis`](https://github.com/niwinz/django-redis)
 * [`python-social-auth`](https://github.com/omab/python-social-auth)
 * [`bootstrap`](https://github.com/twbs/bootstrap)
 * [`react`](https://github.com/facebook/react)
-* [`socket.io`](https://github.com/socketio/socket.io)
 * [`CodeMirror`](https://github.com/codemirror/CodeMirror)
 * [`bootstrap4 (alpha)`](https://v4-alpha.getbootstrap.com/)
 * [`jquery`](https://github.com/jquery/jquery)
@@ -43,6 +43,9 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [`simplemde-markdown-editor`](https://github.com/NextStepWebs/simplemde-markdown-editor)
 * [`jquery-ui`](https://github.com/jquery/jquery-ui)
 * [`Font-Awesome`](https://github.com/FortAwesome/Font-Awesome)
+* [`google-diff-match-patch`](https://code.google.com/p/google-diff-match-patch/)
+* [`reconnecting-websocket`](https://github.com/joewalnes/reconnecting-websocket)
+* [`tether`](https://github.com/HubSpot/tether/)
 
 ## License
 Coding-Night-Live is licensed under the MIT license.
