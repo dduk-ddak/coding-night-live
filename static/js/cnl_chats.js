@@ -36,6 +36,7 @@ var cnl_chats = {
   },
 
   getHelpAutocompletion: function(command, matches) {
+    command = command.trim();
     var len = command.length,
         upper_bound = 5, // length of '@help'
         is_valid = false,
@@ -44,8 +45,8 @@ var cnl_chats = {
     var help_regex = [
         /@/g, /@h/g, /@he/g,
         /@hel/g, /@help/g,
-        /^(\s)*@help\s*$/g,];
-
+        /^(\s)*@help\s*$/g,
+    ];
     if(len <= upper_bound) {
       // user is still typing the command;
       // check for partial syntax.
@@ -54,6 +55,7 @@ var cnl_chats = {
       // check for full systax
       is_valid = !!command.match(help_regex[upper_bound]);
     }
+
     if(is_valid === true) {
       matches = matches.concat([{label: this.valid_syntax.help,
                                  value: text}]);
@@ -134,9 +136,10 @@ var cnl_chats = {
       if(is_complete_hash) {
         matches = matches.concat([{label: label,
                                    value: text}]);
+        return matches;
       }
-      return matches;
     }
+    return matches;
   },
 
   isValidHelpSyntax: function(command) {
