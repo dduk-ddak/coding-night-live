@@ -10,10 +10,10 @@ from manage_room.models import Room
 
 # Create your models here.
 def _createHash():
-    """generate 10 character long hash"""
+    """generate 6 character long hash"""
     now = str(time.time()).encode('utf-8')
     hash = hashlib.sha1(now)
-    return hash.hexdigest()[:-10]
+    return hash.hexdigest()[:6]
 
 class Notice(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)    #fk
