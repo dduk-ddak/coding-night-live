@@ -15,11 +15,11 @@ var cnl_chats = {
   classifyOperation: function (command) {
     var operation_idx;
 
-    if(this.isValidHelpSyntax(command)) {
+    if (this.isValidHelpSyntax(command)) {
       operation_idx = this.operationEnum.help;
-    } else if(this.isValidReplySyntax(command)) {
+    } else if (this.isValidReplySyntax(command)) {
       operation_idx = this.operationEnum.reply;
-    } else if(this.isPossibleTypo(command)) {
+    } else if (this.isPossibleTypo(command)) {
       operation_idx = this.operationEnum.typo;
     } else {
       operation_idx = this.operationEnum.chat;
@@ -35,7 +35,7 @@ var cnl_chats = {
     return matches;
   },
 
-  getHelpAutocompletion: function(command, matches) {
+  getHelpAutocompletion: function (command, matches) {
     command = command.trim();
     var len = command.length,
         upper_bound = 5, // length of '@help'
@@ -47,7 +47,7 @@ var cnl_chats = {
         /@hel/g, /@help/g,
         /^(\s)*@help\s*$/g,
     ];
-    if(len <= upper_bound) {
+    if (len <= upper_bound) {
       // user is still typing the command;
       // check for partial syntax.
       is_valid = !!command.match(help_regex[len-1]);
@@ -56,14 +56,14 @@ var cnl_chats = {
       is_valid = !!command.match(help_regex[upper_bound]);
     }
 
-    if(is_valid === true) {
+    if (is_valid === true) {
       matches = matches.concat([{label: this.valid_syntax.help,
                                  value: text}]);
     }
     return matches;
   },
 
-  getReplyAutocompletion: function(command, matches) {
+  getReplyAutocompletion: function (command, matches) {
     command = command.trim();
     var len = command.length,
         upper_bound = 6, // length of '@reply'
@@ -77,10 +77,10 @@ var cnl_chats = {
 
     var label = "@reply ", labels = [], texts = [];
 
-    if(len <= upper_bound) {
+    if (len <= upper_bound) {
       // user is still typing the command;
       // check for partial syntax.
-      if(!!command.match(reply_regex[len-1])) {
+      if (!!command.match(reply_regex[len-1])) {
         matches = matches.concat([{label: this.valid_syntax.reply,
                                    value: text}]);
         return matches;
@@ -88,12 +88,12 @@ var cnl_chats = {
     } else {
       // check for full systax
       // first character after @reply must be a digit
-      if(!!!command.match(/^\s*@reply\s*(?=[\d])/g))
+      if (!!!command.match(/^\s*@reply\s*(?=[\d])/g))
         return matches;
       // remove '@reply '
       command = command.replace(/^(\s)*@reply\s*/g, "");
 
-      if(command.search(/^\d+(?!\w)/g) === -1) {
+      if (command.search(/^\d+(?!\w)/g) === -1) {
         // invalid user-given hash value
         return matches;
       }
@@ -104,16 +104,16 @@ var cnl_chats = {
       var is_valid_hash = false, is_complete_hash = false;
       var partial_hash_regex, complete_hash_regex;
 
-      for(var i=0; i<cnl_chats.chatHashList.length; i+=1) {
+      for (var i=0; i<cnl_chats.chatHashList.length; i+=1) {
         partial_hash_regex = new RegExp("^"+hash, "g");
         complete_hash_regex = new RegExp("^"+hash+"$", "g");
 
-        if(!!cnl_chats.chatHashList[i].match(complete_hash_regex)) {
+        if (!!cnl_chats.chatHashList[i].match(complete_hash_regex)) {
           text += hash + " ";
           label += hash + " <comment>";
           is_complete_hash = true;
           break;
-        } else if(!!cnl_chats.chatHashList[i].match(partial_hash_regex))
+        } else if (!!cnl_chats.chatHashList[i].match(partial_hash_regex))
         {
           labels.push(text + cnl_chats.chatHashList[i] + " <comment>");
           texts.push(text + cnl_chats.chatHashList[i] + " ");
@@ -121,19 +121,19 @@ var cnl_chats = {
         }
       }
 
-      if(command.length === 0) {
+      if (command.length === 0) {
         if (is_complete_hash) {
           matches = matches.concat([{label: label,
                                      value: text}]);
         } else if (is_valid_hash) {
-          for(var i=0; i<cnl_chats.chatHashList.length; i+=1)
+          for (var i=0; i<cnl_chats.chatHashList.length; i+=1)
             matches = matches.concat([{label: labels[i],
                                        value: texts[i]}]);
         }
         return matches;
       }
 
-      if(is_complete_hash) {
+      if (is_complete_hash) {
         matches = matches.concat([{label: label,
                                    value: text}]);
         return matches;
@@ -142,7 +142,7 @@ var cnl_chats = {
     return matches;
   },
 
-  isValidHelpSyntax: function(command) {
+  isValidHelpSyntax: function (command) {
     var is_valid = false;
     var help_regex = [/^\s*@help\s*$/g];
 
@@ -150,7 +150,7 @@ var cnl_chats = {
     return is_valid;
   },
 
-  isValidReplySyntax: function(command) {
+  isValidReplySyntax: function (command) {
     var is_valid = false,
         hash = "",
         comment = "";
@@ -158,13 +158,13 @@ var cnl_chats = {
     command = command.trim();
 
     // starts with '@reply '
-    if(!!!command.match(/^\s*@reply\s+/g)) {
+    if (!!!command.match(/^\s*@reply\s+/g)) {
       // console.log("doesn't start with '@reply '");
       return is_valid;
     }
     command = command.replace(/^\s*@reply\s+/g, "");
 
-    if(!!!command.match(/^\d+(?!\w)/g))
+    if (!!!command.match(/^\d+(?!\w)/g))
       return is_valid;
 
     hash = command.match(/^\d+(?!\w)/g)[0];
@@ -173,21 +173,21 @@ var cnl_chats = {
     var is_valid_hash = false,
         complete_hash_regex;
 
-    for(var i=0; i<cnl_chats.chatHashList.length; i+=1) {
+    for (var i=0; i<cnl_chats.chatHashList.length; i+=1) {
       complete_hash_regex = new RegExp("^"+hash+"$", "g");
-      if(!!cnl_chats.chatHashList[i].match(complete_hash_regex)) {
+      if (!!cnl_chats.chatHashList[i].match(complete_hash_regex)) {
         is_valid_hash = true;
         break;
       }
     }
 
-    if(!is_valid_hash){
+    if (!is_valid_hash){
       // invalid hash value given
       // console.log("invalid hash");
       return is_valid;
     }
 
-    if(command.length === 0){
+    if (command.length === 0){
       // empty comment
       // console.log("empty comment");
       return is_valid;
@@ -199,7 +199,7 @@ var cnl_chats = {
     return is_valid;
   },
 
-  isPossibleTypo: function(command) {
+  isPossibleTypo: function (command) {
     var is_valid = false;
     var typo_regex = [/^\s*(?=@)/g];
 
@@ -208,12 +208,12 @@ var cnl_chats = {
     return is_valid;
   },
 
-  helpWrapper: function(command) {
+  helpWrapper: function (command) {
 
     console.log(cnl_chats.valid_syntax);
   },
 
-  getDateString: function() {
+  getDateString: function () {
     var date = new Date();
     var year = date.getFullYear(),
         month = date.getMonth(),
@@ -229,7 +229,7 @@ var cnl_chats = {
     return date_string;
   },
 
-  chatWrapper: function(command) {
+  chatWrapper: function (command) {
     socket.send(JSON.stringify({
       "command": "new_chat",
       "description": command,
@@ -238,7 +238,7 @@ var cnl_chats = {
     }));
   },
 
-  replyWrapper: function(command) {
+  replyWrapper: function (command) {
     var hash_value, description;
 
     command = command.trim();
@@ -248,27 +248,27 @@ var cnl_chats = {
 
     hash_value = command.match(/^\d+(?!\w)/g)[0];
     command = command.replace(/^\d+\s*(?!\w)/g, "");
-    description = command;
+    //description = command;
 
     socket.send(JSON.stringify({
       "command": "new_chat",
-      "description": description,
+      "description": command,
       "hash": hash_value,
       "room": room_label,
       "is_reply": true,
     }));
   },
 
-  showTypoAlertMessage: function(command) {
+  showTypoAlertMessage: function (command) {
     command = "'" + command + "'";
     console.log(command, "is not a valid command. " +
     "See '@help' for the list of available commands.");
   },
 
-  newChat: function(obj) {
+  newChat: function (obj) {
     var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var appended_elem = 0;
-    if(obj.is_reply) {
+    if (obj.is_reply) {
       appended_elem = $('\
           <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>\
           <div class="card" style="margin-left:30px;">\
@@ -292,11 +292,11 @@ var cnl_chats = {
           </div>');
       $('#chat_list_items').append(appended_elem);
     }
-    if(is_end_of_scroll) {
+    if (is_end_of_scroll) {
       $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'slow');
     }
     else {
-      if($('#chat_scroll_button').css('visibility') == 'hidden') {
+      if ($('#chat_scroll_button').css('visibility') == 'hidden') {
         toBeScrolledPosition(appended_elem.position().top);
         $('#chat_scroll_button').css('visibility', 'visible');
       }

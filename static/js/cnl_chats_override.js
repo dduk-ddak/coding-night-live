@@ -27,15 +27,15 @@ cnl_chats.operationTable = [
 cnl_chats.classifyOperation = function (command) {
   var operation_idx;
 
-  if(this.isValidHelpSyntax(command)) {
+  if (this.isValidHelpSyntax(command)) {
     operation_idx = this.operationEnum.help;
-  } else if(this.isValidReplySyntax(command)) {
+  } else if (this.isValidReplySyntax(command)) {
     operation_idx = this.operationEnum.reply;
-  } else if(this.isValidNoticeSyntax(command)){
+  } else if (this.isValidNoticeSyntax(command)){
     operation_idx = this.operationEnum.notice;
-  } else if(this.isValidPollSyntax(command)) {
+  } else if (this.isValidPollSyntax(command)) {
     operation_idx = this.operationEnum.poll;
-  } else if(this.isPossibleTypo(command)) {
+  } else if (this.isPossibleTypo(command)) {
     operation_idx = this.operationEnum.typo;
   } else {
     operation_idx = this.operationEnum.chat;
@@ -73,17 +73,24 @@ cnl_chats.getPollAutocompletion = function (command, matches) {
   return matches;
 }
 
-cnl_chats.noticeWrapper = function() {
+cnl_chats.noticeWrapper = function (command) {
   console.log("run notice");
+  // just for testing..
+  socket.send(JSON.stringify({
+      "command": "notice",
+      "description": command,
+      "room": room_label
+  }));
+
   return;
 }
 
-cnl_chats.pollWrapper = function() {
+cnl_chats.pollWrapper = function () {
   console.log("run poll");
   return;
 }
 
-cnl_chats.newNotice = function(obj) {
+cnl_chats.newNotice = function (obj) {
   var preappended_elem = $('#shown-notice').find('div.notice-with-time').detach();
   if(preappended_elem.length !== 0) {
     preappended_elem.prependTo('#hidden-notice');
@@ -122,11 +129,11 @@ cnl_chats.newPoll = function (obj) {
     }
   });
 
-  if(is_end_of_scroll) {
+  if (is_end_of_scroll) {
     $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
   }
   else {
-    if($('#chat_scroll_button').css('visibility') == 'hidden') {
+    if ($('#chat_scroll_button').css('visibility') == 'hidden') {
       toBeScrolledPosition(ctx.position().top);
       $('#chat_scroll_button').css('visibility', 'visible');
     }
