@@ -230,27 +230,16 @@ var cnl_chats = {
   },
 
   chatWrapper: function(command) {
-    var obj = {hash_value: '', time: '', description: '', is_reply: false};
-    var hash_value = cnl_globals.hash(command),
-        date_string = cnl_chats.getDateString();
-
-    if(hash_value < 0)
-      hash_value = hash_value * -1;
-
-    obj.hash_value = hash_value;
-    obj.time = date_string;
-    obj.description = command;
-
-    cnl_chats.chatHashList.push(String(obj.hash_value));
-
-    cnl_chats.newChat(obj);
+    socket.send(JSON.stringify({
+      "command": "new_chat",
+      "description": command,
+      "room": room_label,
+      "is_reply": false,
+    }));
   },
 
   replyWrapper: function(command) {
-    var obj = {hash_value: '', time: '', description: '', is_reply: true};
-    var hash_value,
-        description,
-        date_string = cnl_chats.getDateString();
+    var hash_value, description;
 
     command = command.trim();
 
@@ -261,11 +250,13 @@ var cnl_chats = {
     command = command.replace(/^\d+\s*(?!\w)/g, "");
     description = command;
 
-    obj.hash_value = hash_value;
-    obj.time = date_string;
-    obj.description = description;
-
-    cnl_chats.newChat(obj);
+    socket.send(JSON.stringify({
+      "command": "new_chat",
+      "description": description,
+      "hash": hash_value,
+      "room": room_label,
+      "is_reply": true,
+    }));
   },
 
   showTypoAlertMessage: function(command) {
@@ -288,6 +279,7 @@ var cnl_chats = {
       $('#chat_list_items').find('#chat_' + obj.hash_value).append(appended_elem);
     }
     else {
+      this.chatHashList.push(String(obj.hash_value));
       appended_elem = $('\
           <div id="chat_' + obj.hash_value + '">\
           <div class="card">\

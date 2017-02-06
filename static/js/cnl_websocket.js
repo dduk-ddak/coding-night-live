@@ -59,7 +59,7 @@ var cnl_communicate = $(function () {
       setRoomTitle(data.title)
     } else if (data.chat) {
       // New chat
-      newChat(data);
+      cnl_chats.newChat(data);
     } else if (data.notice) {
       // New notice
       newNotice(data);

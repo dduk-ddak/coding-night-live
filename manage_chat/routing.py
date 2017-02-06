@@ -12,7 +12,7 @@ from .consumers import new_chat, new_notice
 # Websocket command :
 custom_routing = [
     #route("room.receive", talk_join, command="^join$"),
-    route("room.receive", new_chat, command="^chat$"),
+    route("room.receive", new_chat, command="^new_chat$"),
     route("room.receive", new_notice, command="^notice$"),
     #route("room.receive", talk_leave, command="^leave$"),
     #route("talk.receive", start_poll, command="^start_poll$"),
