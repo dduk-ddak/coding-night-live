@@ -4,13 +4,11 @@ var cnl_chats = {
     error: -1
   },
 
-  operationTable: [
-    this.helpWrapper,
-  ],
-
   classifyOperation: function (command) {
     var operation_idx = this.operationEnum.error;
 
+    console.log("classifyOperation");
+    operation_idx = this.operationEnum.help;
     return operation_idx;
   },
 
@@ -122,6 +120,8 @@ var cnl_chats = {
     }
   },
 
-
-
 };
+
+cnl_chats.operationTable = [
+  cnl_chats.helpWrapper
+];
