@@ -355,21 +355,18 @@
     $('#chat_form').submit(function (e) {
       // remove the leading white spaces
       var command = $("#chat_input").val().replace(/^\s*/g, "");
-      var operation_idx = cnl_chats.operationEnum.error;
+      var operation_idx;
+
       $('#chat_input').val('');
       e.preventDefault();
 
-      console.log(command);
-
-      operation_idx = cnl_chats.classifyOperation();
-
-      if(operation_idx === cnl_chats.operationEnum.error) {
-        command = "'" + command + "'";
-        console.log(command, "is not a valid command. See '@help'.");
+      if(command.length === 0) {
+        // no action for empty input
+        return;
       }
-      else {
-        cnl_chats.operationTable[operation_idx](command);
-      }
+
+      operation_idx = cnl_chats.classifyOperation(command);
+      cnl_chats.operationTable[operation_idx](command);
     });
 
     $('#chat_input').autocomplete({
