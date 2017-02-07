@@ -244,6 +244,46 @@ def change_slide(message):
 
 @channel_session_user
 @catch_client_error
+def get_slide_diff(message):
+    # cache is expired, moved to redis->sqlite
+    if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
+        with transaction.atomic():
+            room = get_room_or_error(message["room"])
+            slide = Slide.objects.get(room=room, now_id=message["id"])
+            hash_blob = javaHash(slide.md_blob)
+            cache.set("%s/%s" % (message["room"], message["id"]), slide.md_blob, timeout=60)
+            cache.set("%s/%s/%s" % (message["room"], message["id"], hash_blob), slide.md_blob, timeout=60)
+    else:
+        cache.expire("%s/%s" % (message["room"], message["id"]), timeout=60)
+
+    curr_text = cache.get("%s/%d" % (message["room"], message["id"]))
+
+    if cache.ttl("%s/%s/%s" % (message["room"], message["id"], message["hash"])) == 0:
+        message.reply_channel.send({
+            "text": json.dumps({
+                "change_slide": "whole",
+                "id": message["id"],
+                "curr_text": curr_text,
+            }),
+        })
+    else:
+        cache.expire("%s/%s/%s" % (message["room"], message["id"], message["hash"]), timeout=60)
+        dmp = diff_match_patch()
+        pre_text = cache.get("%s/%s/%s" % (message["room"], message["id"], message["hash"]))
+        patches = dmp.patch_make(pre_text, curr_text)
+        patch_text = dmp.patch_toText(patches)
+        message.reply_channel.send({
+            "text": json.dumps({
+                "change_slide": "diff",
+                "id": message["id"],
+                "patch_text": patch_text,
+                "pre_hash": message["hash"],
+                "curr_hash": javaHash(curr_text),
+            }),
+        })
+
+@channel_session_user
+@catch_client_error
 def rename_room(message):
     # need to add admin_user authentication
     room = get_room_or_error(message["room"])

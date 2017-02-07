@@ -89,9 +89,14 @@ var cnl_slides = {
 
         // Case 3: Late update
         else {
-          // debug: send local_pre_hash
-          // eventually, changeSlide will be called again by websocket
-          // debug
+          console.log('late update triggered')
+          socket.send(JSON.stringify({
+            "command": "get_slide_diff",
+            "room": room_label,
+            "id": obj.id,
+            "hash": local_pre_hash,
+            "type": "diff",
+          }));
         }
       }
     }
