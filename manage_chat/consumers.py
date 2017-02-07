@@ -34,7 +34,7 @@ def new_notice(message):
     #notice.send_message(message["description"])
 
 @channel_session_user
-#@catch_client_error
+@catch_client_error
 def new_poll(message):
     room = get_room_or_error(message["room"])
     answer_count = []
@@ -46,8 +46,15 @@ def new_poll(message):
     poll.start_poll(room.label)
 
 @channel_session_user
-#@catch_client_error
-def result_poll(message):
+@catch_client_error
+def end_poll(message):
+    # developing...
     room = get_room_or_error(message["room"])
+    poll = Poll.objects.get(room=room, questiong=message["question"])
     answer = message["answer"]
-    answer_count = str(Poll.objects.get(room=room, question=message["question"]).answer_count)
+    answer_count = str(poll.answer_count)
+
+    poll.answer_count = answer_count
+    poll.save()
+
+    poll.result_poll()

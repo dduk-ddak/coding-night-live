@@ -13,7 +13,7 @@ def _createHash():
     # Generate 10 character long hash
     now = str(time.time()).encode('utf-8')
     hash = hashlib.sha1(now)
-    return hash.hexdigest()[:10]
+    return hash.hexdigest()[:7]
 
 class Notice(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)    #fk
@@ -60,8 +60,14 @@ class Poll(models.Model):
         return Group(str(self.room.label))
     
     def start_poll(self, label):
-        final_msg = {'poll': label, 'question': str(self.question), 'answer': self.answer}
+        final_msg = {'start_poll': label, 'question': str(self.question), 'answer': self.answer}
         #final_msg = {'poll': label, 'question': str(self.question), 'answer': str(self.answer)}
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )
+    
+    def result_poll(self):
+        final_msg = {'result_poll': label, 'question': str(self.question), 'answer_count': str(self.answer_count)}
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )
@@ -69,8 +75,8 @@ class Poll(models.Model):
 class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
-    hash_value = models.CharField(max_length=10, default=_createHash, unique=True)
-    assist_hash = models.CharField(max_length=10, default=0)    # saving existing hash (is_reply=True)
+    hash_value = models.CharField(max_length=7, default=_createHash, unique=True)
+    assist_hash = models.CharField(max_length=7, default=0)    # saving existing hash (is_reply=True)
     time = models.DateTimeField(default=timezone.now)
     is_reply = models.BooleanField(default=False)
     description = models.TextField()
