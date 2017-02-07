@@ -10,10 +10,10 @@ from manage_room.models import Room
 
 # Create your models here.
 def _createHash():
-    """generate 6 character long hash"""
+    # Generate 10 character long hash
     now = str(time.time()).encode('utf-8')
     hash = hashlib.sha1(now)
-    return hash.hexdigest()[:6]
+    return hash.hexdigest()[:10]
 
 class Notice(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)    #fk
@@ -60,7 +60,8 @@ class Poll(models.Model):
         return Group(str(self.room.label))
     
     def start_poll(self, label):
-        final_msg = {'poll': label, 'question': str(self.question), 'answer': str(self.answer)}
+        final_msg = {'poll': label, 'question': str(self.question), 'answer': self.answer}
+        #final_msg = {'poll': label, 'question': str(self.question), 'answer': str(self.answer)}
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )
