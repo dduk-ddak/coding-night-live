@@ -51,6 +51,12 @@
   <script src="{% static "js/cnl_websocket.js" %}" type="text/javascript"></script>
 
   <body class="drawer drawer--left" style="background-color:#eee">
+    <!-- just temporary testing code -->
+    {% if admin %}
+      <h1>hello admin_user</h1>
+    {% else %}
+      <h1>hello user</h1>
+    {% endif %}
     <!-- Slide delete modal -->
     <div class="modal fade" id="delete_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog" role="document">
