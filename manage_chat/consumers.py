@@ -10,42 +10,6 @@ from manage_room.utils import get_room_or_error, catch_client_error
 from .models import ChatAndReply, Notice, Poll
 from .setting import NOTIFY_USERS_NOTICE_POLL_CHAT
 
-"""
-@channel_session_user_from_http
-def ws_connect(message):
-    message.reply_channel.send({'accept': True})
-    message.channel_session['talk'] = []
-
-def ws_receive(message):
-    payload = json.loads(message['text'])
-    payload['reply_channel'] = message.content['reply_channel']
-    Channel("talk.receive").send(payload)
-
-@channel_session_user
-def ws_disconnect(message):
-    for room_label in message.channel_session.get('talk', set()):
-        try:
-            room = Room.objects.get(label=room_label)
-            room.websocket_group.discard(message.reply_channel)
-        except Room.DoesNotExist:
-            pass
-
-@channel_session_user
-@catch_client_error
-def talk_join(message):
-    room = get_room_or_error(message["room"])
-    room.websocket_group.add(message.reply_channel)
-    
-    # test json sending
-    message.reply_channel.send({
-        "text": json.dumps({
-            "join": str(room.label),
-            "title": room.title,
-            "ws": "talk",
-        }),
-    })
-"""
-
 @channel_session_user
 @catch_client_error
 def new_chat(message):
@@ -68,42 +32,20 @@ def new_notice(message):
     notice = Notice.objects.create(room=room, description=message["description"])
     notice.send_message(message["description"], room.label)
     #notice.send_message(message["description"])
-    """
-    message.reply_channel.send({
-        "text": json.dumps({
-            "notice": "send notice",
-            "title": room.title,
-        }),
-    })
-    """
-
-"""
-@channel_session_user
-@catch_client_error
-def talk_leave(message):
-    # Reverse of join - remove them from everything.
-    room = get_room_or_error(message["room"])
-
-    room.websocket_group.discard(message.reply_channel)
-    
-    # test json sending
-    message.reply_channel.send({
-        "text": json.dumps({
-            "leave": str(room.label),
-            "title": room.title,
-            "ws": "talk",
-        }),
-    })
-
-# Future..
 
 @channel_session_user
 #@catch_client_error
-def start_poll(message):
-    print('helloworld')
+def new_poll(message):
+    room = get_room_or_error(message["room"])
+    answer_count = []
+    for i in range(0, len(message["answer"])):
+        answer_count.append(0)
+    answer_count = str(answer_count)
+    poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
 
 @channel_session_user
 #@catch_client_error
 def result_poll(message):
-    print('helloworld')
-"""
+    room = get_room_or_error(message["room"])
+    answer = message["answer"]
+    answer_count = str(Poll.objects.get(room=room, question=message["question"]).answer_count)
