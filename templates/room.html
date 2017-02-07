@@ -173,12 +173,22 @@
               <!-- Right Div: Notice: Notice title -->
               <h4 class="card-title"><i class="fa fa-podcast" aria-hidden="true"></i> Notice</h4>
 
-              <!-- Right Div: Noice: Only show 1 notice -->
+              <!-- Right Div: Notice: Only show 1 notice -->
               <div id="shown-notice">
+                <div class="notice-with-time">
+                  <p class="card-text" style="margin-bottom: 0px;">{{ head_notice.description }}</p>
+                  <p class="card-text text-muted" style="text-align:right;">{{ head_notice.time }}</p>
+                </div>
               </div>
 
               <!-- Hidden notice lists -->
               <div id="hidden-notice">
+                {% for notice in notices %}
+                  <div class="notice-with-time">
+                    <p class="card-text" style="margin-bottom: 0px;">{{ notice.description }}</p>
+                    <p class="card-text text-muted" style="text-align:right;">{{ notice.time }}</p>
+                  </div>
+                {% endfor %}
               </div>
 
               <!-- Toggle notice button -->
@@ -406,17 +416,13 @@
       <script src="{% static "js/cnl_chats_override.js" %}" type="text/javascript"></script>
     {% endif %}
 
-    <!-- get list of notice, chat and reply -->
+    <!-- get list of chat and reply -->
     <script type="text/javascript">
-      {% for notice in notices %}
-        cnl_chats.newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
-      {% endfor %}
-
       {% for chat in chats %}
         cnl_chats.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
       {% endfor %}
 
-      {% for reply in replys %}
+      {% for reply in replies %}
         cnl_chats.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
       {% endfor %}
     </script>

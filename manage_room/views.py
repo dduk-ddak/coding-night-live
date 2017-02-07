@@ -68,17 +68,21 @@ class RedirectRoomView(TemplateView):
             header = Slide.objects.get(now_id=header.next_id)
             value = (str(header.title), str(header.now_id))
             title_list.append(value)
-        
-        if self.request.user.is_anonymous():
-            # Anonymous user is not a admin_user!
-            return {'admin': False, 'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "slides": title_list}
-        else:
+
+        head_notice = ''
+        if notices:
+            head_notice, notices = notices[0], notices[1:]
+
+        is_admin = False
+        if not self.request.user.is_anonymous():
             try:
                 check_admin = Room.objects.get(label=label, admin_user=self.request.user)  #check admin user
-                return {'admin': True, 'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "slides": title_list}
+                is_admin = True
             except:
                 # Matching query does not exist - request.user is not a admin_user
-                return {'admin': False, 'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "slides": title_list}
+                pass
+
+        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "chats": chat_and_reply[0], "replies": chat_and_reply[1], "slides": title_list}
         # future ..
         # polls = get_poll_list(label)
         # return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "polls": polls}
