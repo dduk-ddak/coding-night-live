@@ -22,8 +22,8 @@ socket.onopen = function () {
   cnl_slides.getSlideIndex(first_slide_idx);
 };
 
-// Socket closing
-socket.onclose = function () {
+// Socket(Browser) closing
+socket.onclose = window.onbeforeunload = function () {
   console.log("disconnected websocket");
 
   socket.send(JSON.stringify({
