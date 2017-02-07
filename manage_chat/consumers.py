@@ -43,6 +43,8 @@ def new_poll(message):
     answer_count = str(answer_count)
     poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
 
+    poll.start_poll(room.label)
+
 @channel_session_user
 #@catch_client_error
 def result_poll(message):

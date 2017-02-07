@@ -54,6 +54,16 @@ class Poll(models.Model):
 
     def __str__(self):
         return str(self._id)
+    
+    @property
+    def websocket_group(self):
+        return Group(str(self.room.label))
+    
+    def start_poll(self, label):
+        final_msg = {'poll': label, 'question': str(self.question), 'answer': str(self.answer)}
+        self.websocket_group.send(
+            {"text": json.dumps(final_msg)}
+        )
 
 class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
