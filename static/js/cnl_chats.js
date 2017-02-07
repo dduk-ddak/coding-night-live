@@ -302,6 +302,20 @@ var cnl_chats = {
       }
     }
   },
+
+  newNotice: function (obj) {
+    var preappended_elem = $('#shown-notice').find('div.notice-with-time').detach();
+    if(preappended_elem.length !== 0) {
+      preappended_elem.prependTo('#hidden-notice');
+    }
+
+    $('#shown-notice').append('\
+        <div class="notice-with-time">\
+          <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
+          <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
+        </div>');
+  },
+
 };
 
 cnl_chats.chatHashList = [];

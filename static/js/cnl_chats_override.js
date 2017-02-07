@@ -90,19 +90,6 @@ cnl_chats.pollWrapper = function () {
   return;
 }
 
-cnl_chats.newNotice = function (obj) {
-  var preappended_elem = $('#shown-notice').find('div.notice-with-time').detach();
-  if(preappended_elem.length !== 0) {
-    preappended_elem.prependTo('#hidden-notice');
-  }
-
-  $('#shown-notice').append('\
-      <div class="notice-with-time">\
-      <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
-      <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
-      </div>');
-}
-
 cnl_chats.newPoll = function (obj) {
   var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
   var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
