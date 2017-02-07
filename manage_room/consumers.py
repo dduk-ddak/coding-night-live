@@ -211,17 +211,19 @@ def change_slide(message):
         pre_hash = javaHash(pre_text)
         curr_hash = javaHash(curr_text)
 
-        if curr_hash != message["curr_hash"] or pre_hash != message["pre_hash"]:
-            diff = dmp.diff_main(pre_text, curr_text)
-            patches = dmp.patch_make(pre_text, diff)
-            patch_text = dmp.patch_toText(patches)
-            print('something is wrong')
-            pass # something wrong. broadcast whole string to everybody
+        # some data got dirty
+        if curr_hash != message["curr_hash"]:
+            Group(message["room"]).send({
+                "text": json.dumps({
+                    "change_slide": "whole",
+                    "id": message["id"],
+                    "curr_text": curr_text,
+                }),
+            })
         else:
             Group(message["room"]).send({
                 "text": json.dumps({
-                    "change_slide": "true",
-                    "room": message["room"],
+                    "change_slide": "diff",
                     "id": message["id"],
                     "patch_text": patch_text,
                     "pre_hash": pre_hash,
