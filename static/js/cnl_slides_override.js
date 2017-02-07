@@ -1,6 +1,7 @@
-// another person may have been updated the editor string
+// if markdown editor's string is changed, this function is called
+// socket connection if this user updates the string
 cnl_slides.setSlideText = function (str) {
-  // another person updated
+  // another person may have been updated the editor string
   if(str != cnl_globals.editor.codemirror.doc.getValue()) {
     var curr_cursor = cnl_globals.editor.codemirror.doc.getCursor();
     cnl_globals.editor.codemirror.doc.setValue(str);
@@ -30,9 +31,9 @@ cnl_slides.setSlideText = function (str) {
   $('blockquote').addClass('blockquote');
 }
 
+// send request for new slide to server
+// socket connection always
 cnl_slides.getNewSlide = function () {
-  console.log('add clicked');
-  
   socket.send(JSON.stringify({
     "command": "new_slide",
     "room": room_label
@@ -40,70 +41,24 @@ cnl_slides.getNewSlide = function () {
 }
 
 // callback when new slide is generated
+// socket connection always
 // overriden version has setSlideIndex() (if new slide is set, automatically send it to it)
-cnl_slides.setNewSlide = function (data) {
-  var new_idx = data;
+cnl_slides.setNewSlide = function (new_idx) {
   $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   cnl_slides.getSlideIndex(new_idx);
 }
 
-/*
-// delete slide with index "idx", then click on adjacent slide
-cnl_slides.delSlide = function (idx) {
-  // called from modal
-  if(typeof idx == 'undefined') {
-    idx = this.curr_slide_idx;
-  }
-  // debug: remove idx from server
-  console.log('deleted ' + idx);
-  // debug end
-
-  var curr_slide = $('#slide_' + idx);
-
-  if(idx === this.curr_slide_idx) {
-    // If more slides, get new one
-    if($('li.drawer-menu-item').length === 1) {
-      this.getNewSlide();
-    }
-    // Else, find adjacent slides
-    else {
-      var next_slide = curr_slide.next();
-      if(next_slide.length === 0) {
-        next_slide = curr_slide.prev();
-      }
-      var next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
-      this.getSlideIndex(next_slide_idx);
-    }
-  }
-
-  //밑에 다 콜백
-  // remove from drawer
-  curr_slide.remove();
-}
-*/
-
+// send request for deleting slide with index "idx" to server
+// socket connection always, two requests if no slides left
 cnl_slides.getDelSlide = function (idx) {
   // called from modal
   if (typeof idx == 'undefined') {
     idx = this.curr_slide_idx;
   }
 
-  var curr_slide = $('#slide_' + idx);
-
-  if (idx === this.curr_slide_idx) {
-    // If more slides, get new one
-    if($('li.drawer-menu-item').length === 1) {
-      this.getNewSlide();
-    }
-    // Else, find adjacent slides
-    else {
-      var next_slide = curr_slide.next();
-      if(next_slide.prop('tagName') == 'BUTTON') {
-        next_slide = curr_slide.prev();
-      }
-      var next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
-      this.getSlideIndex(next_slide_idx);
-    }
+  // If that slide was the only slide, get new one
+  if($('li.drawer-menu-item').length === 1) {
+    this.getNewSlide();
   }
 
   socket.send(JSON.stringify({
@@ -113,45 +68,10 @@ cnl_slides.getDelSlide = function (idx) {
   }));
 }
 
-cnl_slides.setDelSlide = function (data) {
-  var curr_slide = $('#slide_' + data);
-  curr_slide.remove()
-}
-
-/*
-// change order of slide with index "idx" to previous of slide with index "next"
-// overriden version should have websocket
-cnl_slides.changeSlideOrder = function (idx, next) {
-  // debug: send idx, next
-  console.log(idx + ' and ' + next + ' send to server');
-  // debug end
-  
-  if(next !== 0) {
-    $('#slide_' + idx).detach().insertBefore('#slide_' + next);
-  }
-  else {
-    // it is last element
-    $('#slide_' + idx).detach().appendTo('#slide_list');
-  }
-}
-*/
-
-cnl_slides.setChangeSlideOrder = function (data) {
-  var idx = data.id;
-  var next = data.next_id;
-
-  console.log('id : ' + idx + '/ next : ' + next)
-
-  if (next !== 0) {
-    $('#slide_' + idx).detach().insertBefore('#slide_' + next);
-  }
-  else {
-    $('#slie_' + idx).detach().appendTo('#slide_list')
-  }
-}
-
+// send request for changing slide order to server
+// socket connection always
+// idx is slide that is changing and it is moved before of slide with index "next"
 cnl_slides.getChangeSlideOrder = function (idx, next) {
-  console.log('id : ' + idx + '/ next : ' + next)
   socket.send(JSON.stringify({
     "command": "change_slide_order",
     "id": idx,
@@ -160,38 +80,8 @@ cnl_slides.getChangeSlideOrder = function (idx, next) {
   }));
 }
 
-/*
-// renaming slide
-// overriden version should have websocket & modal consideration
-cnl_slides.renameSlide = function (idx, name) {
-  // called from modal
-  if(typeof idx == 'undefined') {
-    var idx = this.curr_slide_idx;
-    var name = $('#slide_name_input').val();
-    if(!name) name = 'unnamed slide'; // default value
-  }
-
-  if(name != $('#slide_' + idx).text()) {
-    // debug: send to server
-    console.log('slide ' + idx + ' renamed to ' + name);
-    // end debug
-    $('#slide_' + idx).text(name);
-    if(idx === this.curr_slide_idx) {
-      $('#markdown_title').text(name);
-    }
-  }
-}*/
-
-cnl_slides.setRenameSlide = function (data) {
-  var idx = data.rename_slide;
-  var name = data.title;
-
-  $('#slide_' + idx).text(name);
-  if(idx == this.curr_slide_idx) {
-    $('#markdown_title').text(name);
-  }
-}
-
+// send request for renaming slide
+// socket connection always
 cnl_slides.getRenameSlide = function () {
   var idx = this.curr_slide_idx;
   var name = $('#slide_name_input').val();

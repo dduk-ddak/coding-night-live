@@ -14,97 +14,71 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.1.3/iscroll.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/js/drawer.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.2.2/markdown-it.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
-
-    {% load staticfiles %}
-    <script src="{% static "js/reconnecting-websocket.min.js" %}" type="text/javascript"></script>
-    <script src="{% static "js/diff_match_patch.min.js" %}" type="text/javascript"></script>
-
+    <style>
+      .codemirror {
+        height: auto;
+      }
+      .left_div_content {
+        display:inline-block;
+        vertical-align: top;
+        border-color: #eee;
+        border-width: thin;
+        border-style:solid;
+      }
+    </style>
   </head>
-  <style>
-  .CodeMirror {
-    height: auto;
-  }
-  .halves {
-    width:50%;
-    display:inline-block;
-    vertical-align: top;
-    border-color: #eee;
-    border-width: thin;
-    border-style:solid;
-  }
-  </style>
-
-  <!-- connecting websocket -->
-  {% load static %}
-  <script src="{% static "js/cnl_websocket.js" %}" type="text/javascript"></script>
 
   <body class="drawer drawer--left" style="background-color:#eee">
-    <!-- just temporary testing code -->
-    {% if admin %}
-      <h1>hello admin_user</h1>
-    {% else %}
-      <h1>hello user</h1>
+    {% if admin is True %}
+      <!-- Slide delete modal -->
+      <div class="modal fade" id="delete_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Are you sure to delete this slide?</h4>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cnl_slides.getDelSlide()">Delete slide</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide rename modal -->
+      <div class="modal fade" id="rename_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="input-group">
+                <input id="slide_name_input" type="text" class="form-control form-control-lg" placeholder="unnamed slide">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cnl_slides.getRenameSlide()">Save</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room rename modal -->
+      <div class="modal fade" id="rename_room_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="input-group">
+                <input id="room_title_input" type="text" class="form-control form-control-lg">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cnl_rooms.renameRoom()">Save</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     {% endif %}
-    <!-- Slide delete modal -->
-    <div class="modal fade" id="delete_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Are you sure to delete this slide?</h4>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="cnl_slides.getDelSlide()">Delete slide</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide rename modal -->
-    <div class="modal fade" id="rename_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="input-group">
-              <input id="slide_name_input" type="text" class="form-control form-control-lg" placeholder="unnamed slide">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cnl_slides.getRenameSlide()">Save</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Room rename modal -->
-    <div class="modal fade" id="rename_room_modal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="input-group">
-              <input id="room_title_input" type="text" class="form-control form-control-lg">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cnl_rooms.renameRoom()">Save</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-light bg-faded" style="background-color:#151515; font-size:1.5em;">
@@ -114,7 +88,9 @@
 
       <!-- Navbar: Title -->
       <h3 id="room_title" class="navbar-text" style="color:white">{{ title }}</h3>
-      <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
+      {% if admin is True %}
+        <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
+      {% endif %}
       <!-- Copy a url -->
       <a onclick="window.prompt('Copy to Clipboard: Ctrl+C, Enter', document.location.href);" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
       <!-- Download PDF file -->
@@ -141,17 +117,21 @@
           <li id="slide_{{ slide.1 }}"  class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
         {% endfor %}
 
-        <!-- Drawer: "Add" button -->
-        <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_send.newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        {% if admin is True %}
+          <!-- Drawer: "Add" button -->
+          <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_send.newSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        {% endif %}
       </ul>
     </nav>
 
     <!-- Contents -->
     <div class="container-fluid" style="z-index:4">
 
-      <!-- Poll prompt(to be appended here when prompted) -->
-      <div id="polls-wrapper" class="row" style="padding:0px 50px">
-      </div>
+      {% if admin is False %}
+        <!-- Poll prompt(to be appended here when prompted) -->
+        <div id="polls-wrapper" class="row" style="padding:0px 50px">
+        </div>
+      {% endif %}
 
       <!-- Shown Contents (without poll) -->
       <div id="contents-wrapper" class="row">
@@ -162,18 +142,23 @@
           <!-- Left Div: Slide title -->
           <div class="card" style="margin-top: 1em">
             <h4 class="card-title" style="margin-top:0.5em; margin-left:0.5em;">
-              <span id="markdown_title">(empty)</span>
-              <i class="fa fa-pencil" style="display:inline-block; cursor:pointer;" aria-hidden="true" data-toggle="modal" data-target="#rename_slide_modal"></i>
-            <i class="fa fa-trash" aria-hidden="true" style="cursor:pointer; float:right; margin-right:0.5em;" data-toggle="modal" data-target="#delete_slide_modal"></i>
+              <span id="markdown_title"></span>
+              {% if admin is True %}
+                <!-- Left Div: Slide title: edit/delete button -->
+                <i class="fa fa-pencil" style="display:inline-block; cursor:pointer;" aria-hidden="true" data-toggle="modal" data-target="#rename_slide_modal"></i>
+                <i class="fa fa-trash" aria-hidden="true" style="cursor:pointer; float:right; margin-right:0.5em;" data-toggle="modal" data-target="#delete_slide_modal"></i>
+              {% endif %}
             </h4>
-
-            <!-- Left Div: Slide title: delete button -->
           </div>
 
           <!-- Left Div: markdown & rendered output -->
           <div style="margin-top:1em; background-color:#eee">
-            <div class="halves"><textarea id="code"></textarea>
-            </div><div class="halves" id="out" style="padding:1em; background-color:#fff"></div>
+            {% if admin is True %}
+              <div class="left_div_content" style="width:50%;"><textarea id="code"></textarea>
+              </div><div class="left_div_content" id="out" style="width:50%; padding:1em; background-color:#fff"></div>
+            {% else %}
+              <div class="left_div_content" id="out" style="width:100%; padding:1em; background-color:#fff"></div>
+            {% endif %}
           </div>
 
         </div>
@@ -238,8 +223,9 @@
       </div>
     </div>
 
-    <!--
+    <script src="https://use.fontawesome.com/22d0d19cf2.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.1.3/iscroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/js/drawer.min.js"></script>
@@ -249,204 +235,198 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+
+    {% load staticfiles %}
+    <script src="{% static "js/reconnecting-websocket.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/diff_match_patch.min.js" %}" type="text/javascript"></script>
 
    <script>
-    $(document).ready(function() {
-      // drawer init
-      $('.drawer').drawer({
-        class: {
-          nav: 'drawer-nav',
-          toggle: 'drawer-toggle'
-        },
-        iscroll: {
-          mouseWheel: true,
-          preventDefault: false,
-          disableMouse: true,
-          disablePointer: true,
-          disableTouch: true,
-        },
-        showOverlay: true
+      $(document).ready(function() {
+        // drawer init
+        $('.drawer').drawer({
+          class: {
+            nav: 'drawer-nav',
+            toggle: 'drawer-toggle'
+          },
+          iscroll: {
+            mouseWheel: true,
+            preventDefault: false,
+            disableMouse: true,
+            disablePointer: true,
+            disableTouch: true,
+          },
+          showOverlay: true
+        });
+
+        {% if admin is True %}
+        // sortable init
+        $('#slide_list').sortable({
+          update: function(event, ui) {
+            var curr_slide = ui.item;
+            var next_slide = ui.item.next();
+            var prev_slide = ui.item.prev();
+
+            // below than button
+            if(prev_slide.prop('tagName') == 'BUTTON') {
+              curr_slide.detach().insertBefore(prev_slide);
+            }
+
+            var curr_slide_idx = parseInt(curr_slide.attr('id').split('_')[1]);
+            var next_slide_idx = 0;
+
+            if(next_slide.length === 1 && typeof next_slide.attr('id') != 'undefined' && next_slide.attr('id').substring(0,6) === 'slide_') {
+              next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
+            }
+
+            //cnl_slides.changeSlideOrder(curr_slide_idx, next_slide_idx);
+            cnl_slides.getChangeSlideOrder(curr_slide_idx, next_slide_idx);
+          }
+        });
+
+        // rename slide modal init
+        $('#rename_slide_modal').on('show.bs.modal', function(e) {
+          $('#slide_name_input').val($('#markdown_title').text());
+        });
+
+        // rename room modal init
+        $('#rename_room_modal').on('show.bs.modal', function(e) {
+          $('#room_title_input').val($('#room_title').text());
+        });
+        $('#room_title_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
+        {% endif %}
       });
 
-      // sortable init
-      $('#slide_list').sortable({
-        update: function(event, ui) {
-          var curr_slide = ui.item;
-          var next_slide = ui.item.next();
-          var prev_slide = ui.item.prev();
+      // notice show/hide
+      function toggleNotice() {
+        $('#hidden-notice').slideToggle({duration:200, step:chatListResize});
 
-          // below than button
-          if(prev_slide.prop('tagName') == 'BUTTON') {
-            curr_slide.detach().insertBefore(prev_slide);
-          }
-
-          var curr_slide_idx = parseInt(curr_slide.attr('id').split('_')[1]);
-          var next_slide_idx = 0;
-
-          if(next_slide.length === 1 && typeof next_slide.attr('id') != 'undefined' && next_slide.attr('id').substring(0,6) === 'slide_') {
-            next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
-          }
-
-          //cnl_slides.changeSlideOrder(curr_slide_idx, next_slide_idx);
-          cnl_slides.getChangeSlideOrder(curr_slide_idx, next_slide_idx);
+        if($('#notice-toggler').hasClass('fa-sort-desc')) {
+          $('#notice-toggler').removeClass('fa-sort-desc');
+          $('#notice-toggler').addClass('fa-sort-asc');
         }
-      });
-
-      // rename slide modal init
-      $('#rename_slide_modal').on('show.bs.modal', function(e) {
-        $('#slide_name_input').val($('#markdown_title').text());
-      });
-
-      // rename room modal init
-      $('#rename_room_modal').on('show.bs.modal', function(e) {
-        $('#room_title_input').val($('#room_title').text());
-      });
-      $('#room_title_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
-
-      // chat list size init
-      chatListResize();
-    });
-
-    // notice show/hide
-    function toggleNotice() {
-      $('#hidden-notice').slideToggle({duration:200, step:chatListResize});
-
-      if($('#notice-toggler').hasClass('fa-sort-desc')) {
-        $('#notice-toggler').removeClass('fa-sort-desc');
-        $('#notice-toggler').addClass('fa-sort-asc');
-      }
-      else if($('#notice-toggler').hasClass('fa-sort-asc')) {
-        $('#notice-toggler').removeClass('fa-sort-asc');
-        $('#notice-toggler').addClass('fa-sort-desc');
-      }
-    }
-
-    // responsive chat list
-    function chatListResize() {
-      console.log('test!!');
-      var viewport_height = $(window).height();
-      var start_height = $('#notice_card').height() + $('#notice_card').offset().top;
-      var chat_list_height = viewport_height - start_height - 140;
-      if(chat_list_height < 100) {
-        chat_list_height = 100;
-      }
-      $('#chat_list_scroll').height(chat_list_height);
-    }
-
-    function startPoll(q_str, a_strs) {
-      // debug
-      q_str = "Q. How does this get toggled? Let's make this question much longer!";
-      a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
-
-      $('#contents-wrapper').css('visibility', 'hidden');
-      var a_strs_str = '<h1 id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>'
-      for(var i=0; i<a_strs.length; i+=1) {
-        a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="endPoll(' + i.toString() + ')">' + a_strs[i] + '</button>';
-      }
-      $('#polls-wrapper').append(a_strs_str);
-    }
-
-    function endPoll(ret_idx) {
-      $('#polls-wrapper').empty();
-      $('#contents-wrapper').css('visibility', 'visible');
-
-      // debug: do something with ret_idx
-      console.log('endPoll');
-      console.log(ret_idx);
-    }
-
-    $(window).resize(function() {
-      chatListResize();
-    });
-
-    $('#chat_form').submit(function (e) {
-      // remove the leading white spaces
-      var command = $("#chat_input").val().replace(/^\s*/g, "");
-      var operation_idx;
-
-      $('#chat_input').val('');
-      e.preventDefault();
-
-      if(command.length === 0) {
-        // no action for empty input
-        return;
+        else if($('#notice-toggler').hasClass('fa-sort-asc')) {
+          $('#notice-toggler').removeClass('fa-sort-asc');
+          $('#notice-toggler').addClass('fa-sort-desc');
+        }
       }
 
-      operation_idx = cnl_chats.classifyOperation(command);
-      cnl_chats.operationTable[operation_idx](command);
-    });
+      // responsive chat list
+      function chatListResize() {
+        console.log('test!!');
+        var viewport_height = $(window).height();
+        var start_height = $('#notice_card').height() + $('#notice_card').offset().top;
+        var chat_list_height = viewport_height - start_height - 140;
+        if(chat_list_height < 100) {
+          chat_list_height = 100;
+        }
+        $('#chat_list_scroll').height(chat_list_height);
+      }
 
-    $('#chat_input').autocomplete({
-      position: {my: "left bottom", at: "left top"},
-      source: function(request, response) {
-        // debug: use regular expressions
-        //console.log(request.term);
+      function startPoll(q_str, a_strs) {
+        // debug
+        q_str = "Q. How does this get toggled? Let's make this question much longer!";
+        a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
 
-        // debug: return with list of dict
+        $('#contents-wrapper').css('visibility', 'hidden');
+        var a_strs_str = '<h1 id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>'
+          for(var i=0; i<a_strs.length; i+=1) {
+            a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="endPoll(' + i.toString() + ')">' + a_strs[i] + '</button>';
+          }
+        $('#polls-wrapper').append(a_strs_str);
+      }
+
+      function endPoll(ret_idx) {
+        $('#polls-wrapper').empty();
+        $('#contents-wrapper').css('visibility', 'visible');
+
+        // debug: do something with ret_idx
+        console.log('endPoll');
+        console.log(ret_idx);
+      }
+
+      $('#chat_form').submit(function (e) {
         // remove the leading white spaces
+        var command = $("#chat_input").val().replace(/^\s*/g, "");
+        var operation_idx;
 
-        var command = request.term.replace(/^\s*/g, ""),
-            matches = [];
+        $('#chat_input').val('');
+        e.preventDefault();
 
-        matches = cnl_chats.getAutocompletion(command, matches);
-        response(matches);
-      },
-      delay: 0,
-    });
+        if(command.length === 0) {
+          // no action for empty input
+          return;
+        }
 
-    var to_be_scrolled_position = 0;
-    function toBeScrolledPosition(pos) {
-      if(typeof pos != 'undefined') {
-        to_be_scrolled_position = pos;
+        operation_idx = cnl_chats.classifyOperation(command);
+        cnl_chats.operationTable[operation_idx](command);
+      });
+
+      $('#chat_input').autocomplete({
+        position: {my: "left bottom", at: "left top"},
+        source: function(request, response) {
+          // debug: use regular expressions
+          //console.log(request.term);
+
+          // debug: return with list of dict
+          // remove the leading white spaces
+
+          var command = request.term.replace(/^\s*/g, ""),
+          matches = [];
+
+          matches = cnl_chats.getAutocompletion(command, matches);
+          response(matches);
+        },
+        delay: 0,
+      });
+
+      var to_be_scrolled_position = 0;
+      function toBeScrolledPosition(pos) {
+        if(typeof pos != 'undefined') {
+          to_be_scrolled_position = pos;
+        }
+        return to_be_scrolled_position;
       }
-      return to_be_scrolled_position;
-    }
 
-    function scrollDownToLastest() {
-      $('#chat_list_scroll').animate({scrollTop: toBeScrolledPosition()}, 'slow');
-      $('#chat_scroll_button').css('visibility', 'hidden');
-    }
-
-    function setRoomTitle(str) {
-      $('#room_title').text(str);
-      $('#head_title').text(str + ' :: coding-night-live');
-    }
-
-    function setUserCount(cnt) {
-      $('#user_count').text(cnt);
-    }
-
+      function scrollDownToLastest() {
+        $('#chat_list_scroll').animate({scrollTop: toBeScrolledPosition()}, 'slow');
+        $('#chat_scroll_button').css('visibility', 'hidden');
+      }
     </script>
+
     <script src="{% static "js/cnl_globals.js" %}" type="text/javascript"></script>
     <script src="{% static "js/cnl_slides.js" %}" type="text/javascript"></script>
     <script src="{% static "js/cnl_chats.js" %}" type="text/javascript"></script>
     <script src="{% static "js/cnl_rooms.js" %}" type="text/javascript"></script>
+    <script src="{% static "js/cnl_websocket.js" %}" type="text/javascript"></script>
 
-    <!-- if admin -->
-    <script src="{% static "js/cnl_globals_override.js" %}" type="text/javascript"></script>
-    <script src="{% static "js/cnl_slides_override.js" %}" type="text/javascript"></script>
-    <script src="{% static "js/cnl_chats_override.js" %}" type="text/javascript"></script>
-    <!-- endif -->
+    {% if admin is True %}
+      <script src="{% static "js/cnl_globals_override.js" %}" type="text/javascript"></script>
+      <script src="{% static "js/cnl_slides_override.js" %}" type="text/javascript"></script>
+      <script src="{% static "js/cnl_chats_override.js" %}" type="text/javascript"></script>
+    {% endif %}
 
     <!-- get list of notice, chat and reply -->
-    {% for notice in notices %}
     <script type="text/javascript">
-      cnl_chats.newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
-    </script>
-    {% endfor %}
+      {% for notice in notices %}
+        cnl_chats.newNotice({time: "{{ notice.time }}", description: "{{ notice.description }}"});
+      {% endfor %}
 
-    {% for chat in chats %}
+      {% for chat in chats %}
+        cnl_chats.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
+      {% endfor %}
+
+      {% for reply in replys %}
+        cnl_chats.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
+      {% endfor %}
+    </script>
+
+    <!-- After load completes -->
     <script type="text/javascript">
-      cnl_chats.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
+      chatListResize();
+      $(window).resize(function() {
+        chatListResize();
+      });
     </script>
-    {% endfor %}
-
-    {% for reply in replys %}
-    <script type="text/javascript">
-      cnl_chats.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
-    </script>
-    {% endfor %}
-
   </body>
 </html>

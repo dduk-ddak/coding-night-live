@@ -1,15 +1,12 @@
 var cnl_slides = {
-  // current showing slide index & setter
-  // currently showing slide and curr_slide_idx consistency ensured
+  // currently showing slide's index and curr_slide_idx consistency ensured by callback
   curr_slide_idx: 0,
 
+  // get slide with index "idx" from server
   getSlideIndex: function (idx) {
     if(idx === this.curr_slide_idx) {
       return;
     }
-
-    console.log('view slide clicked');
-    
     socket.send(JSON.stringify({
       "command": "get_slide",
       "room": room_label,
@@ -17,12 +14,13 @@ var cnl_slides = {
     }));
   },
 
+  // callback for getSlideIndex
   setSlideIndex: function (data) {
     var title = data.title;
     var content = data.md_blob;
     var idx = data.idx;
-    var preclicked_idx = this.curr_slide_idx;
 
+    var preclicked_idx = this.curr_slide_idx;
     this.curr_slide_idx = idx;
 
     $('#markdown_title').text(title);
@@ -35,6 +33,21 @@ var cnl_slides = {
     $('#slide_' + idx).addClass('active');
 
     $('.drawer').drawer('close');
+  },
+
+  // callback for getDelSlide (only admin can call getDelSlide)
+  setDelSlide: function (idx) {
+    var curr_slide = $('#slide_' + idx);
+    curr_slide.remove();
+
+    if (idx === this.curr_slide_idx) {
+      var next_slide = curr_slide.next();
+      if(next_slide.prop('tagName') == 'BUTTON') {
+        next_slide = curr_slide.prev();
+      }
+      var next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
+      this.getSlideIndex(next_slide_idx);
+    }
   },
 
   // current showing slide's text & setter
@@ -84,30 +97,33 @@ var cnl_slides = {
     }
   },
 
-  // callback when new slide is generated
+  // callback when new slide is generated (overriden for admin)
   setNewSlide: function (data) {
     var new_idx = data;
     $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   },
 
   // callback for change order of slide with index "idx" to previous of slide with index "next"
-  changeSlideOrder: function (idx, next) {
-    if(next !== 0) {
+  setChangeSlideOrder: function (data) {
+    var idx = data.id;
+    var next = data.next_id;
+
+    if (next !== 0) {
       $('#slide_' + idx).detach().insertBefore('#slide_' + next);
     }
     else {
-      // it is last element
-      $('#slide_' + idx).detach().appendTo('#slide_list');
+      $('#slide_' + idx).detach().insertBefore('#slide_list button');
     }
   },
 
   // callback for renaming slide
-  renameSlide: function (idx, name) {
-    if(name != $('#slide_' + idx).text()) {
-      $('#slide_' + idx).text(name);
-      if(idx === this.curr_slide_idx) {
-        $('#markdown_title').text(name);
-      }
+  setRenameSlide: function (data) {
+    var idx = data.rename_slide;
+    var name = data.title;
+
+    $('#slide_' + idx).text(name);
+    if(idx == this.curr_slide_idx) {
+      $('#markdown_title').text(name);
     }
-  }
+  },
 };
