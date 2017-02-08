@@ -77,7 +77,7 @@ var cnl_chats = {
         /^@rep/g, /^@repl/g,
         /^@reply\s*/g, /^\s*@reply\s*(?=\d)/g,];
 
-    var label = "@reply ", labels = [], texts = [];
+    var label = "@reply #", labels = [], texts = [];
 
     if (len <= upper_bound) {
       // user is still typing the command;
@@ -94,13 +94,11 @@ var cnl_chats = {
         return matches;
       // remove '@reply '
       command = command.replace(/^(\s)*@reply\s*#/g, "");
-      console.log("after removing reply #");
 
       if (command.search(/^[0-9a-z]*(?![^\s])/g) === -1) {
         // invalid user-given hash value
         return matches;
       }
-      console.log("herer");
 
       var hash = command.match(/^[0-9a-z]*(?![^\s])/g)[0];
       command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
@@ -112,12 +110,12 @@ var cnl_chats = {
         partial_hash_regex = new RegExp("^"+hash, "g");
         complete_hash_regex = new RegExp("^"+hash+"$", "g");
 
-        if (!!cnl_chats.chatHashList[i].match(complete_hash_regex)) {
+        if (cnl_chats.chatHashList[i].search(complete_hash_regex) !== -1) {
           text += hash + " ";
           label += hash + " <comment>";
           is_complete_hash = true;
           break;
-        } else if (!!cnl_chats.chatHashList[i].match(partial_hash_regex))
+        } else if (cnl_chats.chatHashList[i].search(partial_hash_regex) !== -1)
         {
           labels.push(text + cnl_chats.chatHashList[i] + " <comment>");
           texts.push(text + cnl_chats.chatHashList[i] + " ");
@@ -130,7 +128,7 @@ var cnl_chats = {
           matches = matches.concat([{label: label,
                                      value: text}]);
         } else if (is_valid_hash) {
-          for (var i=0; i<cnl_chats.chatHashList.length; i+=1)
+          for (var i=0; i<labels.length; i+=1)
             matches = matches.concat([{label: labels[i],
                                        value: texts[i]}]);
         }
