@@ -44,7 +44,7 @@ cnl_slides.getNewSlide = function () {
 // socket connection always
 // overriden version has setSlideIndex() (if new slide is set, automatically send it to it)
 cnl_slides.setNewSlide = function (new_idx) {
-  $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
+  $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   cnl_slides.getSlideIndex(new_idx);
 }
 
@@ -57,7 +57,7 @@ cnl_slides.getDelSlide = function (idx) {
   }
 
   // If that slide was the only slide, get new one
-  if($('li.drawer-menu-item').length === 1) {
+  if($('#slide_list li').length === 1) {
     this.getNewSlide();
   }
 
