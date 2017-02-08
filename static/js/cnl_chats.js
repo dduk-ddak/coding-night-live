@@ -239,7 +239,7 @@ var cnl_chats = {
     command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
     //description = command;
 
-    console.log(hash_value, command);
+    // console.log(hash_value, command);
 
     socket.send(JSON.stringify({
       "command": "new_chat",

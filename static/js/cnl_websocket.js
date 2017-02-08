@@ -62,7 +62,7 @@ socket.onmessage = function (message) {
     cnl_chats.newChat(data);
   } else if (data.notice) {
     // New notice
-    newNotice(data);
+    cnl_chats.newNotice(data);
   } else if (data.start_poll) {
     // Start poll
     //cnl_slides.startPoll(data.start_poll);
