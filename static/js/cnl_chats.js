@@ -322,17 +322,18 @@ var cnl_chats = {
   },
 
   // User to Server
-  endPoll: function (ret_idx) {
+  endPoll: function (obj) {
+    // obj[0] : index / obj[1] : question
     $('#polls-wrapper').empty();
     $('#contents-wrapper').css('visibility', 'visible');
     // debug: do something with ret_idx
     console.log('endPoll');
-    console.log(ret_idx);
+    console.log(obj[0]);
 
     socket.send(JSON.stringify({
       "command": "end_poll",
-      "question": obj.question,
-      "answer": ret_idx
+      "question": obj[1],
+      "answer": obj[0]
     }));
   },
 

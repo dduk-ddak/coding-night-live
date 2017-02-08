@@ -338,15 +338,15 @@
       */
 
       /* cnl_charts.js - endPoll function
-      function endPoll(ret_idx) {
+      function endPoll(ret_idx, q) {
         $('#polls-wrapper').empty();
         $('#contents-wrapper').css('visibility', 'visible');
+      */
 
         // debug: do something with ret_idx
         console.log('endPoll');
-        console.log(ret_idx);
+        console.log(ret_idx + '/ '+ q);
       }
-      */
 
       $('#chat_form').submit(function (e) {
         // remove the leading white spaces
