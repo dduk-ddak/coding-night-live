@@ -23,6 +23,21 @@
   </head>
 
   <body style="background-color:#eee">
+    <!-- Room delete modal -->
+    <div class="modal fade" id="room_delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Are you sure to delete this room?</h4>
+          </div>
+          <div class="modal-footer">
+            <button id="modal_delete_button" type="button" class="btn btn-danger" data-dismiss="modal">Delete room</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <nav class="navbar navbar-light bg-faded" style="background-color:#151515">
       <a class="navbar-brand" href="#">
         <img src="{% static "image/small-logo-point.png" %}" height="30vh">
@@ -49,17 +64,24 @@
 
     <div class="list-group center-list">
       {% for room in rooms %}
-        <button type="button" class="list-group-item list-group-item-action" onclick="location.href='{{ room.link }}'">
-          <h4 class="list-group-item-heading">{{ room.title }}</h4>
+        <div type="button" class="list-group-item list-group-item-action">
+          <h4 class="list-group-item-heading"><a href="{{ room.link }}" style="color:black;">{{ room.title }}</a></h4>
           <span class="tag tag-danger tag-pill float-xs-right">
-            <a href="{% url 'delete' pk=room.label %}" style="color:white">Delete</a>
+            <a href="#" onclick="deleteRoom('{% url 'delete' pk=room.label %}')" style="color:white">Delete</a>
           </span>
           <p class="list-group-item-text">Generated at {{ room.time }}</p>
-        </button>
+        </div>
       {% endfor %}
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+
+    <script>
+      function deleteRoom(link) {
+        $('#modal_delete_button').attr('onclick', 'location.href="' + link + '"');
+        $('#room_delete_modal').modal('show');
+      }
+    </script>
   </body>
 </html>

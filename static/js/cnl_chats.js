@@ -325,6 +325,25 @@ var cnl_chats = {
         </div>');
   },
 
+  // Admin user to Server
+  newPoll: function (obj) {
+    console.log("temporary..");
+  },
+
+  // User to Server
+  endPoll: function(obj) {
+    socket.send(JSON.stringify({
+      "command": "end_poll",
+      "question": obj.question,
+      "answer": obj.index
+    }));
+  },
+
+  // Create a result chart / from server
+  resultPoll: function (obj) {
+    var question = obj.question;
+    var answer_count = obj.answer_count;
+  },
 };
 
 cnl_chats.chatHashList = [];
