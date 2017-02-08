@@ -311,29 +311,29 @@ var cnl_chats = {
   startPoll: function (question, answers) {
     //q_str = "Q. How does this get toggled? Let's make this question much longer!";
     //a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
-    
+    question = question.replace(/'/g, "\\'");
+    question = question.replace(/"/g, '\\"');
+
     $('#contents-wrapper').css('visibility', 'hidden');
     var a_strs_str = '<h1 id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>'
     for(var i=0; i<answers.length; i+=1) {
-      var value = [i, question]
-      a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="endPoll(' + i.toString() + ')">' + a_strs[i] + '</button>';
+      a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="endPoll(\'' + i + '\',\'' + question + '\')">' + a_strs[i] + '</button>';
     }
     $('#polls-wrapper').append(a_strs_str);
   },
 
   // User to Server
-  endPoll: function (obj) {
-    // obj[0] : index / obj[1] : question
+  endPoll: function (index, question) {
     $('#polls-wrapper').empty();
     $('#contents-wrapper').css('visibility', 'visible');
     // debug: do something with ret_idx
     console.log('endPoll');
-    console.log(obj[0]);
+    console.log(index);
 
     socket.send(JSON.stringify({
       "command": "end_poll",
-      "question": obj[1],
-      "answer": obj[0]
+      "question": question,
+      "answer": index
     }));
   },
 
