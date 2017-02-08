@@ -6,6 +6,8 @@ console.log("Connecting to " + ws_path);
 var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
 var room_label = window.location.pathname;
 room_label = room_label.substring(1, room_label.length-1);  // Get label
+google.charts.load('current', {'packages':['corechart']});  // Load the Visualization API and the piechart package.
+//google.setOnLoadCallback(resultPoll); // Set a callback to run when the Google Visualization API is loaded.
 
 var had_count = false;
 

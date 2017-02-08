@@ -346,9 +346,6 @@ var cnl_chats = {
     var question = "Do you like python?";
     var answer_count = {'Yes': 4, 'No': 0};
 
-    google.load('visualization', '1.0', {'packages': ['corechart']}); // Load the Visualization API and the piechart package.
-    google.setOnLoadCallback(drawChart); // Set a callback to run when the Google Visualization API is loaded.
-
     // Create the data table
     var data = new google.visualization.DataTable();
     data.addColumn('string', 'Answer');
