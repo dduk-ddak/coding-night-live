@@ -64,11 +64,13 @@ var cnl_chats = {
   },
 
   getReplyAutocompletion: function (command, matches) {
-    command = command.trim();
-    var len = command.length,
+    // remove leading white spaces
+    command = command.replace(/^\s*/g, "");
+
+    var len = command.trim().length,
         upper_bound = 6, // length of '@reply'
         is_valid = false,
-        text = "@reply ";
+        text = "@reply #";
 
     var reply_regex = [
         /^@/g, /^@r/g, /^@re/g,
@@ -88,18 +90,20 @@ var cnl_chats = {
     } else {
       // check for full systax
       // first character after @reply must be a digit
-      if (!!!command.match(/^\s*@reply\s*(?=[\d])/g))
+      if (!!!command.match(/^\s*@reply\s*(?=[#])/g))
         return matches;
       // remove '@reply '
-      command = command.replace(/^(\s)*@reply\s*/g, "");
+      command = command.replace(/^(\s)*@reply\s*#/g, "");
+      console.log("after removing reply #");
 
-      if (command.search(/^\d+(?!\w)/g) === -1) {
+      if (command.search(/^[0-9a-z]*(?![^\s])/g) === -1) {
         // invalid user-given hash value
         return matches;
       }
+      console.log("herer");
 
-      var hash = command.match(/^\d+(?!\w)/g)[0];
-      command = command.replace(/^\d+(?!\w)/g, "");
+      var hash = command.match(/^[0-9a-z]*(?![^\s])/g)[0];
+      command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
 
       var is_valid_hash = false, is_complete_hash = false;
       var partial_hash_regex, complete_hash_regex;
@@ -134,6 +138,7 @@ var cnl_chats = {
       }
 
       if (is_complete_hash) {
+        text += command;
         matches = matches.concat([{label: label,
                                    value: text}]);
         return matches;
@@ -157,18 +162,20 @@ var cnl_chats = {
 
     command = command.trim();
 
-    // starts with '@reply '
-    if (!!!command.match(/^\s*@reply\s+/g)) {
+    // starts with '@reply #'
+    if (!!!command.match(/^\s*@reply\s*(?=[#])/g)) {
       // console.log("doesn't start with '@reply '");
       return is_valid;
     }
-    command = command.replace(/^\s*@reply\s+/g, "");
+    command = command.replace(/^(\s)*@reply\s*#/g, "");
 
-    if (!!!command.match(/^\d+(?!\w)/g))
+    if (command.search(/^[0-9a-z]*(?![^\s])/g) === -1) {
+      // invalid user-given hash value
       return is_valid;
+    }
 
-    hash = command.match(/^\d+(?!\w)/g)[0];
-    command = command.replace(/^\d+(?!\w)/g, "");
+    var hash = command.match(/^[0-9a-z]*(?![^\s])/g)[0];
+    command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
 
     var is_valid_hash = false,
         complete_hash_regex;
@@ -243,12 +250,14 @@ var cnl_chats = {
 
     command = command.trim();
 
-    // remove with '@reply '
-    command = command.replace(/^\s*@reply\s+/g, "");
+    // remove with '@reply #'
+    command = command.replace(/^(\s)*@reply\s*#/g, "");
 
-    hash_value = command.match(/^\d+(?!\w)/g)[0];
-    command = command.replace(/^\d+\s*(?!\w)/g, "");
+    var hash_value = command.match(/^[0-9a-z]*(?![^\s])/g)[0];
+    command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
     //description = command;
+
+    console.log(hash_value, command);
 
     socket.send(JSON.stringify({
       "command": "new_chat",
