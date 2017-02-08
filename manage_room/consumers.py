@@ -51,7 +51,7 @@ def room_join(message):
     if not curr_tot:
         curr_tot = 0
 
-    cache.set(message["room"], curr_tot + 1, timeout=None)
+    cache.set(message["room"], curr_tot + 1, timeout=7200)
     Group(message["room"]).send({
         "text": json.dumps({
             "count_user": curr_tot + 1,
@@ -81,7 +81,7 @@ def room_leave(message):
     if curr_tot < 2:
         cache.expire(message["room"], timeout=0)
     else:
-        cache.set(message["room"], curr_tot - 1, timeout=None)
+        cache.set(message["room"], curr_tot - 1, timeout=7200)
 
     Group(message["room"]).send({
         "text": json.dumps({

@@ -98,7 +98,7 @@
       <!-- Navbar: People count -->
       <h3 class="navbar-text float-xs-right" style="color:#1e2ea5">
         <i class="fa fa-user-plus" aria-hidden="true"></i>
-        <div id="user_count" style="float:right; margin-left:10px;">34</div>
+        <div id="user_count" style="float:right; margin-left:10px;"></div>
       </h3>
     </nav>
 
@@ -115,17 +115,17 @@
       <div id="contents-wrapper" class="row">
 
         <div id="slide_list_row" class="col-md-2" style="margin-top:1em;">
-          <!-- Drawer: Slide list: Title -->
+          <!-- Slide list: Title -->
           <div id="slide_contents_title" class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></div>
 
-          <!-- Drawer: Slide list -->
+          <!-- Slide list -->
           <ul id="slide_list" class="list-group" style="overflow-y:scroll; height:100%; border:1px solid rgba(0,0,0,.125); border-radius:.25rem; ">
-            <!-- Drawer: Slide list: Contents -->
+            <!-- Slide list: Contents -->
             {% for slide in slides %}
               <li id="slide_{{ slide.1 }}"  class="list-group-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
             {% endfor %}
 
-            <!-- Drawer: "Add" button -->
+            <!-- "Add" button -->
             {% if admin is True %}
               <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_slides.getNewSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
             {% endif %}
@@ -315,6 +315,7 @@
         var viewport_height = $(window).height();
         var start_height = $('#slide_contents_title').height() + $('#slide_contents_title').offset().top;
         var list_height = viewport_height - start_height - 40;
+
         $('#slide_list_row').height(list_height);
       }
 
