@@ -308,20 +308,21 @@ var cnl_chats = {
   },
 
   //Server to User
-  startPoll: function (obj) {
-    q_str = "Q. How does this get toggled? Let's make this question much longer!";
-    a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
+  startPoll: function (question, answers) {
+    //q_str = "Q. How does this get toggled? Let's make this question much longer!";
+    //a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
     
     $('#contents-wrapper').css('visibility', 'hidden');
     var a_strs_str = '<h1 id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>'
-    for(var i=0; i<a_strs.length; i+=1) {
+    for(var i=0; i<answers.length; i+=1) {
+      var value = [i, question]
       a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="endPoll(' + i.toString() + ')">' + a_strs[i] + '</button>';
     }
     $('#polls-wrapper').append(a_strs_str);
   },
 
   // User to Server
-  endPoll: function(obj) {
+  endPoll: function (ret_idx) {
     $('#polls-wrapper').empty();
     $('#contents-wrapper').css('visibility', 'visible');
     // debug: do something with ret_idx
@@ -331,7 +332,7 @@ var cnl_chats = {
     socket.send(JSON.stringify({
       "command": "end_poll",
       "question": obj.question,
-      "answer": obj.index
+      "answer": ret_idx
     }));
   },
 

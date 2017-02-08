@@ -49,6 +49,7 @@ def new_poll(message):
 @catch_client_error
 def end_poll(message):
     # developing...
+    #json.decoder.JSONDecoder()decode(field data)
     room = get_room_or_error(message["room"])
     poll = Poll.objects.get(room=room, questiong=message["question"])
     answer = message["answer"]

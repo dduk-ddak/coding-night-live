@@ -67,7 +67,7 @@ class Poll(models.Model):
         )
     
     def result_poll(self):
-        final_msg = {'result_poll': label, 'question': str(self.question), 'answer_count': str(self.answer_count)}
+        final_msg = {'result_poll': label, 'question': str(self.question), 'answer_count': self.answer_count}
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )
