@@ -20,20 +20,23 @@ var cnl_slides = {
     var content = data.md_blob;
     var idx = data.idx;
 
-    var preclicked_idx = this.curr_slide_idx;
-    this.curr_slide_idx = idx;
+    if (idx !== this.curr_slide_idx) {
+      var preclicked_idx = this.curr_slide_idx;
+      this.curr_slide_idx = idx;
 
-    $('#markdown_title').text(title);
-    this.setSlideText(content);
+      $('#markdown_title').text(title);
+      this.setSlideText(content);
 
-    var preclicked_slide = $('#slide_' + preclicked_idx);
-    if(preclicked_slide.length !== 0) {
-      preclicked_slide.removeClass('active');
+      var preclicked_slide = $('#slide_' + preclicked_idx);
+      if(preclicked_slide.length !== 0) {
+        preclicked_slide.removeClass('active');
+      }
+      $('#slide_' + idx).addClass('active');
     }
-    $('#slide_' + idx).addClass('active');
   },
 
   // callback for getDelSlide (only admin can call getDelSlide)
+  // this function is overriden for admin (because of tracking current slide that admin is watching)
   setDelSlide: function (idx) {
     var curr_slide = $('#slide_' + idx);
     curr_slide.remove();
@@ -100,9 +103,10 @@ var cnl_slides = {
     }
   },
 
-  // callback when new slide is generated (overriden for admin)
+  // callback when new slide is generated
+  // this function is overriden for admin
   setNewSlide: function (new_idx) {
-    $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
+    $('#slide_list').append('<li id="slide_' + new_idx + '" class="list-group-item" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   },
 
   // callback for change order of slide with index "idx" to previous of slide with index "next"
@@ -127,5 +131,16 @@ var cnl_slides = {
     if(idx == this.curr_slide_idx) {
       $('#markdown_title').text(name);
     }
+  },
+
+  // callback for current slide
+  currSlide: function (idx) {
+    $('#slide_list li').attr('data-original-title', '');
+    $('#slide_' + idx).attr('data-original-title', 'Current Slide');
+    $('#slide_' + idx).tooltip('show');
+    $('#slide_list').animate({scrollTop: $('#slide_' + idx).position().top - $('#slide_list li').first().position().top}, 'slow');
+    setTimeout(function() {
+      $('#slide_' + idx).tooltip('hide');
+    }, 1000);
   },
 };

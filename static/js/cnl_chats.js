@@ -284,7 +284,7 @@ var cnl_chats = {
       $('#chat_list_items').append(appended_elem);
     }
     if (is_end_of_scroll) {
-      $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'slow');
+      $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
     }
     else {
       if ($('#chat_scroll_button').css('visibility') == 'hidden') {

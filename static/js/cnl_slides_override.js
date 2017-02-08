@@ -42,10 +42,25 @@ cnl_slides.getNewSlide = function () {
 
 // callback when new slide is generated
 // socket connection always
-// overriden version has setSlideIndex() (if new slide is set, automatically send it to it)
+// overriden version has getSlideIndex() (if new slide is set, automatically send it to it),
+// and append differently because of add button
 cnl_slides.setNewSlide = function (new_idx) {
-  $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
+  $('#slide_list button').before('<li id="slide_' + new_idx + '" class="list-group-item" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="" onclick="cnl_slides.getSlideIndex(' + new_idx + ')">Unnamed slide</li>');
   cnl_slides.getSlideIndex(new_idx);
+}
+
+// when admin clicks new slide, the info is sent for everyone(for tooltip)
+// overriden version has socket send
+cnl_slides.setSlideIndex_user = cnl_slides.setSlideIndex;
+cnl_slides.setSlideIndex = function (data) {
+  if (cnl_slides.curr_slide_idx !== data.idx) {
+    socket.send(JSON.stringify({
+      "command": "curr_slide",
+      "room": room_label,
+      "id": data.idx,
+    }));
+  }
+  cnl_slides.setSlideIndex_user(data);
 }
 
 // send request for deleting slide with index "idx" to server

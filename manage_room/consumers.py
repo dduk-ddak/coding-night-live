@@ -117,6 +117,16 @@ def del_slide(message):
 
 @channel_session_user
 @catch_client_error
+def curr_slide(message):
+    #need to add admin_user authentication
+    Group(message["room"]).send({
+        "text": json.dumps({
+            "curr_slide": message['id'],
+        }),
+    })
+
+@channel_session_user
+@catch_client_error
 def get_slide(message):
     room = get_room_or_error(message["room"])
     slide = Slide.objects.get(room=room, now_id=message["id"])

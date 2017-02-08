@@ -124,7 +124,7 @@
           <ul id="slide_list" class="list-group" style="overflow-y:scroll; height:100%; border:1px solid rgba(0,0,0,.125); border-radius:.25rem; ">
             <!-- Slide list: Contents -->
             {% for slide in slides %}
-              <li id="slide_{{ slide.1 }}"  class="list-group-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
+              <li id="slide_{{ slide.1 }}" class="list-group-item" data-toggle="tooltip" data-placement="right" data-trigger="hover" title="" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
             {% endfor %}
 
             <!-- "Add" button -->
