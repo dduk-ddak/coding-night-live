@@ -163,6 +163,14 @@ def change_slide_order(message):
     pre_movable.save()
     movable.save()
 
+    Group(message["room"]).send({
+        "text": json.dumps({
+            "change_slide_order": True,
+            "id": message['id'],
+            "next_id": message['next_id'],
+        }),
+    })
+
 """
 @channel_session_user
 @catch_client_error
