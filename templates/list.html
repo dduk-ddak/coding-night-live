@@ -62,9 +62,9 @@
       </button>
     </div>
 
-    <div class="list-group center-list">
+    <div class="list-group center-list" style="margin-top:1em;">
       {% for room in rooms %}
-        <div type="button" class="list-group-item list-group-item-action">
+        <div class="list-group-item list-group-item-action">
           <h4 class="list-group-item-heading"><a href="{{ room.link }}" style="color:black;">{{ room.title }}</a></h4>
           <span class="tag tag-danger tag-pill float-xs-right">
             <a href="#" onclick="deleteRoom('{% url 'delete' pk=room.label %}')" style="color:white">Delete</a>
