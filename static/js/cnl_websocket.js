@@ -7,23 +7,27 @@ var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
 var room_label = window.location.pathname;
 room_label = room_label.substring(1, room_label.length-1);  // Get label
 
+var had_count = false;
+
 // Socket opening
 socket.onopen = function () {
   console.log("connected websocket");
 
-  socket.send(JSON.stringify({
-    "command": "join",
-    "room": room_label
-  }));
+  if(had_count === false) {
+    socket.send(JSON.stringify({
+      "command": "join",
+      "room": room_label
+    }));
+    had_count = true;
+  }
 
   // markdown view init
   var first_slide_idx = parseInt($('#slide_list li:nth-child(1)').attr('id').split('_')[1]);
-  console.log(first_slide_idx);
   cnl_slides.getSlideIndex(first_slide_idx);
 };
 
-// Socket(Browser) closing
-socket.onclose = window.onbeforeunload = function () {
+// Browser closing
+window.onbeforeunload = function () {
   console.log("disconnected websocket");
 
   socket.send(JSON.stringify({
