@@ -49,10 +49,10 @@ class Poll(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     time = models.DateTimeField(default=timezone.now)
     question = models.CharField(max_length=130)
-    answer = models.TextField()    #tuple or dictionary.. but dictionary is better than a tuple. because this field will save a JSON data
-    # answer example : ['yes', 'no', 'x']
+    answer = models.TextField()
+    # answer example : ['yes', 'no', 'x'] ; array(or list)
     answer_count = models.TextField()   #will save a JSON data
-    # answer_count example : {'yes': 4, 'no': 0, 'x': 2332}
+    # answer_count example : {'yes': 4, 'no': 0, 'x': 2332} ; json dumped string
 
     def __str__(self):
         return str(self._id)
@@ -68,8 +68,8 @@ class Poll(models.Model):
             {"text": json.dumps(final_msg)}
         )
     
-    def result_poll(self):
-        final_msg = {'result_poll': label, 'question': str(self.question), 'answer_count': self.answer_count}
+    def result_poll(self, label):
+        final_msg = {'result_poll': label, 'question': str(self.question), 'answer_count': json.loads(self.answer_count)}
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )

@@ -44,7 +44,7 @@ def new_poll(message):
     answer_count = json.dumps(answer_count) # dictinary json dumps -> str
     poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
 
-    poll.start_poll(room.label)
+    poll.start_poll(message["room"])
 
 @channel_session_user
 @catch_client_error
@@ -59,4 +59,4 @@ def end_poll(message):
     poll.answer_count = json.dumps(answer_count)
     poll.save()
 
-    poll.result_poll()
+    poll.result_poll(message["room"])

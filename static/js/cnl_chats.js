@@ -344,7 +344,7 @@ var cnl_chats = {
     
     // for debug
     var question = "Do you like python?";
-    var answer_count = 
+    var answer_count = {'Yes': 4, 'No': 0};
 
     var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
