@@ -19,6 +19,20 @@
       width: 70%;
       max-width: 600px;
     }
+    .room-link-element {
+      color: black;
+    }
+    .room-link-element:hover {
+      color: #0275d8;
+      text-decoration: none;
+    }
+    .room-delete-element {
+      color: white;
+    }
+    .room-delete-element:hover {
+      color: white;
+      text-decoration: none;
+    }
     </style>
   </head>
 
@@ -38,7 +52,7 @@
       </div>
     </div>
 
-    <nav class="navbar navbar-light bg-faded" style="background-color:#151515">
+    <nav class="navbar navbar-light bg-faded" style="background-color:#0275d8;">
       <a class="navbar-brand" href="#">
         <img src="{% static "image/small-logo-point.png" %}" height="30vh">
       </a>
@@ -47,8 +61,6 @@
           {% load account %}
           <a class="nav-link dropdown-toggle" href="#" id="logged_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">Welcome, <b>{% user_display user %}</b></a>
           <div class="dropdown-menu" aria-labelledby="logged_dropdown">
-            <a class="dropdown-item" href="#">My Profile</a>
-            <a class="dropdown-item" href="#">Settings</a>
             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
           </div>
         </li>
@@ -65,9 +77,9 @@
     <div class="list-group center-list" style="margin-top:1em;">
       {% for room in rooms %}
         <div class="list-group-item list-group-item-action">
-          <h4 class="list-group-item-heading"><a href="{{ room.link }}" style="color:black;">{{ room.title }}</a></h4>
+          <h4 class="list-group-item-heading"><a class="room-link-element" href="{{ room.link }}">{{ room.title }}</a></h4>
           <span class="tag tag-danger tag-pill float-xs-right">
-            <a href="#" onclick="deleteRoom('{% url 'delete' pk=room.label %}')" style="color:white">Delete</a>
+            <a href="#" class="room-delete-element" onclick="deleteRoom('{% url 'delete' pk=room.label %}')">Delete</a>
           </span>
           <p class="list-group-item-text">Generated at {{ room.time }}</p>
         </div>

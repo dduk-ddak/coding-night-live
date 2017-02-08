@@ -80,7 +80,7 @@
     {% endif %}
 
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-light bg-faded" style="background-color:#151515; font-size:1.5em; border-radius:0em;">
+    <nav class="navbar navbar-light bg-faded" style="background-color:#0275d8; font-size:1.5em; border-radius:0em;">
       <a class="btn" href="/services">
         <i class="fa fa-chevron-left" aria-hidden="true" style="color:white"></i>
       </a>
@@ -91,11 +91,11 @@
         <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
       {% endif %}
       <!-- Copy a url -->
-      <a onclick="window.prompt('Copy to Clipboard: Ctrl+C, Enter', document.location.href);" style="padding-left:20px;" data-toggle="tooltip" data-placement="bottom" title="Share via URL"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <a onclick="window.prompt('Copy to Clipboard: Ctrl+C, Enter', document.location.href);" style="padding-left:20px;" data-toggle="tooltip" data-placement="bottom" title="Share via URL"><i class="fa fa-link" aria-hidden="true" style="color:white;"></i></a>
       <!-- Download PDF file -->
-      <a href="#" data-toggle="tooltip" data-placement="bottom" title="Download PDF"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <a href="#" data-toggle="tooltip" data-placement="bottom" title="Download PDF"><i class="fa fa-download" aria-hidden="true" style="color:white;"></i></a>
       <!-- Report a bug -->
-      <a href="https://github.com/dduk-ddak/coding-night-live/issues" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Report Bugs"><i class="fa fa-bug" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <a href="https://github.com/dduk-ddak/coding-night-live/issues" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Report Bugs"><i class="fa fa-bug" aria-hidden="true" style="color:white;"></i></a>
 
       <!-- Navbar: People count -->
       <h3 class="navbar-text float-xs-right" style="color:white">
@@ -341,12 +341,12 @@
       function endPoll(ret_idx, q) {
         $('#polls-wrapper').empty();
         $('#contents-wrapper').css('visibility', 'visible');
-      */
 
         // debug: do something with ret_idx
         console.log('endPoll');
         console.log(ret_idx + '/ '+ q);
       }
+      */
 
       $('#chat_form').submit(function (e) {
         // remove the leading white spaces
