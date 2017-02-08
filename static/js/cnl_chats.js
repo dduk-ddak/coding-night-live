@@ -64,18 +64,20 @@ var cnl_chats = {
   },
 
   getReplyAutocompletion: function (command, matches) {
-    command = command.trim();
-    var len = command.length,
+    // remove leading white spaces
+    command = command.replace(/^\s*/g, "");
+
+    var len = command.trim().length,
         upper_bound = 6, // length of '@reply'
         is_valid = false,
-        text = "@reply ";
+        text = "@reply #";
 
     var reply_regex = [
         /^@/g, /^@r/g, /^@re/g,
         /^@rep/g, /^@repl/g,
         /^@reply\s*/g, /^\s*@reply\s*(?=\d)/g,];
 
-    var label = "@reply ", labels = [], texts = [];
+    var label = "@reply #", labels = [], texts = [];
 
     if (len <= upper_bound) {
       // user is still typing the command;
@@ -88,18 +90,18 @@ var cnl_chats = {
     } else {
       // check for full systax
       // first character after @reply must be a digit
-      if (!!!command.match(/^\s*@reply\s*(?=[\d])/g))
+      if (!!!command.match(/^\s*@reply\s*(?=[#])/g))
         return matches;
       // remove '@reply '
-      command = command.replace(/^(\s)*@reply\s*/g, "");
+      command = command.replace(/^(\s)*@reply\s*#/g, "");
 
-      if (command.search(/^\d+(?!\w)/g) === -1) {
+      if (command.search(/^[0-9a-z]*(?![^\s])/g) === -1) {
         // invalid user-given hash value
         return matches;
       }
 
-      var hash = command.match(/^\d+(?!\w)/g)[0];
-      command = command.replace(/^\d+(?!\w)/g, "");
+      var hash = command.match(/^[0-9a-z]*(?![^\s])/g)[0];
+      command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
 
       var is_valid_hash = false, is_complete_hash = false;
       var partial_hash_regex, complete_hash_regex;
@@ -108,12 +110,12 @@ var cnl_chats = {
         partial_hash_regex = new RegExp("^"+hash, "g");
         complete_hash_regex = new RegExp("^"+hash+"$", "g");
 
-        if (!!cnl_chats.chatHashList[i].match(complete_hash_regex)) {
+        if (cnl_chats.chatHashList[i].search(complete_hash_regex) !== -1) {
           text += hash + " ";
           label += hash + " <comment>";
           is_complete_hash = true;
           break;
-        } else if (!!cnl_chats.chatHashList[i].match(partial_hash_regex))
+        } else if (cnl_chats.chatHashList[i].search(partial_hash_regex) !== -1)
         {
           labels.push(text + cnl_chats.chatHashList[i] + " <comment>");
           texts.push(text + cnl_chats.chatHashList[i] + " ");
@@ -126,7 +128,7 @@ var cnl_chats = {
           matches = matches.concat([{label: label,
                                      value: text}]);
         } else if (is_valid_hash) {
-          for (var i=0; i<cnl_chats.chatHashList.length; i+=1)
+          for (var i=0; i<labels.length; i+=1)
             matches = matches.concat([{label: labels[i],
                                        value: texts[i]}]);
         }
@@ -134,6 +136,7 @@ var cnl_chats = {
       }
 
       if (is_complete_hash) {
+        text += command;
         matches = matches.concat([{label: label,
                                    value: text}]);
         return matches;
@@ -157,18 +160,20 @@ var cnl_chats = {
 
     command = command.trim();
 
-    // starts with '@reply '
-    if (!!!command.match(/^\s*@reply\s+/g)) {
+    // starts with '@reply #'
+    if (!!!command.match(/^\s*@reply\s*(?=[#])/g)) {
       // console.log("doesn't start with '@reply '");
       return is_valid;
     }
-    command = command.replace(/^\s*@reply\s+/g, "");
+    command = command.replace(/^(\s)*@reply\s*#/g, "");
 
-    if (!!!command.match(/^\d+(?!\w)/g))
+    if (command.search(/^[0-9a-z]*(?![^\s])/g) === -1) {
+      // invalid user-given hash value
       return is_valid;
+    }
 
-    hash = command.match(/^\d+(?!\w)/g)[0];
-    command = command.replace(/^\d+(?!\w)/g, "");
+    var hash = command.match(/^[0-9a-z]*(?![^\s])/g)[0];
+    command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
 
     var is_valid_hash = false,
         complete_hash_regex;
@@ -213,22 +218,6 @@ var cnl_chats = {
     console.log(cnl_chats.valid_syntax);
   },
 
-  getDateString: function () {
-    var date = new Date();
-    var year = date.getFullYear(),
-        month = date.getMonth(),
-        day = date.getDay(),
-        hour = date.getHours(),
-        min = date.getMinutes();
-    var date_string = String(year) +'.'  +
-                      String(month)+'.'  +
-                      String(day)  +'. ' +
-                      String(hour) +':'  +
-                      String(min);
-
-    return date_string;
-  },
-
   chatWrapper: function (command) {
     socket.send(JSON.stringify({
       "command": "new_chat",
@@ -243,12 +232,14 @@ var cnl_chats = {
 
     command = command.trim();
 
-    // remove with '@reply '
-    command = command.replace(/^\s*@reply\s+/g, "");
+    // remove with '@reply #'
+    command = command.replace(/^(\s)*@reply\s*#/g, "");
 
-    hash_value = command.match(/^\d+(?!\w)/g)[0];
-    command = command.replace(/^\d+\s*(?!\w)/g, "");
+    var hash_value = command.match(/^[0-9a-z]*(?![^\s])/g)[0];
+    command = command.replace(/^[0-9a-z]*(?![^\s])\s*/g, "");
     //description = command;
+
+    // console.log(hash_value, command);
 
     socket.send(JSON.stringify({
       "command": "new_chat",
@@ -316,6 +307,25 @@ var cnl_chats = {
         </div>');
   },
 
+  // Admin user to Server
+  newPoll: function (obj) {
+    console.log("temporary..");
+  },
+
+  // User to Server
+  endPoll: function(obj) {
+    socket.send(JSON.stringify({
+      "command": "end_poll",
+      "question": obj.question,
+      "answer": obj.index
+    }));
+  },
+
+  // Create a result chart / from server
+  resultPoll: function (obj) {
+    var question = obj.question;
+    var answer_count = obj.answer_count;
+  },
 };
 
 cnl_chats.chatHashList = [];

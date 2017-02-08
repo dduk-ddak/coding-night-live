@@ -7,23 +7,27 @@ var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
 var room_label = window.location.pathname;
 room_label = room_label.substring(1, room_label.length-1);  // Get label
 
+var had_count = false;
+
 // Socket opening
 socket.onopen = function () {
   console.log("connected websocket");
 
-  socket.send(JSON.stringify({
-    "command": "join",
-    "room": room_label
-  }));
+  if(had_count === false) {
+    socket.send(JSON.stringify({
+      "command": "join",
+      "room": room_label
+    }));
+    had_count = true;
+  }
 
   // markdown view init
   var first_slide_idx = parseInt($('#slide_list li:nth-child(1)').attr('id').split('_')[1]);
-  console.log(first_slide_idx);
   cnl_slides.getSlideIndex(first_slide_idx);
 };
 
-// Socket(Browser) closing
-socket.onclose = window.onbeforeunload = function () {
+// Browser closing
+window.onbeforeunload = function () {
   console.log("disconnected websocket");
 
   socket.send(JSON.stringify({
@@ -51,14 +55,20 @@ socket.onmessage = function (message) {
     console.log("Leaving room " + data.leave);
     data.leave.remove();
   } else if (data.rename_title) {
-    // Rename room rename_title
+    // Rename room title
     setRoomTitle(data.title)
   } else if (data.chat) {
     // New chat
     cnl_chats.newChat(data);
   } else if (data.notice) {
     // New notice
-    newNotice(data);
+    cnl_chats.newNotice(data);
+  } else if (data.start_poll) {
+    // Start poll
+    //cnl_slides.startPoll(data.start_poll);
+  } else if (data.result_poll) {
+    // Result poll
+    //cnl_slide.resultPoll(data.result_poll);
   } else if (data.new_slide) {
     // New Slide
     cnl_slides.setNewSlide(data.new_slide);
@@ -66,17 +76,22 @@ socket.onmessage = function (message) {
     // Delete Slide
     cnl_slides.setDelSlide(data.del_slide);
   } else if (data.get_slide) {
+    // View selected slide
     cnl_slides.setSlideIndex(data);
-    //data.md_blob
   } else if (data.rename_slide) {
+    // Rename slide title
     cnl_slides.setRenameSlide(data);
   } else if (data.change_slide_order) {
+    // Change slide order
     cnl_slides.setChangeSlideOrder(data);
   } else if (data.change_slide) {
+    // Edit slide contents
     cnl_slides.changeSlideText(data);
   } else if (data.rename_room) {
+    // Rename room title
     cnl_rooms.renameRoom(data.rename_room);
   } else if (data.count_user) {
+    // Count connected user
     cnl_rooms.countUser(data.count_user);
   } else if (data.msg_type) {
     // msg_types are defined in manage_room/setting.py

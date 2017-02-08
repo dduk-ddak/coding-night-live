@@ -35,7 +35,6 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [`CodeMirror`](https://github.com/codemirror/CodeMirror)
 * [`bootstrap4 (alpha)`](https://v4-alpha.getbootstrap.com/)
 * [`jquery`](https://github.com/jquery/jquery)
-* [`drawer`](https://github.com/blivesta/drawer)
 * [`highlight.js`](https://github.com/isagalaev/highlight.js)
 * [`markdown-it`](https://github.com/markdown-it/markdown-it)
 * [`iscroll`](https://github.com/cubiq/iscroll)

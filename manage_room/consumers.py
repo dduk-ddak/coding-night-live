@@ -51,7 +51,7 @@ def room_join(message):
     if not curr_tot:
         curr_tot = 0
 
-    cache.set(message["room"], curr_tot + 1, timeout=None)
+    cache.set(message["room"], curr_tot + 1, timeout=7200)
     Group(message["room"]).send({
         "text": json.dumps({
             "count_user": curr_tot + 1,
@@ -81,14 +81,13 @@ def room_leave(message):
     if curr_tot < 2:
         cache.expire(message["room"], timeout=0)
     else:
-        cache.set(message["room"], curr_tot - 1, timeout=None)
+        cache.set(message["room"], curr_tot - 1, timeout=7200)
 
     Group(message["room"]).send({
         "text": json.dumps({
             "count_user": curr_tot - 1,
         }),
     })
-    print('room_leave')
 
 @channel_session_user
 @catch_client_error
@@ -156,6 +155,14 @@ def change_slide_order(message):
     pre_next.save()
     pre_movable.save()
     movable.save()
+
+    Group(message["room"]).send({
+        "text": json.dumps({
+            "change_slide_order": True,
+            "id": message['id'],
+            "next_id": message['next_id'],
+        }),
+    })
 
 """
 @channel_session_user

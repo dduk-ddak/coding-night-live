@@ -7,7 +7,6 @@
     <title id="head_title"></title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/css/drawer.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
@@ -28,7 +27,7 @@
     </style>
   </head>
 
-  <body class="drawer drawer--left" style="background-color:#eee">
+  <body style="background-color:#eee">
     {% if admin is True %}
       <!-- Slide delete modal -->
       <div class="modal fade" id="delete_slide_modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -82,8 +81,8 @@
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-light bg-faded" style="background-color:#151515; font-size:1.5em; border-radius:0em;">
-      <a class="btn drawer-toggle" id="getList">
-        <i class="fa fa-bars" aria-hidden="true" style="color:white"></i>
+      <a class="btn" href="/services">
+        <i class="fa fa-chevron-left" aria-hidden="true" style="color:white"></i>
       </a>
 
       <!-- Navbar: Title -->
@@ -92,36 +91,15 @@
         <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
       {% endif %}
       <!-- Copy a url -->
-      <a onclick="window.prompt('Copy to Clipboard: Ctrl+C, Enter', document.location.href);" style="padding-left:20px;"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <a onclick="window.prompt('Copy to Clipboard: Ctrl+C, Enter', document.location.href);" style="padding-left:20px;" data-toggle="tooltip" data-placement="bottom" title="Share via URL"><i class="fa fa-link" aria-hidden="true" style="color:#7b7b7b"></i></a>
       <!-- Download PDF file -->
-      <a href="#"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
+      <a href="#" data-toggle="tooltip" data-placement="bottom" title="Download PDF"><i class="fa fa-download" aria-hidden="true" style="color:#7b7b7b"></i></a>
 
       <!-- Navbar: People count -->
       <h3 class="navbar-text float-xs-right" style="color:#1e2ea5">
         <i class="fa fa-user-plus" aria-hidden="true"></i>
-        <div id="user_count" style="float:right; margin-left:10px;">34</div>
+        <div id="user_count" style="float:right; margin-left:10px;"></div>
       </h3>
-
-    </nav>
-
-    <!-- Drawer -->
-    <nav class="drawer-nav" role="navigation" style="z-index:5">
-
-      <!-- Drawer: Slide list: Title -->
-      <div class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></div>
-
-      <!-- Drawer: Slide list -->
-      <ul id="slide_list" class="drawer-menu list-group">
-        <!-- Drawer: Slide list: Contents -->
-        {% for slide in slides %}
-          <li id="slide_{{ slide.1 }}"  class="list-group-item drawer-menu-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
-        {% endfor %}
-
-        {% if admin is True %}
-          <!-- Drawer: "Add" button -->
-          <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_slides.getNewSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
-        {% endif %}
-      </ul>
     </nav>
 
     <!-- Contents -->
@@ -136,8 +114,26 @@
       <!-- Shown Contents (without poll) -->
       <div id="contents-wrapper" class="row">
 
+        <div id="slide_list_row" class="col-md-2" style="margin-top:1em;">
+          <!-- Slide list: Title -->
+          <div id="slide_contents_title" class="list-group-item"><h4 class="list-group-item-heading">Contents</h4></div>
+
+          <!-- Slide list -->
+          <ul id="slide_list" class="list-group" style="overflow-y:scroll; height:100%; border:1px solid rgba(0,0,0,.125); border-radius:.25rem; ">
+            <!-- Slide list: Contents -->
+            {% for slide in slides %}
+              <li id="slide_{{ slide.1 }}"  class="list-group-item" onclick="cnl_slides.getSlideIndex({{ slide.1 }})">{{ slide.0 }}</li>
+            {% endfor %}
+
+            <!-- "Add" button -->
+            {% if admin is True %}
+              <button class="btn btn-secondary btn-block" style="border-style:none; padding:1em;" onclick="cnl_slides.getNewSlide()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+            {% endif %}
+          </ul>
+        </div>
+
         <!-- Left Div -->
-        <div class="col-md-8">
+        <div class="col-md-7" style="padding-left:0px; padding-right:0px;">
 
           <!-- Left Div: Slide title -->
           <div class="card" style="margin-top: 1em">
@@ -164,7 +160,7 @@
         </div>
 
         <!-- Right Div -->
-        <div class="col-md-4">
+        <div class="col-md-3">
 
           <!-- Right Div: Notice -->
           <div id="notice_card" class="card" style="margin-top:1em;">
@@ -192,7 +188,7 @@
               </div>
 
               <!-- Toggle notice button -->
-              <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block"><i id="notice-toggler" class="fa fa-sort-asc" aria-hidden="true"></i></a>
+              <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block" style="height:25px;"><i id="notice-toggler" class="fa fa-sort-asc" aria-hidden="true"></i></a>
 
             </div>
           </div>
@@ -235,16 +231,14 @@
 
     <script src="https://use.fontawesome.com/22d0d19cf2.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/iScroll/5.1.3/iscroll.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawer/3.2.1/js/drawer.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.22.0/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.2.2/markdown-it.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
 
     {% load staticfiles %}
@@ -253,57 +247,42 @@
 
    <script>
       $(document).ready(function() {
-        // drawer init
-        $('.drawer').drawer({
-          class: {
-            nav: 'drawer-nav',
-            toggle: 'drawer-toggle'
-          },
-          iscroll: {
-            mouseWheel: true,
-            preventDefault: false,
-            disableMouse: true,
-            disablePointer: true,
-            disableTouch: true,
-          },
-          showOverlay: true
-        });
-
+        // tooltip init
+        $('[data-toggle="tooltip"]').tooltip();
         {% if admin is True %}
-        // sortable init
-        $('#slide_list').sortable({
-          update: function(event, ui) {
-            var curr_slide = ui.item;
-            var next_slide = ui.item.next();
-            var prev_slide = ui.item.prev();
+          // sortable init
+          $('#slide_list').sortable({
+            update: function(event, ui) {
+              var curr_slide = ui.item;
+              var next_slide = ui.item.next();
+              var prev_slide = ui.item.prev();
 
-            // below than button
-            if(prev_slide.prop('tagName') == 'BUTTON') {
-              curr_slide.detach().insertBefore(prev_slide);
+              // below than button
+              if(prev_slide.prop('tagName') == 'BUTTON') {
+                curr_slide.detach().insertBefore(prev_slide);
+              }
+
+              var curr_slide_idx = parseInt(curr_slide.attr('id').split('_')[1]);
+              var next_slide_idx = 0;
+
+              if(next_slide.length === 1 && typeof next_slide.attr('id') != 'undefined' && next_slide.attr('id').substring(0,6) === 'slide_') {
+                next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
+              }
+
+              cnl_slides.getChangeSlideOrder(curr_slide_idx, next_slide_idx);
             }
+          });
 
-            var curr_slide_idx = parseInt(curr_slide.attr('id').split('_')[1]);
-            var next_slide_idx = 0;
+          // rename slide modal init
+          $('#rename_slide_modal').on('show.bs.modal', function(e) {
+            $('#slide_name_input').val($('#markdown_title').text());
+          });
 
-            if(next_slide.length === 1 && typeof next_slide.attr('id') != 'undefined' && next_slide.attr('id').substring(0,6) === 'slide_') {
-              next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
-            }
-
-            //cnl_slides.changeSlideOrder(curr_slide_idx, next_slide_idx);
-            cnl_slides.getChangeSlideOrder(curr_slide_idx, next_slide_idx);
-          }
-        });
-
-        // rename slide modal init
-        $('#rename_slide_modal').on('show.bs.modal', function(e) {
-          $('#slide_name_input').val($('#markdown_title').text());
-        });
-
-        // rename room modal init
-        $('#rename_room_modal').on('show.bs.modal', function(e) {
-          $('#room_title_input').val($('#room_title').text());
-        });
-        $('#room_title_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
+          // rename room modal init
+          $('#rename_room_modal').on('show.bs.modal', function(e) {
+            $('#room_title_input').val($('#room_title').text());
+          });
+          $('#room_title_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
         {% endif %}
       });
 
@@ -323,7 +302,6 @@
 
       // responsive chat list
       function chatListResize() {
-        console.log('test!!');
         var viewport_height = $(window).height();
         var start_height = $('#notice_card').height() + $('#notice_card').offset().top;
         var chat_list_height = viewport_height - start_height - 140;
@@ -331,6 +309,15 @@
           chat_list_height = 100;
         }
         $('#chat_list_scroll').height(chat_list_height);
+      }
+
+      // responsive slide list
+      function slideListResize() {
+        var viewport_height = $(window).height();
+        var start_height = $('#slide_contents_title').height() + $('#slide_contents_title').offset().top;
+        var list_height = viewport_height - start_height - 40;
+
+        $('#slide_list_row').height(list_height);
       }
 
       function startPoll(q_str, a_strs) {
@@ -430,8 +417,10 @@
     <!-- After load completes -->
     <script type="text/javascript">
       chatListResize();
+      slideListResize();
       $(window).resize(function() {
         chatListResize();
+        slideListResize();
       });
     </script>
   </body>
