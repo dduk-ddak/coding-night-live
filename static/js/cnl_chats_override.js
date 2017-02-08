@@ -118,41 +118,10 @@ cnl_chats.pollWrapper = function (question, answer) {
   return;
 }
 
+// Admin user to Server
 cnl_chats.newPoll = function (obj) {
-  var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
-  var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
-  $('#chat_list_items').append(ctx);
-  var pollChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: obj.answers,
-      datasets: [{
-        label: '',
-        data: [13, 43, 92, 13],//data: Array.apply(null, {length: obj.answers.length}).map(function() {return 0;}),
-      }],
-    },
-    options: {
-      responiveAnimationDuration: 100,
-      text: obj.question,
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
-    }
-  });
-
-  if (is_end_of_scroll) {
-    $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
-  }
-  else {
-    if ($('#chat_scroll_button').css('visibility') == 'hidden') {
-      toBeScrolledPosition(ctx.position().top);
-      $('#chat_scroll_button').css('visibility', 'visible');
-    }
-  }
+  var question = obj.question;
+  var answer = obj.answer;
 }
 
 cnl_chats.operationTable = [

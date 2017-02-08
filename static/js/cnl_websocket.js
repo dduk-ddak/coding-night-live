@@ -54,9 +54,6 @@ socket.onmessage = function (message) {
     //Handle Leaving
     console.log("Leaving room " + data.leave);
     data.leave.remove();
-  } else if (data.rename_title) {
-    // Rename room title
-    setRoomTitle(data.title)
   } else if (data.chat) {
     // New chat
     cnl_chats.newChat(data);
