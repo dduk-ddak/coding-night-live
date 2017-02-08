@@ -346,33 +346,31 @@ var cnl_chats = {
     var question = "Do you like python?";
     var answer_count = {'Yes': 4, 'No': 0};
 
+    google.load('visualization', '1.0', {'packages': ['corechart']}); // Load the Visualization API and the piechart package.
+    google.setOnLoadCallback(drawChart); // Set a callback to run when the Google Visualization API is loaded.
+
+    // Create the data table
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Answer');
+    data.addColumn('number', 'Result');
+
+    var data_array = [];
+    for (var answer in answer_count) {
+      var value = [answer, answer_count[answer]];
+      data_array.push(value);
+    }
+    data.addRows(data_array);
+
+    // Set chart options
+    var options = {'title': question, 'width': 380, 'height': 380};
+    // Instantiate and draw our chart, passing in some options.
+    //var chart = new google.visualization.PieChart(document.getElementById('chart_div'));  //draw chart to 'chart-div'
+    //chart.draw(data, options);
+
     var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
     $('#chat_list_items').append(ctx);
-    /*
-    var pollChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: obj.answers,
-        datasets: [{
-          label: '',
-          data: [13, 43, 92, 13],//data: Array.apply(null, {length: obj.answers.length}).map(function() {return 0;}),
-        }],
-      },
-      options: {
-        responiveAnimationDuration: 100,
-        text: obj.question,
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    });
-    */
-
+    
     if (is_end_of_scroll) {
       $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
     }
