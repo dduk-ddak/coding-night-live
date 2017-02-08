@@ -218,22 +218,6 @@ var cnl_chats = {
     console.log(cnl_chats.valid_syntax);
   },
 
-  getDateString: function () {
-    var date = new Date();
-    var year = date.getFullYear(),
-        month = date.getMonth(),
-        day = date.getDay(),
-        hour = date.getHours(),
-        min = date.getMinutes();
-    var date_string = String(year) +'.'  +
-                      String(month)+'.'  +
-                      String(day)  +'. ' +
-                      String(hour) +':'  +
-                      String(min);
-
-    return date_string;
-  },
-
   chatWrapper: function (command) {
     socket.send(JSON.stringify({
       "command": "new_chat",
