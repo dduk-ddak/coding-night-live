@@ -316,6 +316,9 @@ var cnl_chats = {
         </div>');
   },
 
+  newPoll: function(obj) {
+      console.log("temporary..");
+  },
 };
 
 cnl_chats.chatHashList = [];

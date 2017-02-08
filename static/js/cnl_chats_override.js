@@ -85,8 +85,15 @@ cnl_chats.noticeWrapper = function (command) {
   return;
 }
 
-cnl_chats.pollWrapper = function () {
+cnl_chats.pollWrapper = function (question, answer) {
   console.log("run poll");
+  socket.send(JSON.stringify({
+      "command": "new_poll",
+      "question": question,
+      "answer": answer,
+      "room": room_label
+  }));
+
   return;
 }
 

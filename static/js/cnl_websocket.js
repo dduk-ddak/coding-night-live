@@ -55,7 +55,7 @@ socket.onmessage = function (message) {
     console.log("Leaving room " + data.leave);
     data.leave.remove();
   } else if (data.rename_title) {
-    // Rename room rename_title
+    // Rename room title
     setRoomTitle(data.title)
   } else if (data.chat) {
     // New chat
@@ -63,6 +63,9 @@ socket.onmessage = function (message) {
   } else if (data.notice) {
     // New notice
     newNotice(data);
+  } else if (data.start_poll) {
+    // Start poll
+    //cnl_slides.startPoll(data.start_poll);
   } else if (data.new_slide) {
     // New Slide
     cnl_slides.setNewSlide(data.new_slide);
@@ -70,17 +73,22 @@ socket.onmessage = function (message) {
     // Delete Slide
     cnl_slides.setDelSlide(data.del_slide);
   } else if (data.get_slide) {
+    // View selected slide
     cnl_slides.setSlideIndex(data);
-    //data.md_blob
   } else if (data.rename_slide) {
+    // Rename slide title
     cnl_slides.setRenameSlide(data);
   } else if (data.change_slide_order) {
+    // Change slide order
     cnl_slides.setChangeSlideOrder(data);
   } else if (data.change_slide) {
+    // Edit slide contents
     cnl_slides.changeSlideText(data);
   } else if (data.rename_room) {
+    // Rename room title
     cnl_rooms.renameRoom(data.rename_room);
   } else if (data.count_user) {
+    // Count connected user
     cnl_rooms.countUser(data.count_user);
   } else if (data.msg_type) {
     // msg_types are defined in manage_room/setting.py
