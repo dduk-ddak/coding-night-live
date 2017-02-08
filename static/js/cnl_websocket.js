@@ -66,6 +66,9 @@ socket.onmessage = function (message) {
   } else if (data.start_poll) {
     // Start poll
     //cnl_slides.startPoll(data.start_poll);
+  } else if (data.result_poll) {
+    // Result poll
+    //cnl_slide.resultPoll(data.result_poll);
   } else if (data.new_slide) {
     // New Slide
     cnl_slides.setNewSlide(data.new_slide);
