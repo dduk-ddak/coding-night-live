@@ -45,15 +45,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
     <script>
     function myfocus(img) {
-      console.log('focus');
       img.setAttribute('src', "{% static "image/google_focus.png" %}");
     }
     function unfocus(img) {
-      console.log('unfocus');
       img.setAttribute('src', "{% static "image/google_normal.png" %}");
     }
     function press(img) {
-      console.log('press');
       img.setAttribute('src', "{% static "image/google_pressed.png" %}");
     }
     </script>
