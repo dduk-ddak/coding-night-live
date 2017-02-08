@@ -37,10 +37,11 @@ def new_notice(message):
 @catch_client_error
 def new_poll(message):
     room = get_room_or_error(message["room"])
-    answer_count = []
+    answer_count = {}
     for i in range(0, len(message["answer"])):
-        answer_count.append(0)
-    answer_count = str(answer_count)
+        answer = message["answer"][i]
+        answer_count[answer] = 0
+    answer_count = json.dumps(answer_count) # dictinary json dumps -> str
     poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
 
     poll.start_poll(room.label)
@@ -49,13 +50,13 @@ def new_poll(message):
 @catch_client_error
 def end_poll(message):
     # developing...
-    #json.decoder.JSONDecoder()decode(field data)
     room = get_room_or_error(message["room"])
-    poll = Poll.objects.get(room=room, questiong=message["question"])
+    poll = Poll.objects.get(room=room, question=message["question"])
     answer = message["answer"]
-    answer_count = str(poll.answer_count)
+    answer_count = json.loads(poll.answer_count)    # dict result
+    answer_count[answer] += 1
 
-    poll.answer_count = answer_count
+    poll.answer_count = json.dumps(answer_count)
     poll.save()
 
     poll.result_poll()

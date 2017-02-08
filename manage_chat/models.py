@@ -50,7 +50,9 @@ class Poll(models.Model):
     time = models.DateTimeField(default=timezone.now)
     question = models.CharField(max_length=130)
     answer = models.TextField()    #tuple or dictionary.. but dictionary is better than a tuple. because this field will save a JSON data
+    # answer example : ['yes', 'no', 'x']
     answer_count = models.TextField()   #will save a JSON data
+    # answer_count example : {'yes': 4, 'no': 0, 'x': 2332}
 
     def __str__(self):
         return str(self._id)

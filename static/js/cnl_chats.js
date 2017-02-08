@@ -339,8 +339,12 @@ var cnl_chats = {
 
   // Create a result chart / from server
   resultPoll: function (obj) {
-    var question = obj.question;
-    var answer_count = obj.answer_count;
+    //var question = obj.question;
+    //var answer_count = obj.answer_count;
+    
+    // for debug
+    var question = "Do you like python?";
+    var answer_count = 
 
     var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
