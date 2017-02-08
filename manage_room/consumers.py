@@ -88,7 +88,6 @@ def room_leave(message):
             "count_user": curr_tot - 1,
         }),
     })
-    print('room_leave')
 
 @channel_session_user
 @catch_client_error
