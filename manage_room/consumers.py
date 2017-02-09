@@ -94,8 +94,8 @@ def room_leave(message):
 def new_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    last_slide = Slide.objects.get(next_id=0, room=room)
     with transaction.atomic():
+        last_slide = Slide.objects.get(next_id=0, room=room)
         slide = Slide.objects.create(room=room)
         last_slide.next_id = slide.now_id
         last_slide.save()
@@ -107,13 +107,14 @@ def new_slide(message):
 def del_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    delete_slide = Slide.objects.get(room=room, now_id=message["id"])
-    slide = Slide.objects.get(room=room, next_id=message["id"])
-    slide.next_id = delete_slide.next_id
+    with transaction.atomic():
+        delete_slide = Slide.objects.get(room=room, now_id=message["id"])
+        slide = Slide.objects.get(room=room, next_id=message["id"])
+        slide.next_id = delete_slide.next_id
+        delete_slide.delete()
+        slide.save()
     
     delete_slide.send_idx(message["command"])
-    delete_slide.delete()
-    slide.save()
 
 @channel_session_user
 @catch_client_error
@@ -153,18 +154,18 @@ def get_slide(message):
 def change_slide_order(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    movable = Slide.objects.get(room=room, now_id=message["id"])
-    pre_movable = Slide.objects.get(room=room, next_id=message["id"])
-    pre_next = Slide.objects.get(room=room, next_id=message["next_id"])
-    
-    pre_movable.next_id = movable.next_id
-    pre_next.next_id = message["id"]
-    
-    movable.next_id = message["next_id"]
+    with transaction.atomic():
+        movable = Slide.objects.get(room=room, now_id=message["id"])
+        pre_movable = Slide.objects.get(room=room, next_id=message["id"])
+        pre_next = Slide.objects.get(room=room, next_id=message["next_id"])
 
-    pre_next.save()
-    pre_movable.save()
-    movable.save()
+        pre_movable.next_id = movable.next_id
+        pre_next.next_id = message["id"]
+        movable.next_id = message["next_id"]
+
+        pre_next.save()
+        pre_movable.save()
+        movable.save()
 
     Group(message["room"]).send({
         "text": json.dumps({
@@ -186,9 +187,10 @@ def current_slide(message):
 def rename_slide(message):
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
-    slide = Slide.objects.get(room=room, now_id=message["id"])
-    slide.title = message["title"]
-    slide.save()
+    with transaction.atomic():
+        slide = Slide.objects.get(room=room, now_id=message["id"])
+        slide.title = message["title"]
+        slide.save()
 
     slide.send_title()
 
@@ -296,9 +298,10 @@ def get_slide_diff(message):
 @catch_client_error
 def rename_room(message):
     # need to add admin_user authentication
-    room = get_room_or_error(message["room"])
-    room.title = message["title"]
-    room.save()
+    with transaction.atomic():
+        room = get_room_or_error(message["room"])
+        room.title = message["title"]
+        room.save()
     Group(message["room"]).send({
         "text": json.dumps({
             "rename_room": message["title"],
