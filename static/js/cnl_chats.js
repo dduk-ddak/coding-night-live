@@ -2,7 +2,7 @@ var cnl_chats = {
   valid_syntax: {
       help: "@help",
       reply: "@reply #<hash_value> <description>",
-      notice: "@notice [<description>]",
+      notice: "@notice <description>",
       poll: "@poll [-t <\"question\">] <\"answers\", ...>",
   },
 

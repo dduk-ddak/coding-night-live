@@ -109,9 +109,17 @@ cnl_chats.get_and_remove_answers = function(command, delimiter) {
 
 cnl_chats.isValidNoticeSyntax = function (command) {
   var is_valid = false,
-      notice_regex = [/^(\s)*@notice\s+.*$/g];
+      notice_regex = [/^(\s)*@notice\s+/g];
 
-  is_valid = !!command.match(notice_regex[0]);
+  if(command.search(notice_regex[0]) === -1)
+    return is_valid;
+  else
+    command = command.replace(notice_regex[0], "");
+
+  if(command.length === 0)
+    return is_valid;
+  else
+    is_valid = true;
 
   return is_valid;
 }
