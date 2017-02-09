@@ -1,7 +1,7 @@
 var cnl_chats = {
   valid_syntax: {
       help: "@help",
-      reply: "@reply <hash_value> <comment>",
+      reply: "@reply #<hash_value> <comment>",
       chat: "<comment>",
   },
 
@@ -287,7 +287,7 @@ var cnl_chats = {
       appended_elem = $('\
           <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>\
             <div class="card" style="margin-left:30px;">\
-              <div class="card-block">\
+              <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
               <p class="card-text">' + obj.description + '</p>\
             </div>\
           </div>');
@@ -298,12 +298,13 @@ var cnl_chats = {
       appended_elem = $('\
           <div id="chat_' + obj.hash_value + '">\
             <div class="card">\
-              <div class="card-header" style="padding-left: .5rem;">\
-                <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> ' + obj.hash_value + '</div>\
-                <div style="margin:0;font-size:.5em;" align="right">' + obj.time + '</div>\
+              <div class="card-header" style="padding-left:15px; padding-bottom:0.5em; padding-top:0.5em;">\
+                <div style="float:left; margin-right:10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> ' + obj.hash_value + '</div>\
+                <div style="font-size:0.8em; margin-top:0.1em;" align="right">' + obj.time + '</div>\
               </div>\
-              <div class="card-block">\
-              <p class="card-text">' + obj.description + '</p>\
+              <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
+                <p class="card-text">' + obj.description + '</p>\
+              </div>\
             </div>\
           </div>');
       $('#chat_list_items').append(appended_elem);

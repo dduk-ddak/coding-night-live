@@ -1,6 +1,6 @@
 cnl_chats.valid_syntax = {
     help: "@help",
-    reply: "@reply <hash_value> <comment>",
+    reply: "@reply #<hash_value> <comment>",
     chat: "<comment>",
     notice: "@notice [<args>]",
     poll: "@poll [-t <\"title\">] <\"options\", ...>",
