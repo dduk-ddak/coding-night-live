@@ -1,11 +1,3 @@
-cnl_chats.valid_syntax = {
-    help: "@help",
-    reply: "@reply #<hash_value> <comment>",
-    chat: "<comment>",
-    notice: "@notice [<args>]",
-    poll: "@poll [-t <\"title\">] <\"options\", ...>",
-};
-
 cnl_chats.operationEnum = {
   help: 0,
   reply: 1,
