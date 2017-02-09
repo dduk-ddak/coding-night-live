@@ -318,6 +318,12 @@ var cnl_chats = {
         $('#chat_scroll_button').css('visibility', 'visible');
       }
     }
+    $('#qna_card_block').animate({backgroundColor:'#adf'}, 'fast');
+    $('#chat_list_items').animate({backgroundColor:'#adf'}, 'fast');
+    setTimeout(function() {
+      $('#qna_card_block').animate({backgroundColor:'#ffffff'}, 'slow');
+      $('#chat_list_items').animate({backgroundColor:'#ffffff'}, 'slow');
+    }, 1000);
   },
 
   newNotice: function (obj) {
@@ -331,6 +337,10 @@ var cnl_chats = {
           <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
           <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
         </div>');
+    $('#notice_card_block').animate({backgroundColor:'#adf'}, 'fast');
+    setTimeout(function() {
+      $('#notice_card_block').animate({backgroundColor:'#ffffff'}, 'slow');
+    }, 1000);
   },
 
   //Server to User
