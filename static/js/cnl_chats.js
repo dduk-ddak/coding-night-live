@@ -106,7 +106,7 @@ var cnl_chats = {
       var is_valid_hash = false, is_complete_hash = false;
       var partial_hash_regex, complete_hash_regex;
 
-      for (var i=0; i<cnl_chats.chatHashList.length; i+=1) {
+      for (var i=cnl_chats.chatHashList.length-1; i>=0; i-=1) {
         partial_hash_regex = new RegExp("^"+hash, "g");
         complete_hash_regex = new RegExp("^"+hash+"$", "g");
 
@@ -128,7 +128,10 @@ var cnl_chats = {
           matches = matches.concat([{label: label,
                                      value: text}]);
         } else if (is_valid_hash) {
-          for (var i=0; i<labels.length; i+=1)
+          // change this to adjust the maximum number of returned autocompletion
+          var maximum_autocompletion_num = 10;
+          var i = labels.length < maximum_autocompletion_num ? labels.length : maximum_autocompletion_num;
+          for (i -= 1; i>=0; i-=1)
             matches = matches.concat([{label: labels[i],
                                        value: texts[i]}]);
         }
@@ -377,7 +380,7 @@ var cnl_chats = {
   resultPoll: function (obj) {
     //var question = obj.question;
     //var answer_count = obj.answer_count;
-    
+
     // for debug
     var question = "Do you like python?";
     var answer_count = {'Yes': 4, 'No': 0};
@@ -403,7 +406,7 @@ var cnl_chats = {
     var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
     $('#chat_list_items').append(ctx);
-    
+
     if (is_end_of_scroll) {
       $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
     }
