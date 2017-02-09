@@ -347,6 +347,7 @@
         var operation_idx;
 
         $('#chat_input').val('');
+        $('#chat_input').autocomplete("close");
         e.preventDefault();
 
         if(command.length === 0) {
