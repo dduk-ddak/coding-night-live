@@ -58,7 +58,7 @@ class RedirectRoomView(TemplateView):
         label = label.strip('/')    # get label
 
         room = Room.objects.get(label=label)
-        notices = get_notice_list(label)
+        notices = get_notice_list(label).reverse()
         chat_and_reply = get_chat_list(label)   # [0]: chat / [1] : reply
         
         title_list = []

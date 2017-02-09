@@ -31,7 +31,6 @@ def new_notice(message):
      
     notice = Notice.objects.create(room=room, description=message["description"])
     notice.send_message(message["description"], room.label)
-    #notice.send_message(message["description"])
 
 @channel_session_user
 @catch_client_error
