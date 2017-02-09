@@ -31,13 +31,11 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [`django-redis`](https://github.com/niwinz/django-redis)
 * [`python-social-auth`](https://github.com/omab/python-social-auth)
 * [`bootstrap`](https://github.com/twbs/bootstrap)
-* [`react`](https://github.com/facebook/react)
 * [`CodeMirror`](https://github.com/codemirror/CodeMirror)
 * [`bootstrap4 (alpha)`](https://v4-alpha.getbootstrap.com/)
 * [`jquery`](https://github.com/jquery/jquery)
 * [`highlight.js`](https://github.com/isagalaev/highlight.js)
 * [`markdown-it`](https://github.com/markdown-it/markdown-it)
-* [`iscroll`](https://github.com/cubiq/iscroll)
 * [`redis`](https://github.com/antirez/redis)
 * [`simplemde-markdown-editor`](https://github.com/NextStepWebs/simplemde-markdown-editor)
 * [`jquery-ui`](https://github.com/jquery/jquery-ui)
@@ -45,6 +43,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [`google-diff-match-patch`](https://code.google.com/p/google-diff-match-patch/)
 * [`reconnecting-websocket`](https://github.com/joewalnes/reconnecting-websocket)
 * [`tether`](https://github.com/HubSpot/tether/)
+* [`google-chart`](https://github.com/GoogleWebComponents/google-chart)
 
 ## License
 Coding-Night-Live is licensed under the MIT license.
