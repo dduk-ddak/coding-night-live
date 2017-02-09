@@ -455,6 +455,25 @@ cnl_chats.getPollAutocompletion = function (command, matches) {
   return matches;
 }
 
+// overriden for more description
+cnl_chats.helpWrapper = function (command) {
+  var appended_elem = $('\
+      <div>\
+        <div class="card">\
+          <div class="card-block" style="border:1px solid #adf; border-left-width:5px; border-radius:3px; padding-bottom:10px;">\
+          <h4 class="card-text" style="margin-bottom: 10px; color: #5ebeff;">@help</h4>\
+          <p class="card-text">\
+            <p><b>@help</b>: Shows this message. <i>ex)@help</i></p>\
+            <p><b>@reply</b>: Reply to the specific thread. <i>ex)@reply #47cd926 this is reply</i></p>\
+            <p><b>@notice</b>: Display new notice. <i>ex)@notice this is notice</i></p>\
+            <p style="margin-bottom:0px;"><b>@poll</b>: Start a poll. <i>ex)@poll -t "this is question" "answer 1", "answer 2", "answer 3" </i></p>\
+          </p>\
+        </div>\
+      </div>');
+  $('#chat_list_items').append(appended_elem);
+  $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
+};
+
 cnl_chats.noticeWrapper = function (command) {
   command = command.replace(/^(\s)*@notice\s+/g, "");
 

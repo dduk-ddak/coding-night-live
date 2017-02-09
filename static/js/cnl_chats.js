@@ -213,9 +213,21 @@ var cnl_chats = {
     return is_valid;
   },
 
+  // overriden at admin for more description
   helpWrapper: function (command) {
-
-    console.log(cnl_chats.valid_syntax);
+    var appended_elem = $('\
+        <div>\
+          <div class="card">\
+            <div class="card-block" style="border:1px solid #adf; border-left-width:5px; border-radius:3px; padding-bottom:10px;">\
+            <h4 class="card-text" style="margin-bottom: 10px; color: #5ebeff;">@help</h4>\
+            <p class="card-text">\
+              <p><b>@help</b>: Shows this message. <i>ex)@help</i></p>\
+              <p style="margin-bottom:0px;"><b>@reply</b>: Reply to the specific thread. <i>ex)@reply #47cd926 this is reply</i></p>\
+            </p>\
+          </div>\
+        </div>');
+    $('#chat_list_items').append(appended_elem);
+    $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
   },
 
   chatWrapper: function (command) {
@@ -262,10 +274,10 @@ var cnl_chats = {
     if (obj.is_reply) {
       appended_elem = $('\
           <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>\
-          <div class="card" style="margin-left:30px;">\
-          <div class="card-block">\
-          <p class="card-text">' + obj.description + '</p>\
-          </div>\
+            <div class="card" style="margin-left:30px;">\
+              <div class="card-block">\
+              <p class="card-text">' + obj.description + '</p>\
+            </div>\
           </div>');
       $('#chat_list_items').find('#chat_' + obj.hash_value).append(appended_elem);
     }
@@ -273,13 +285,14 @@ var cnl_chats = {
       this.chatHashList.push(String(obj.hash_value));
       appended_elem = $('\
           <div id="chat_' + obj.hash_value + '">\
-          <div class="card">\
-          <div class="card-header" style="padding-left: .5rem;">\
-          <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> ' + obj.hash_value + '</div> <div style="margin:0;font-size:.5em;" align="right">' + obj.time + '</div>\
-          </div>\
-          <div class="card-block">\
-          <p class="card-text">' + obj.description + '</p>\
-          </div>\
+            <div class="card">\
+              <div class="card-header" style="padding-left: .5rem;">\
+                <div style="float:left; margin-right: 10px;"><i class="fa fa-commenting-o" aria-hidden="true"></i> ' + obj.hash_value + '</div>\
+                <div style="margin:0;font-size:.5em;" align="right">' + obj.time + '</div>\
+              </div>\
+              <div class="card-block">\
+              <p class="card-text">' + obj.description + '</p>\
+            </div>\
           </div>');
       $('#chat_list_items').append(appended_elem);
     }
