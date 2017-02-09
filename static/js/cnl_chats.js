@@ -130,7 +130,7 @@ var cnl_chats = {
                                      value: text}]);
         } else if (is_valid_hash) {
           // change this to adjust the maximum number of returned autocompletion
-          var maximum_autocompletion_num = 10;
+          var maximum_autocompletion_num = Object.keys(this.valid_syntax).length;
           var i = labels.length < maximum_autocompletion_num ? labels.length : maximum_autocompletion_num;
           for (i -= 1; i>=0; i-=1)
             matches = matches.concat([{label: labels[i],
