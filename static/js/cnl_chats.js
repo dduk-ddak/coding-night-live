@@ -221,8 +221,8 @@ var cnl_chats = {
             <div class="card-block" style="border:1px solid #adf; border-left-width:5px; border-radius:3px; padding-bottom:10px;">\
             <h4 class="card-text" style="margin-bottom: 10px; color: #5ebeff;">@help</h4>\
             <p class="card-text">\
-              <p><b>@help</b>: Shows this message. <i>ex)@help</i></p>\
-              <p style="margin-bottom:0px;"><b>@reply</b>: Reply to the specific thread. <i>ex)@reply #47cd926 this is reply</i></p>\
+              <p><b>@help</b>: Shows this message. <i>ex)</i><code>@help</code></p>\
+              <p style="margin-bottom:0px;"><b>@reply</b>: Reply to the specific thread. <i>ex)</i><code>@reply #47cd926 this is reply</code></p>\
             </p>\
           </div>\
         </div>');
@@ -263,9 +263,21 @@ var cnl_chats = {
   },
 
   showTypoAlertMessage: function (command) {
-    command = "'" + command + "'";
     console.log(command, "is not a valid command. " +
     "See '@help' for the list of available commands.");
+    var appended_elem = $('\
+        <div>\
+          <div class="card">\
+            <div class="card-block" style="border:1px solid #d9534f; border-left-width:5px; border-radius:3px; padding-bottom:10px;">\
+            <h4 class="card-text" style="margin-bottom: 10px; color: #e85550;">Invalid command</h4>\
+            <p class="card-text">\
+              <code>' + command + '</code> is not a valid command. Type <code>@help</code> for the list of available commands.\
+            </p>\
+          </div>\
+        </div>');
+
+    $('#chat_list_items').append(appended_elem);
+    $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
   },
 
   newChat: function (obj) {

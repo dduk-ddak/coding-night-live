@@ -463,10 +463,10 @@ cnl_chats.helpWrapper = function (command) {
           <div class="card-block" style="border:1px solid #adf; border-left-width:5px; border-radius:3px; padding-bottom:10px;">\
           <h4 class="card-text" style="margin-bottom: 10px; color: #5ebeff;">@help</h4>\
           <p class="card-text">\
-            <p><b>@help</b>: Shows this message. <i>ex)@help</i></p>\
-            <p><b>@reply</b>: Reply to the specific thread. <i>ex)@reply #47cd926 this is reply</i></p>\
-            <p><b>@notice</b>: Display new notice. <i>ex)@notice this is notice</i></p>\
-            <p style="margin-bottom:0px;"><b>@poll</b>: Start a poll. <i>ex)@poll -t "this is question" "answer 1", "answer 2", "answer 3" </i></p>\
+            <p><b>@help</b>: Shows this message. <i>ex)</i><code>@help</code></p>\
+            <p><b>@reply</b>: Reply to the specific thread. <i>ex)</i><code>@reply #47cd926 this is reply</code></p>\
+            <p><b>@notice</b>: Display new notice. <i>ex)</i><code>@notice this is notice</code></p>\
+            <p style="margin-bottom:0px;"><b>@poll</b>: Start a poll. <i>ex)</i><code>@poll -t "this is question" "ans 1", "ans 2", "ans 3"</code></p>\
           </p>\
         </div>\
       </div>');
