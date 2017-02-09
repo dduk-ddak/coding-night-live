@@ -467,12 +467,47 @@ cnl_chats.noticeWrapper = function (command) {
   return;
 }
 
-cnl_chats.pollWrapper = function (question, answer) {
-  console.log("run poll");
+cnl_chats.pollWrapper = function (command) {
+
+  var is_valid = false,
+      poll_regex = [/^(\s)*@poll\s+/g],
+      delimiter = '"',
+      title_given = false,
+      question = "",
+      answers = [];
+
+  command = command.replace(poll_regex[0], "");
+  delimiter = cnl_chats.get_delimiter(command);
+
+  if(command.search(/^-t\s*(?![^\"\'])/g) !== -1) {
+    // question is given before the answers
+    title_given = true;
+    var ret = cnl_chats.get_and_remove_title(command, delimiter);
+    command = ret[0];
+    question = ret[1];
+  }
+
+  var ret = cnl_chats.get_and_remove_answers(command, delimiter);
+  command = ret[0];
+  answers = ret[1];
+
+  command = command.trim();
+
+  if(command.search(/^-t\s*(?![^\"\'])/g) !== -1) {
+    // question is given after the answers
+    title_given = true;
+
+    var ret = cnl_chats.get_and_remove_title(command, delimiter);
+    question = ret[1];
+  }
+
+  console.log("question: ", question);
+  console.log("answers: ", answers);
+
   socket.send(JSON.stringify({
       "command": "new_poll",
       "question": question,
-      "answer": answer,
+      "answer": answers,
       "room": room_label
   }));
 
