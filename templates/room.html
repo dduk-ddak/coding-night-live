@@ -153,9 +153,9 @@
           <div style="margin-top:1em; background-color:#eee">
             {% if admin is True %}
               <div class="left_div_content" style="width:50%;"><textarea id="code"></textarea>
-              </div><div class="left_div_content" id="out" style="width:50%; padding:1em; background-color:#fff"></div>
+              </div><div class="left_div_content" id="out" style="width:50%; padding:20px; background-color:#fff"></div>
             {% else %}
-              <div class="left_div_content" id="out" style="width:100%; padding:1em; background-color:#fff"></div>
+              <div class="left_div_content" id="out" style="width:100%; padding:20px; background-color:#fff"></div>
             {% endif %}
           </div>
 
@@ -326,6 +326,21 @@
         $('#slide_list_row').height(list_height);
       }
 
+      // not allowing img inside markdown to overflow
+      function mdImageResize() {
+        $('#out img').each(function() {
+          var max_width = $('#out').width() - 40; // padding: 20px * 2
+          var img_height = $(this).get(0).naturalHeight;
+          var img_width = $(this).get(0).naturalWidth;
+          if(img_width > max_width) {
+            img_height = max_width * img_height / img_width;
+            img_width = max_width;
+          }
+          $(this).css('height', img_height);
+          $(this).css('width', img_width);
+        });
+      }
+
       $('#chat_form').submit(function (e) {
         // remove the leading white spaces
         var command = $("#chat_input").val().replace(/^\s*/g, "");
@@ -402,9 +417,11 @@
     <script type="text/javascript">
       chatListResize();
       slideListResize();
+      mdImageResize();
       $(window).resize(function() {
         chatListResize();
         slideListResize();
+        mdImageResize();
       });
     </script>
   </body>

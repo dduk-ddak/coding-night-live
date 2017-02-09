@@ -1,5 +1,6 @@
 // if markdown editor's string is changed, this function is called
 // socket connection if this user updates the string
+cnl_slides.setSlideText_user = cnl_slides.setSlideText;
 cnl_slides.setSlideText = function (str) {
   // another person may have been updated the editor string
   if(str != cnl_globals.editor.codemirror.doc.getValue()) {
@@ -25,10 +26,7 @@ cnl_slides.setSlideText = function (str) {
     }));
   }
 
-  this.curr_slide_text = str;
-  var out = document.getElementById("out");
-  out.innerHTML = cnl_globals.md.render(str);
-  $('blockquote').addClass('blockquote');
+  cnl_slides.setSlideText_user(str);
 }
 
 // send request for new slide to server
@@ -60,6 +58,7 @@ cnl_slides.setSlideIndex = function (data) {
       "id": data.idx,
     }));
   }
+
   cnl_slides.setSlideIndex_user(data);
 }
 

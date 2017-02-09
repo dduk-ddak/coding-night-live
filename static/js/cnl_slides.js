@@ -53,12 +53,16 @@ var cnl_slides = {
 
   // current showing slide's text & setter
   // rendered output & curr_slide_text consistency ensured
+  // this function is overriden for admin
   curr_slide_text: '',
   setSlideText: function (str) {
     this.curr_slide_text = str;
     var out = document.getElementById("out");
     out.innerHTML = cnl_globals.md.render(str);
-    $('blockquote').addClass('blockquote');
+    $('#out blockquote').addClass('blockquote');
+    $('#out img').each(function() {
+      $(this).load(mdImageResize);
+    });
   },
 
   // callback for change slide's content with patches
