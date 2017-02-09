@@ -241,7 +241,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.2.2/markdown-it.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -253,7 +252,9 @@
       $(document).ready(function() {
         // tooltip init
         $('[data-toggle="tooltip"]').tooltip();
+
         {% if admin is True %}
+
           // sortable init
           $('#slide_list').sortable({
             update: function(event, ui) {
@@ -287,6 +288,7 @@
             $('#room_title_input').val($('#room_title').text());
           });
           $('#room_title_input').attr('placeholder', window.location.pathname.replace(/^\/+|\/+$/g, '')); // default value
+
         {% endif %}
       });
 
@@ -323,37 +325,6 @@
 
         $('#slide_list_row').height(list_height);
       }
-
-      /* cnl_charts.js - startPoll function
-      function startPoll(q_str, a_strs) {
-        // debug
-        q_str = "Q. How does this get toggled? Let's make this question much longer!";
-        a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
-
-        q_str = q_str.replace(/'/g, "\\'");
-        q_str = q_str.replace(/"/g, '\\"');
-
-        $('#contents-wrapper').css('visibility', 'hidden');
-        var a_strs_str = '<h1 id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>'
-          for(var i=0; i<a_strs.length; i+=1) {
-            var obj = [i, q_str];
-            a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="endPoll(\'' + i + '\',\'' + q_str + '\')">' + a_strs[i] + '</button>';
-          }
-        $('#polls-wrapper').append(a_strs_str);
-      }
-      */
-
-      /* cnl_charts.js - endPoll function
-      function endPoll(index, question) {
-
-        $('#polls-wrapper').empty();
-        $('#contents-wrapper').css('visibility', 'visible');
-
-        // debug: do something with ret_idx
-        console.log('endPoll');
-        console.log(index+ ' / '+ question);
-      }
-      */
 
       $('#chat_form').submit(function (e) {
         // remove the leading white spaces
