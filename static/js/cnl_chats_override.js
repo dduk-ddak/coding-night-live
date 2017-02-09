@@ -220,7 +220,238 @@ cnl_chats.getNoticeAutocompletion = function (command, matches) {
 }
 
 cnl_chats.getPollAutocompletion = function (command, matches) {
+  var poll_regex = [
+      /^@$/g, /^@p$/g, /^@po$/g,
+      /^@pol$/g, /^@poll$/g,
+      /^@poll\s$/g,
+  ];
 
+  var poll_opt_regex = [
+    /^-t\s*(?![^\"\'])/g,
+    /^-(?![^t])/g,
+  ];
+
+  var len = 0,
+    upper_bound = 6,          // length of '@poll '
+    is_valid = false,
+    title_given = false,
+    text = "@poll ",
+    title = null,
+    delimiter = "\"",  // either ' || "
+    options = [];
+
+  // remove leading white spaces
+  command = command.replace(/^\s*/g, "");
+  len = command.length;
+  if(len <= upper_bound) {
+    // user is still typing the command;
+    // valid commands include: @, @p, @po, @pol, @poll
+    if(!!command.match(poll_regex[len-1]))
+      return matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+    else
+      return matches;
+  } else {
+    if(!!!command.match(/^@poll\s+(?![^-\'\"])/g)) {
+      // command doesn't start with '@poll '
+      // or the first character after '@poll ' is invalid
+      return matches;
+    }
+    // command starts with '@poll '
+    // remove '@poll ' from the command
+    command = command.replace(/^@poll\s+/g, "");
+    if(command.length === 0) {
+      // input command is '@poll '
+      matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+      return matches;
+    } else {
+      command = command.trim();
+    }
+    if(!!command.match(/^-(?=[^t])/g)) {
+      // check for invalid option
+      return matches;
+    }
+    for(var i=0; i<poll_opt_regex.length; i+=1) {
+      // title option is given before "","",...
+      // if title given, sets title_given to true
+      // console.log("[debug] checking for early title option");
+      if(!!command.match(poll_opt_regex[i])) {
+        title_given = true;
+        command = command.replace(poll_opt_regex[i], "");
+        text += "-t ";
+        if(command.length === 0) {
+          // input command is '@poll -t'
+          text += (delimiter+delimiter);
+          matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+          return matches;
+        } else break;
+      }
+    }
+    // console.log("[debug] checking for quotation choice");
+    if(command[0] !== '"' && command[0] !== "'") {
+      return matches;
+    } else {
+      delimiter = command[0];
+    }
+    if (title_given === true) {
+      // console.log("[debug] retrieving early title");
+      var finished = false;
+      for(var i=1; i<command.length; i+=1) {
+        if(command[i] === delimiter && command[i-1] !== "\\") {
+          // user has finished typing title
+          title = command.substring(1, i);
+          title = title.trim();
+          command = command.substring(i+1);
+          finished = true; break;
+        }
+      }
+      if(command.length === 0) {
+        // user has given only the title
+        text += delimiter + title + delimiter + " ";
+        matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+        return matches;
+      } else if(finished === false) {
+        // user is in the middle of typing the title
+        // delete the leading quotation mark and trim the white spaces
+        command = command.substring(1);
+        command = command.trim();
+        text += delimiter+ command + delimiter + " ";
+        matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+        return matches;
+      } else if(finished === true) {
+        // user has given the title, and there is more to come...
+        text += delimiter + title + delimiter + " ";
+      }
+    } // end of if (title_given === true)
+    // remove leading white spaces
+    command = command.replace(/^\s*/g, "");
+    if(command[0] !== delimiter)
+      return matches;
+    var option = "", finished = false;
+    do {
+      option = "", finished = false;
+      for(var i=1; i<command.length; i+=1) {
+        if(command[i] === delimiter && command[i-1] !== "\\") {
+          // user has finished typing title
+          option = command.substring(1, i);
+          option = option.trim();
+          if(option.length !== 0) options.push(option);
+          command = command.substring(i+1);
+          finished = true; break;
+        }
+      }
+      if(command.length === 0) {
+        // this option marks the end of user input
+        for(var i=0; i<options.length; i+=1) {
+          text += delimiter + options[i] + delimiter;
+          if(i !== options.length-1) text += ', ';
+          else if (i !== 0) text += ' ';
+        }
+        matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+        return matches;
+      } else if(finished === false) {
+        // user is in the middle of typing the option
+        // delete the leading quotation mark and trim the white spaces
+        command = command.substring(1);
+        command = command.trim();
+        options.push(command);
+        for(var i=0; i<options.length; i+=1) {
+          text += delimiter + options[i] + delimiter;
+          if(i !== options.length-1) text += ', ';
+        }
+        matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+        return matches;
+      } else if(finished === true) {
+        // user has given the option, and there is more to come...
+        command = command.replace(/^\s*/g, "");
+        if(command[0] === ',') {
+          command = command.replace(/^,\s*/g, "");
+          if(command.length !== 0) {
+            if(command[0] !== delimiter)
+              return matches;
+          } else {
+            for(var i=0; i<options.length; i+=1) {
+              text += delimiter + options[i] + delimiter;
+              text += ', ';
+            } text += delimiter + delimiter;
+            matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+            return matches;
+          }
+        } else if (title_given === false && command[0] === '-') {
+          break;
+        } else {
+          return matches;
+        }
+      }
+    } while(true);
+    // if you are here, options are taken care of,
+    // and user has not given the title option yet.
+    // command should start with "-"
+    if(!!command.match(/^-(?=[^t])/g)) {
+      // check for invalid option
+      return matches;
+    }
+    title = "";
+    for(var i=0; i<poll_opt_regex.length; i+=1) {
+      // title option is given after "","",...
+      if(!!command.match(poll_opt_regex[i])) {
+        command = command.replace(poll_opt_regex[i], "");
+        text += "-t ";
+        if(command.length === 0) {
+          // input command is '@poll -t'
+          text += (delimiter+delimiter+' ');
+          for(var i=0; i<options.length; i+=1) {
+            text += delimiter + options[i] + delimiter;
+            if(i !== options.length-1) text += ', ';
+          }
+          matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+          return matches;
+        } else break;
+      }
+    }
+    if(command[0] !== delimiter)
+      return matches;
+    var finished = false;
+    for(var i=1; i<command.length; i+=1) {
+      if(command[i] === delimiter && command[i-1] !== "\\") {
+        // user has finished typing title
+        title = command.substring(1, i);
+        title = title.trim();
+        command = command.substring(i+1);
+        finished = true; break;
+      }
+    }
+    if(command.length === 0) {
+      // user has given only the title
+      text += delimiter + title + delimiter + " ";
+    } else if(finished === false) {
+      // user is in the middle of typing the title
+      // delete the leading quotation mark and trim the white spaces
+      command = command.substring(1);
+      command = command.trim();
+      text += delimiter+ command + delimiter + " ";
+      for(var i=0; i<options.length; i+=1) {
+        text += delimiter + options[i] + delimiter;
+        if(i !== options.length-1) text += ', ';
+      }
+      matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
+      return matches;
+    } else if(finished === true) {
+      // user has given the title, and there is more to come...
+      text += delimiter + title + delimiter + " ";
+    }
+    // title and options all taken care of
+    // there should be no remaining characters in command
+    if(command.length !== 0)
+      return matches;
+  } // if(len <= upper_bound) else
+  // for debugging: print title, options
+  // console.log('title == ', title);
+  // console.log('options == ', options);
+  for(var i=0; i<options.length; i+=1) {
+    text += delimiter + options[i] + delimiter;
+    if(i !== options.length-1) text += ', ';
+  }
+  matches = matches.concat([{label: cnl_chats.valid_syntax.poll, value: text}]);
   return matches;
 }
 
