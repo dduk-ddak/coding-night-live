@@ -329,7 +329,7 @@
       // not allowing img inside markdown to overflow
       function mdImageResize() {
         $('#out img').each(function() {
-          var max_width = $('#out').width() - 40; // padding: 20px * 2
+          var max_width = $('#out').width();
           var img_height = $(this).get(0).naturalHeight;
           var img_width = $(this).get(0).naturalWidth;
           if(img_width > max_width) {
