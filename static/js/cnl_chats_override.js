@@ -501,6 +501,13 @@ cnl_chats.pollWrapper = function (command) {
     question = ret[1];
   }
 
+  // replacing \delimiter with delimiter
+  var delimiter_regex = new RegExp ("\\\\"+delimiter, "g");
+  for(var i=0; i<answers.length; i+=1) {
+    answers[i] = answers[i].replace(delimiter_regex, delimiter);
+  }
+  question = question.replace(delimiter_regex, delimiter);
+
   console.log("question: ", question);
   console.log("answers: ", answers);
 
