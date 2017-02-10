@@ -448,5 +448,13 @@
         mdImageResize();
       });
     </script>
+
+    <!--
+    {% for poll in polls %}
+      <script>
+        cnl_chats.resultPoll({{ poll|safe }});
+      </script>
+    {% endfor %}
+    -->
   </body>
 </html>
