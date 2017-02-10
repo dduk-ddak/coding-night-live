@@ -220,7 +220,7 @@
                       </div>
                     </div>
                   {% else %}
-                    <div id="chat_' + obj.hash_value + '">
+                    <div id="chat_{{ chat.hash_value }}" class="preloaded-chat">
                       <div class="card">
                         <div class="card-header" style="padding-left:15px; padding-bottom:0.5em; padding-top:0.5em;">
                           <div style="float:left; margin-right:10px;">
@@ -436,6 +436,12 @@
       chatListResize();
       slideListResize();
       mdImageResize();
+
+      // init hash list
+      $('.preloaded-chat').each(function() {
+        cnl_chats.chatHashList.push($(this).attr('id').split('_')[1]);
+      });
+
       $(window).resize(function() {
         chatListResize();
         slideListResize();
