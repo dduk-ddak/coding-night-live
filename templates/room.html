@@ -175,7 +175,7 @@
               <div id="shown-notice">
                 <div class="notice-with-time">
                   <p class="card-text" style="margin-bottom: 0px;">{{ head_notice.description }}</p>
-                  <p class="card-text text-muted" style="text-align:right;">{{ head_notice.time }}</p>
+                  <p class="card-text text-muted" style="text-align:right;">{{ head_notice.time|date:"Y-m-d H:i:s" }}</p>
                 </div>
               </div>
 
@@ -184,7 +184,7 @@
                 {% for notice in notices %}
                   <div class="notice-with-time">
                     <p class="card-text" style="margin-bottom: 0px;">{{ notice.description }}</p>
-                    <p class="card-text text-muted" style="text-align:right;">{{ notice.time }}</p>
+                    <p class="card-text text-muted" style="text-align:right;">{{ notice.time|date:"Y-m-d H:i:s" }}</p>
                   </div>
                 {% endfor %}
               </div>
@@ -406,11 +406,11 @@
     <!-- get list of chat and reply -->
     <script type="text/javascript">
       {% for chat in chats %}
-        cnl_chats.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time }}", description: "{{ chat.description }}", is_reply: false});
+        cnl_chats.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time|date:"Y-m-d H:i:s" }}", description: "{{ chat.description }}", is_reply: false});
       {% endfor %}
 
       {% for reply in replies %}
-        cnl_chats.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time }}", description: "{{ reply.description }}", is_reply: true});
+        cnl_chats.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time|date:"Y-m-d H:i:s" }}", description: "{{ reply.description }}", is_reply: true});
       {% endfor %}
     </script>
 
