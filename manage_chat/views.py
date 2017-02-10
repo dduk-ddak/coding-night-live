@@ -9,9 +9,9 @@ def get_chat_list(request):
     room = Room.objects.get(label=request)
 
     chats = ChatAndReply.objects.filter(room=room, is_reply=False).order_by('time')
-    replys = ChatAndReply.objects.filter(room=room, is_reply=True).order_by('time')
+    replies = ChatAndReply.objects.filter(room=room, is_reply=True).order_by('time')
 
-    return (chats, replys)
+    return (chats, replies)
 
 def get_notice_list(request):
     # request is room's label

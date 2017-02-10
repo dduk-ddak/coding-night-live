@@ -190,7 +190,10 @@
               </div>
 
               <!-- Toggle notice button -->
-              <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block" style="height:25px;"><i id="notice-toggler" class="fa fa-sort-asc" aria-hidden="true"></i></a>
+              <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block" style="height:25px;">
+                <i id="notice_toggler_asc" style="display:inline;" class="fa fa-sort-asc" aria-hidden="true"></i>
+                <i id="notice_toggler_desc" style="display:none;" class="fa fa-sort-desc" aria-hidden="true"></i>
+              </a>
 
             </div>
           </div>
@@ -207,7 +210,32 @@
             <div id="chat_list_scroll" class="list-group list-group-flush" style="overflow-y: scroll;">
 
               <!-- Recieved chats -->
-              <div id="chat_list_items" class="list-group-item" style="border-style: none;">
+              <div id="chat_list_items" class="list-group-item" style="border-style:none; background-color:rgb(255, 255, 255, 0.0);">
+                {% for chat in all_chats %}
+                  {% if chat.is_reply %}
+                    <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
+                      <div class="card" style="margin-left:30px;">
+                        <div class="card-block" style="padding-top:1em; padding-bottom:1em;">
+                          <p class="card-text"> {{ chat.description }} </p>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div id="chat_{{ chat.hash_value }}" class="preloaded-chat">
+                      <div class="card">
+                        <div class="card-header" style="padding-left:15px; padding-bottom:0.5em; padding-top:0.5em;">
+                          <div style="float:left; margin-right:10px;">
+                            <i class="fa fa-commenting-o" aria-hidden="true"></i>
+                            {{ chat.hash_value }}
+                          </div>
+                          <div style="font-size:0.8em; margin-top:0.1em;" align="right"> {{ chat.time|date:"Y-m-d H:i:s" }} </div>
+                        </div>
+                        <div class="card-block" style="padding-top:1em; padding-bottom:1em;">
+                          <p class="card-text"> {{ chat.description }} </p>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
               </div>
             </div>
 
@@ -296,13 +324,13 @@
       function toggleNotice() {
         $('#hidden-notice').slideToggle({duration:200, step:chatListResize});
 
-        if($('#notice-toggler').hasClass('fa-sort-desc')) {
-          $('#notice-toggler').removeClass('fa-sort-desc');
-          $('#notice-toggler').addClass('fa-sort-asc');
+        if($('#notice_toggler_asc').is(':visible')) {
+          $('#notice_toggler_asc').css('display', 'none');
+          $('#notice_toggler_desc').css('display', 'inline');
         }
-        else if($('#notice-toggler').hasClass('fa-sort-asc')) {
-          $('#notice-toggler').removeClass('fa-sort-asc');
-          $('#notice-toggler').addClass('fa-sort-desc');
+        else {
+          $('#notice_toggler_desc').css('display', 'none');
+          $('#notice_toggler_asc').css('display', 'inline');
         }
       }
 
@@ -403,22 +431,17 @@
       <script src="{% static "js/cnl_chats_override.js" %}" type="text/javascript"></script>
     {% endif %}
 
-    <!-- get list of chat and reply -->
-    <script type="text/javascript">
-      {% for chat in chats %}
-        cnl_chats.newChat({hash_value: "{{ chat.hash_value }}", time: "{{ chat.time|date:"Y-m-d H:i:s" }}", description: "{{ chat.description }}", is_reply: false});
-      {% endfor %}
-
-      {% for reply in replies %}
-        cnl_chats.newChat({hash_value: "{{ reply.assist_hash }}", time: "{{ reply.time|date:"Y-m-d H:i:s" }}", description: "{{ reply.description }}", is_reply: true});
-      {% endfor %}
-    </script>
-
     <!-- After load completes -->
     <script type="text/javascript">
       chatListResize();
       slideListResize();
       mdImageResize();
+
+      // init hash list
+      $('.preloaded-chat').each(function() {
+        cnl_chats.chatHashList.push($(this).attr('id').split('_')[1]);
+      });
+
       $(window).resize(function() {
         chatListResize();
         slideListResize();
