@@ -8,7 +8,6 @@ from channels.auth import channel_session_user_from_http, channel_session_user
 
 from .models import Room, Slide
 
-from .setting import MSG_TYPE_LEAVE, MSG_TYPE_ENTER, NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS
 from .utils import get_room_or_error, catch_client_error
 from .exceptions import ClientError
 
@@ -28,10 +27,6 @@ def room_join(message):
     # Note that, because of channel_session_user, we have a message.user
     # object that works just like request.user would. Security!
     room = get_room_or_error(message["room"])
-
-    # Send a "enter message" to the room if available
-    if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(MSG_TYPE_ENTER)
 
     # OK, add them in. The websocket_group is what we'll send messages
     # to so that everyone in the chat room gets them.
@@ -63,10 +58,6 @@ def room_join(message):
 def room_leave(message):
     # Reverse of join - remove them from everything.
     room = get_room_or_error(message["room"])
-
-    # Send a "leave message" to the room if available
-    if NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS:
-        room.send_message(MSG_TYPE_LEAVE)
 
     room.websocket_group.discard(message.reply_channel)
     #message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.label]))

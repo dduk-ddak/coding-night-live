@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/css/tether.css">
 
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/github-markdown.css" %}" type="text/css">
+
     <style>
       .codemirror {
         height: auto;
@@ -153,9 +156,9 @@
           <div style="margin-top:1em; background-color:#eee">
             {% if admin is True %}
               <div class="left_div_content" style="width:50%;"><textarea id="code"></textarea>
-              </div><div class="left_div_content" id="out" style="width:50%; padding:20px; background-color:#fff"></div>
+              </div><div class="left_div_content markdown-body" id="out" style="width:50%; padding:20px; background-color:#fff"></div>
             {% else %}
-              <div class="left_div_content" id="out" style="width:100%; padding:20px; background-color:#fff"></div>
+              <div class="left_div_content markdown-body" id="out" style="width:100%; padding:20px; background-color:#fff"></div>
             {% endif %}
           </div>
 
