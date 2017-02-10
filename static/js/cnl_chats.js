@@ -285,6 +285,7 @@ var cnl_chats = {
   },
 
   newChat: function (obj) {
+    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var appended_elem = 0;
     if (obj.is_reply) {
       appended_elem = $('\
@@ -313,7 +314,6 @@ var cnl_chats = {
       $('#chat_list_items').append(appended_elem);
     }
 
-    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     if (is_end_of_scroll) {
       $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
     }
@@ -350,6 +350,7 @@ var cnl_chats = {
 
   // Server to User
   startPoll: function (obj) {
+    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var a_strs = JSON.parse(obj.answer);
     var q_str = obj.question
     q_str = q_str.replace(/'/g, "\\'");
@@ -380,7 +381,6 @@ var cnl_chats = {
         </div>');
       $('#chat_list_items').append(appended_elem);
 
-    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     if (is_end_of_scroll) {
       $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
     }
