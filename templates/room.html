@@ -221,8 +221,8 @@
                           </div>
                         </div>
                         <div class="card-block" style="padding-top:1em; padding-bottom:1em;">
-                          <div id="poll_holder_' + {{ chat.hash_value }} + '">
-                            <button type="button" class="btn btn-block btn-info">Load chart</button>
+                          <div id="poll_holder_{{ chat.hash_value }}">
+                            <button type="button" class="btn btn-block btn-info" onclick="cnl_chats.getPoll('{{ chat.hash_value }}')">Load chart</button>
                           </div>
                         </div>
                       </div>

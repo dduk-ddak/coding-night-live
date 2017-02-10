@@ -28,7 +28,7 @@ def new_chat(message):
 @catch_client_error
 def new_notice(message):
     room = get_room_or_error(message["room"])
-    #need to add : checking admin_user
+    # need to add : checking admin_user
      
     notice = Notice.objects.create(room=room, description=message["description"])
     notice.send_message(message["description"], room.label)
@@ -37,6 +37,8 @@ def new_notice(message):
 @catch_client_error
 def new_poll(message):
     room = get_room_or_error(message["room"])
+    # need to add : checking admin_user
+
     answers = json.loads(message["answer"])
     answer_count = json.dumps([0] * len(answers))
     poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
@@ -58,3 +60,19 @@ def end_poll(message):
         poll.save()
 
     poll.result_poll(message["room"])
+
+@channel_session_user
+@catch_client_error
+def get_poll(message):
+    room = get_room_or_error(message["room"])
+    poll = Poll.objects.get(room=room, hash_value=message["hash_value"])
+
+    message.reply_channel.send({
+        "text": json.dumps({
+            "result_poll": message["room"],
+            'question': poll.question,
+            'hash_value': poll.hash_value,
+            'answer': poll.answer,              # json list
+            'answer_count': poll.answer_count,  # json list
+        }),
+    })

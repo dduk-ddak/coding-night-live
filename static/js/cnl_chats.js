@@ -377,7 +377,9 @@ var cnl_chats = {
                 <i class="fa fa-pie-chart" aria-hidden="true"></i> ' + q_str + '</div>\
             </div>\
             <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
-              <div id="poll_holder_' + obj.hash_value + '"></div>\
+              <div id="poll_holder_' + obj.hash_value + '">\
+                <p class="text-muted" style="margin-bottom:0px; text-align:center">No one answered yet.</p>\
+              </div>\
             </div>\
           </div>\
         </div>');
@@ -442,8 +444,18 @@ var cnl_chats = {
     if(question.length === 0) options['title'] = 'poll_' + hash_value;
 
     // Instantiate and draw our chart, passing in some options.
+    $('#poll_holder_' + hash_value).empty();
     var chart = new google.visualization.PieChart(document.getElementById('poll_holder_' + hash_value));
     chart.draw(data, options);
+  },
+
+  // Get chart data by hash value
+  getPoll: function(hash_value) {
+    socket.send(JSON.stringify({
+      "command":"get_poll",
+      "room":room_label,
+      "hash_value":hash_value,
+    }));
   },
 };
 
