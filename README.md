@@ -54,6 +54,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [`reconnecting-websocket`](https://github.com/joewalnes/reconnecting-websocket)
 * [`tether`](https://github.com/HubSpot/tether/)
 * [`google-chart`](https://github.com/GoogleWebComponents/google-chart)
+* [`github-markdown-css`](https://github.com/sindresorhus/github-markdown-css)
 
 ## Wiki
 
