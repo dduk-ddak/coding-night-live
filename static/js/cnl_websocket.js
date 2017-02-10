@@ -7,7 +7,6 @@ var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
 var room_label = window.location.pathname;
 room_label = room_label.substring(1, room_label.length-1);  // Get label
 google.charts.load('current', {'packages':['corechart']});  // Load the Visualization API and the piechart package.
-//google.setOnLoadCallback(resultPoll); // Set a callback to run when the Google Visualization API is loaded.
 
 var had_count = false;
 
@@ -64,10 +63,10 @@ socket.onmessage = function (message) {
     cnl_chats.newNotice(data);
   } else if (data.start_poll) {
     // Start poll
-    cnl_slides.startPoll(data.question, data.answer);
+    cnl_chats.startPoll(data);
   } else if (data.result_poll) {
     // Result poll
-    //cnl_slide.resultPoll(data.result_poll);
+    cnl_chats.resultPoll(data);
   } else if (data.new_slide) {
     // New Slide
     cnl_slides.setNewSlide(data.new_slide);

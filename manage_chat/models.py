@@ -64,14 +64,24 @@ class Poll(models.Model):
         return Group(str(self.room.label))
     
     def start_poll(self, label):
-        final_msg = {'start_poll': label, 'question': str(self.question), 'answer': self.answer}
-        #final_msg = {'poll': label, 'question': str(self.question), 'answer': str(self.answer)}
+        final_msg = {
+                'start_poll': label,
+                'question': self.question,
+                'answer': self.answer,
+                'hash_value': self.hash_value,
+        }
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )
     
     def result_poll(self, label):
-        final_msg = {'result_poll': label, 'question': str(self.question), 'answer_count': json.loads(self.answer_count)}
+        final_msg = {
+                'result_poll': label,
+                'question': self.question,
+                'hash_value': self.hash_value,
+                'answer': self.answer,              # json list
+                'answer_count': self.answer_count,  # json list
+        }
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )

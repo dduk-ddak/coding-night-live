@@ -1,6 +1,7 @@
 # WebSocket handling
 import json
 
+from django.db import transaction
 from channels import Channel, Group
 from channels.auth import channel_session_user_from_http, channel_session_user
 
@@ -36,11 +37,8 @@ def new_notice(message):
 @catch_client_error
 def new_poll(message):
     room = get_room_or_error(message["room"])
-    answer_count = {}
-    for i in range(0, len(message["answer"])):
-        answer = message["answer"][i]
-        answer_count[answer] = 0
-    answer_count = json.dumps(answer_count) # dictinary json dumps -> str
+    answers = json.loads(message["answer"])
+    answer_count = json.dumps([0] * len(answers))
     poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
 
     poll.start_poll(message["room"])
@@ -48,14 +46,12 @@ def new_poll(message):
 @channel_session_user
 @catch_client_error
 def end_poll(message):
-    # developing...
     room = get_room_or_error(message["room"])
-    poll = Poll.objects.get(room=room, question=message["question"])
-    answer = message["answer"]
-    answer_count = json.loads(poll.answer_count)    # dict result
-    answer_count[answer] += 1
-
-    poll.answer_count = json.dumps(answer_count)
-    poll.save()
+    with transaction.atomic():
+        poll = Poll.objects.get(room=room, hash_value=message["hash_value"])
+        answer_count = json.loads(poll.answer_count)    # list result
+        answer_count[int(message["answer"])] += 1
+        poll.answer_count = json.dumps(answer_count)
+        poll.save()
 
     poll.result_poll(message["room"])

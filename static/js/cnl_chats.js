@@ -285,7 +285,6 @@ var cnl_chats = {
   },
 
   newChat: function (obj) {
-    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     var appended_elem = 0;
     if (obj.is_reply) {
       appended_elem = $('\
@@ -313,6 +312,8 @@ var cnl_chats = {
           </div>');
       $('#chat_list_items').append(appended_elem);
     }
+
+    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
     if (is_end_of_scroll) {
       $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
     }
@@ -347,44 +348,78 @@ var cnl_chats = {
     }, 1000);
   },
 
-  //Server to User
-  startPoll: function (question, answers) {
-    //q_str = "Q. How does this get toggled? Let's make this question much longer!";
-    //a_strs = ['Lorem ipsum dolor sit amet', 'consectetur adipiscing', 'elit', 'sed do eiusmod tempor incididunt ut labore et'];
-    question = question.replace(/'/g, "\\'");
-    question = question.replace(/"/g, '\\"');
-
-    $('#contents-wrapper').css('visibility', 'hidden');
-    var a_strs_str = '<h1 id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>'
-    for(var i=0; i<answers.length; i+=1) {
-      a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="endPoll(\'' + i + '\',\'' + question + '\')">' + a_strs[i] + '</button>';
+  // Server to User
+  startPoll: function (obj) {
+    var a_strs = JSON.parse(obj.answer);
+    var q_str = obj.question
+    q_str = q_str.replace(/'/g, "\\'");
+    q_str = q_str.replace(/"/g, '\\"');
+    if(q_str.length === 0) {
+      q_str = 'poll_' + obj.hash_value;
     }
-    $('#polls-wrapper').append(a_strs_str);
+
+    // it is not admin
+    if($('#polls-wrapper').length !== 0) {
+      var a_strs_str = '<h1 polls-hash="' + obj.hash_value + '" id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>';
+      for(var i=0; i<a_strs.length; i+=1) {
+        a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="cnl_chats.endPoll(\'' + i + '\',\'' + q_str + '\')">' + a_strs[i] + '</button>';
+      }
+
+      $('#contents-wrapper').css('visibility', 'hidden');
+      $('#polls-wrapper').append(a_strs_str);
+    }
+
+    var appended_elem = $('\
+        <div id="poll_' + obj.hash_value + '">\
+          <div class="card">\
+            <div class="card-header" style="padding-left:15px; padding-bottom:0.5em; padding-top:0.5em;">\
+              <div style="float:left; margin-right:10px;"><i class="fa fa-pie-chart" aria-hidden="true"></i> ' + q_str + '</div>\
+            </div>\
+            <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
+              <div id="poll_holder_' + obj.hash_value + '"></div>\
+            </div>\
+          </div>\
+        </div>');
+      $('#chat_list_items').append(appended_elem);
+
+    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
+    if (is_end_of_scroll) {
+      $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
+    }
+    else {
+      if ($('#chat_scroll_button').css('visibility') == 'hidden') {
+        toBeScrolledPosition(appended_elem.position().top);
+        $('#chat_scroll_button').css('visibility', 'visible');
+      }
+    }
+    $('#qna_card_block').animate({backgroundColor:'#adf'}, 'fast');
+    $('#poll_' + obj.hash_value + ' .card-block').animate({backgroundColor:'#adf'}, 'fast');
+    setTimeout(function() {
+      $('#qna_card_block').animate({backgroundColor:'#ffffff'}, 'slow');
+      $('#poll_' + obj.hash_value + ' .card-block').animate({backgroundColor:'#ffffff'}, 'slow');
+    }, 1000);
   },
 
   // User to Server
   endPoll: function (index, question) {
+    var polls_hash = $('#polls-wrapper h1').attr('polls-hash');
     $('#polls-wrapper').empty();
     $('#contents-wrapper').css('visibility', 'visible');
-    // debug: do something with ret_idx
-    console.log('endPoll');
-    console.log(index);
 
     socket.send(JSON.stringify({
       "command": "end_poll",
-      "question": question,
-      "answer": index
+      "hash_value": polls_hash,
+      "answer": index,
+      "room": room_label,
     }));
   },
 
   // Create a result chart / from server
   resultPoll: function (obj) {
-    //var question = obj.question;
-    //var answer_count = obj.answer_count;
-
-    // for debug
-    var question = "Do you like python?";
-    var answer_count = {'Yes': 4, 'No': 0};
+    var question = obj.question;
+    var answer = JSON.parse(obj.answer);
+    var answer_count = JSON.parse(obj.answer_count);
+    var hash_value = obj.hash_value;
 
     // Create the data table
     var data = new google.visualization.DataTable();
@@ -392,31 +427,21 @@ var cnl_chats = {
     data.addColumn('number', 'Result');
 
     var data_array = [];
-    for (var answer in answer_count) {
-      var value = [answer, answer_count[answer]];
+    for (var i = 0; i < answer.length; i++) {
+      var value = [answer[i], answer_count[i]];
       data_array.push(value);
     }
     data.addRows(data_array);
 
+    var poll_size = $('#poll_holder_' + hash_value).width();
+
     // Set chart options
-    var options = {'title': question, 'width': 380, 'height': 380};
+    var options = {'title': question, 'width': poll_size, 'height': poll_size};
+    if(question.length === 0) options['title'] = 'poll_' + hash_value;
+
     // Instantiate and draw our chart, passing in some options.
-    //var chart = new google.visualization.PieChart(document.getElementById('chart_div'));  //draw chart to 'chart-div'
-    //chart.draw(data, options);
-
-    var is_end_of_scroll = $('#chat_list_scroll').scrollTop() === $('#chat_list_scroll')[0].scrollHeight - $('#chat_list_scroll').height();
-    var ctx = $('<canvas id="poll_' + obj.hash_value + '" width="400" height="400"></canvas>');
-    $('#chat_list_items').append(ctx);
-
-    if (is_end_of_scroll) {
-      $('#chat_list_scroll').animate({scrollTop: ctx.position().top}, 'slow');
-    }
-    else {
-      if ($('#chat_scroll_button').css('visibility') == 'hidden') {
-        toBeScrolledPosition(ctx.position().top);
-        $('#chat_scroll_button').css('visibility', 'visible');
-      }
-    }
+    var chart = new google.visualization.PieChart(document.getElementById('poll_holder_' + hash_value));
+    chart.draw(data, options);
   },
 };
 
