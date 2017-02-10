@@ -21,6 +21,19 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * Join codelab via unique URL created for each event 
 * Export codelab to pdf (future)
 
+## Installation and Settings
+
+### Build Requirements
+
+* `Python 3` installed ([Python 3.5.2](https://www.python.org/downloads/release/python-352/) recommended)
+* `Django 1.9` installed ([Django 1.10.5](https://www.djangoproject.com/download/) recommended)
+* `redis 3.x` installed ([Redis 3.2](https://redis.io/download) recommended)
+*  And you need to install additional packages.. [Check a requirements.txt](https://github.com/dduk-ddak/coding-night-live/blob/master/requirements.txt)
+
+### More detailed installation and settings information
+
+[Please visit our wiki page.](https://github.com/dduk-ddak/coding-night-live/wiki/2.-Installation-and-Settings)
+
 ## Third Party Libraries
 * [`python`](https://www.python.org/) 3.x
 * [`django`](https://github.com/django/django) 1.9 or later
@@ -41,6 +54,18 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [`reconnecting-websocket`](https://github.com/joewalnes/reconnecting-websocket)
 * [`tether`](https://github.com/HubSpot/tether/)
 * [`google-chart`](https://github.com/GoogleWebComponents/google-chart)
+
+## Wiki
+
+We have a wiki page for introduction our project, installation and settings information, and some documentation.
+
+And we welcome any documentation contribution.
+
+## Bug Report
+
+If you find a bug, please report it to us using the Issues page on GitHub.
+
+And please add the appropriate Label("bug", ..).
 
 ## License
 Coding-Night-Live is licensed under the MIT license.
