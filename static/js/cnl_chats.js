@@ -437,7 +437,6 @@ var cnl_chats = {
 
     // Set chart options
     var options = {
-      'title': question,
       'width': poll_size,
       'height': poll_size,
       'chartArea': { width: "100%", height: "80%" },
