@@ -92,6 +92,7 @@ def room_leave(message):
 @channel_session_user
 @catch_client_error
 def new_slide(message):
+    check_admin(message)
     #need to add admin_user authentication
     room = get_room_or_error(message["room"])
     with transaction.atomic():
@@ -152,107 +153,106 @@ def get_slide(message):
 @channel_session_user
 @catch_client_error
 def change_slide_order(message):
-    #need to add admin_user authentication
-    room = get_room_or_error(message["room"])
-    with transaction.atomic():
-        movable = Slide.objects.get(room=room, now_id=message["id"])
-        pre_movable = Slide.objects.get(room=room, next_id=message["id"])
-        pre_next = Slide.objects.get(room=room, next_id=message["next_id"])
+    if check_admin(message):
+        room = get_room_or_error(message["room"])
+        with transaction.atomic():
+            movable = Slide.objects.get(room=room, now_id=message["id"])
+            pre_movable = Slide.objects.get(room=room, next_id=message["id"])
+            pre_next = Slide.objects.get(room=room, next_id=message["next_id"])
 
-        pre_movable.next_id = movable.next_id
-        pre_next.next_id = message["id"]
-        movable.next_id = message["next_id"]
+            pre_movable.next_id = movable.next_id
+            pre_next.next_id = message["id"]
+            movable.next_id = message["next_id"]
 
-        pre_next.save()
-        pre_movable.save()
-        movable.save()
+            pre_next.save()
+            pre_movable.save()
+            movable.save()
 
-    Group(message["room"]).send({
-        "text": json.dumps({
-            "change_slide_order": True,
-            "id": message['id'],
-            "next_id": message['next_id'],
-        }),
-    })
+            Group(message["room"]).send({
+                "text": json.dumps({
+                    "change_slide_order": True,
+                    "id": message['id'],
+                    "next_id": message['next_id'],
+                }),
+            })
+    else:
+        pass
 
-"""
-@channel_session_user
-@catch_client_error
-def current_slide(message):
-    #need to add admin_user authentication
-""" 
 
 @channel_session_user
 @catch_client_error
 def rename_slide(message):
-    #need to add admin_user authentication
-    room = get_room_or_error(message["room"])
-    with transaction.atomic():
-        slide = Slide.objects.get(room=room, now_id=message["id"])
-        slide.title = message["title"]
-        slide.save()
+    if check_admin(message):
+        room = get_room_or_error(message["room"])
+        with transaction.atomic():
+            slide = Slide.objects.get(room=room, now_id=message["id"])
+            slide.title = message["title"]
+            slide.save()
 
-    slide.send_title()
+        slide.send_title()
+    else:
+        pass
 
 @channel_session_user
 @catch_client_error
 def change_slide(message):
-    #need to add admin_user authentication
+    if check_admin(message):
+        # cache is expired, moved to redis->sqlite
+        if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
+            with transaction.atomic():
+                room = get_room_or_error(message["room"])
+                slide = Slide.objects.get(room=room, now_id=message["id"])
+                hash_blob = javaHash(slide.md_blob)
+                cache.set("%s/%s" % (message["room"], message["id"]), slide.md_blob, timeout=60)
+                cache.set("%s/%s/%s" % (message["room"], message["id"], hash_blob), slide.md_blob, timeout=60)
+        else:
+            cache.expire("%s/%s" % (message["room"], message["id"]), timeout=60)
 
-    # cache is expired, moved to redis->sqlite
-    if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
+        if cache.ttl("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"])) == 0:
+            pre_text = cache.get("%s/%d" % (message["room"], message["id"]))
+        else:
+            cache.expire("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]), timeout=60)
+            pre_text = cache.get("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]))
+
+        dmp = diff_match_patch()
+        patch_text = message["patch_text"]
+        patches = dmp.patch_fromText(message["patch_text"])
+        curr_text = dmp.patch_apply(patches, pre_text)[0]
+        pre_hash = javaHash(pre_text)
+        curr_hash = javaHash(curr_text)
+
+        # some data got dirty
+        if curr_hash != message["curr_hash"]:
+            Group(message["room"]).send({
+                "text": json.dumps({
+                    "change_slide": "whole",
+                    "id": message["id"],
+                    "curr_text": curr_text,
+                }),
+            })
+        else:
+            Group(message["room"]).send({
+                "text": json.dumps({
+                    "change_slide": "diff",
+                    "id": message["id"],
+                    "patch_text": patch_text,
+                    "pre_hash": pre_hash,
+                    "curr_hash": curr_hash,
+                }),
+            })
+        
+        # update redis
+        cache.set("%s/%s" % (message["room"], message["id"]), curr_text)
+        cache.set("%s/%s/%s" % (message["room"], message["id"], curr_hash), curr_text)
+
         with transaction.atomic():
+            # update sqlite
             room = get_room_or_error(message["room"])
             slide = Slide.objects.get(room=room, now_id=message["id"])
-            hash_blob = javaHash(slide.md_blob)
-            cache.set("%s/%s" % (message["room"], message["id"]), slide.md_blob, timeout=60)
-            cache.set("%s/%s/%s" % (message["room"], message["id"], hash_blob), slide.md_blob, timeout=60)
+            slide.md_blob = curr_text
+            slide.save()
     else:
-        cache.expire("%s/%s" % (message["room"], message["id"]), timeout=60)
-
-    if cache.ttl("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"])) == 0:
-        pre_text = cache.get("%s/%d" % (message["room"], message["id"]))
-    else:
-        cache.expire("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]), timeout=60)
-        pre_text = cache.get("%s/%s/%s" % (message["room"], message["id"], message["pre_hash"]))
-
-    dmp = diff_match_patch()
-    patch_text = message["patch_text"]
-    patches = dmp.patch_fromText(message["patch_text"])
-    curr_text = dmp.patch_apply(patches, pre_text)[0]
-    pre_hash = javaHash(pre_text)
-    curr_hash = javaHash(curr_text)
-
-    # some data got dirty
-    if curr_hash != message["curr_hash"]:
-        Group(message["room"]).send({
-            "text": json.dumps({
-                "change_slide": "whole",
-                "id": message["id"],
-                "curr_text": curr_text,
-            }),
-        })
-    else:
-        Group(message["room"]).send({
-            "text": json.dumps({
-                "change_slide": "diff",
-                "id": message["id"],
-                "patch_text": patch_text,
-                "pre_hash": pre_hash,
-                "curr_hash": curr_hash,
-            }),
-        })
-    
-    # update redis
-    cache.set("%s/%s" % (message["room"], message["id"]), curr_text)
-    cache.set("%s/%s/%s" % (message["room"], message["id"], curr_hash), curr_text)
-
-    with transaction.atomic():
-        # update sqlite
-        room = get_room_or_error(message["room"])
-        slide = Slide.objects.get(room=room, now_id=message["id"])
-        slide.md_blob = curr_text
-        slide.save()
+        pass
 
 @channel_session_user
 @catch_client_error
@@ -297,13 +297,27 @@ def get_slide_diff(message):
 @channel_session_user
 @catch_client_error
 def rename_room(message):
-    # need to add admin_user authentication
-    with transaction.atomic():
-        room = get_room_or_error(message["room"])
-        room.title = message["title"]
-        room.save()
-    Group(message["room"]).send({
-        "text": json.dumps({
-            "rename_room": message["title"],
-        }),
-    })
+    if check_admin(message):
+        with transaction.atomic():
+            room = get_room_or_error(message["room"])
+            room.title = message["title"]
+            room.save()
+        Group(message["room"]).send({
+            "text": json.dumps({
+                "rename_room": message["title"],
+            }),
+        })
+    else:
+        pass
+
+@channel_session_user
+@catch_client_error
+def check_admin(message):
+    is_admin = False
+    if not message.user.is_anonymous():
+        try:
+            check_admin = Room.objects.get(admin_user=message.user, label=message["room"])
+            is_admin = True
+        except:
+            pass
+    return is_admin
