@@ -37,8 +37,8 @@ def new_notice(message):
 @catch_client_error
 def new_poll(message):
     room = get_room_or_error(message["room"])
-    answers = message["answer"]
-    answer_count = [0] * len(answers)
+    answers = json.loads(message["answer"])
+    answer_count = json.dumps([0] * len(answers))
     poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
 
     poll.start_poll(message["room"])
