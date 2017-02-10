@@ -212,7 +212,22 @@
               <!-- Recieved chats -->
               <div id="chat_list_items" class="list-group-item" style="border-style:none; background-color:rgb(255, 255, 255, 0.0);">
                 {% for chat in all_chats %}
-                  {% if chat.is_reply %}
+                  {% if chat.answer %}
+                    <div id="poll_{{ chat.hash_value }}">
+                      <div class="card">
+                        <div class="card-header" style="padding-left:15px; padding-bottom:0.5em; padding-top:0.5em;">
+                          <div style="float:left; margin-right:10px;">
+                            <i class="fa fa-pie-chart" aria-hidden="true"></i> {{ chat.question }}
+                          </div>
+                        </div>
+                        <div class="card-block" style="padding-top:1em; padding-bottom:1em;">
+                          <div id="poll_holder_' + {{ chat.hash_value }} + '">
+                            <button type="button" class="btn btn-block btn-info">Load chart</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% elif chat.is_reply %}
                     <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>
                       <div class="card" style="margin-left:30px;">
                         <div class="card-block" style="padding-top:1em; padding-bottom:1em;">
@@ -448,13 +463,5 @@
         mdImageResize();
       });
     </script>
-
-    <!--
-    {% for poll in polls %}
-      <script>
-        cnl_chats.resultPoll({{ poll|safe }});
-      </script>
-    {% endfor %}
-    -->
   </body>
 </html>

@@ -28,15 +28,5 @@ def get_poll_list(request):
     room = Room.objects.get(label=request)
 
     polls = Poll.objects.filter(room=room).order_by('time')
-    json_polls = []
-    for poll in polls:
-        temp = {
-                'result_poll': room.label,
-                'question': poll.question,
-                'hash_value': poll.hash_value,
-                'answer': poll.answer,
-                'answer_count': poll.answer_count
-            }
-        json_polls.append(json.dumps(temp))
 
-    return json_polls
+    return polls
