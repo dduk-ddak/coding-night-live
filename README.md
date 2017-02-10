@@ -8,7 +8,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * For more detailed information, [we have our Wiki](https://github.com/dduk-ddak/coding-night-live/wiki)!
 
 ## Video Demo
-![intro image](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/video_demo.png)
+[![intro image](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/video_demo.png)](https://youtu.be/-EFYUEsLLDo)
 
 
 [Youtube Link](https://youtu.be/-EFYUEsLLDo)
