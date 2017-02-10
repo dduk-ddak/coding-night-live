@@ -6,6 +6,7 @@ from channels import Channel, Group
 from channels.auth import channel_session_user_from_http, channel_session_user
 
 from manage_room.models import Room
+from manage_room.consumers import check_admin
 from manage_room.utils import get_room_or_error, catch_client_error
 
 from .models import ChatAndReply, Notice, Poll
@@ -27,24 +28,29 @@ def new_chat(message):
 @channel_session_user
 @catch_client_error
 def new_notice(message):
-    room = get_room_or_error(message["room"])
-    #need to add : checking admin_user
-     
-    notice = Notice.objects.create(room=room, description=message["description"])
-    notice.send_message(message["description"], room.label)
+    if check_admin(message):
+        room = get_room_or_error(message["room"])
+        
+        notice = Notice.objects.create(room=room, description=message["description"])
+        notice.send_message(message["description"], room.label)
+    else:
+        pass
 
 @channel_session_user
 @catch_client_error
 def new_poll(message):
-    room = get_room_or_error(message["room"])
-    answers = json.loads(message["answer"])
-    answer_count = json.dumps([0] * len(answers))
-    poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
-    if not message["question"]:
-        poll.question = 'poll_' + poll.hash_value
-        poll.save()
+    if check_admin(message):
+        room = get_room_or_error(message["room"])
+        answers = json.loads(message["answer"])
+        answer_count = json.dumps([0] * len(answers))
+        poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
+        if not message["question"]:
+            poll.question = 'poll_' + poll.hash_value
+            poll.save()
 
-    poll.start_poll(message["room"])
+        poll.start_poll(message["room"])
+    else:
+        pass
 
 @channel_session_user
 @catch_client_error
