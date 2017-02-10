@@ -47,12 +47,14 @@ class Notice(models.Model):
 class Poll(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    hash_value = models.CharField(max_length=7, default=_createHash, unique=True)
     time = models.DateTimeField(default=timezone.now)
     question = models.CharField(max_length=130)
     answer = models.TextField()
-    # answer example : ['yes', 'no', 'x'] ; array(or list)
-    answer_count = models.TextField()   #will save a JSON data
-    # answer_count example : {'yes': 4, 'no': 0, 'x': 2332} ; json dumped string
+    answer_count = models.TextField()
+    # for result {'yes': 4, 'no': 0, 'x': 2332}, this is divided and saved.
+    # answer example : ['yes', 'no', 'x'] ; json list
+    # answer_count example : [4, 0, 2332] ; json list
 
     def __str__(self):
         return str(self._id)
