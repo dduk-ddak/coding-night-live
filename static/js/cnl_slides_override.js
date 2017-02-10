@@ -99,6 +99,7 @@ cnl_slides.getChangeSlideOrder = function (idx, next) {
 cnl_slides.getRenameSlide = function () {
   var idx = this.curr_slide_idx;
   var name = $('#slide_name_input').val();
+  if(name.length === 0) name = 'Unnamed slide';
   
   socket.send(JSON.stringify({
       "command": "rename_slide_title",
