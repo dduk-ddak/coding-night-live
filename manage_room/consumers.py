@@ -114,12 +114,14 @@ def del_slide(message):
 @channel_session_user
 @catch_client_error
 def curr_slide(message):
-    #need to add admin_user authentication
-    Group(message["room"]).send({
-        "text": json.dumps({
-            "curr_slide": message['id'],
-        }),
-    })
+    if check_admin(message):
+        Group(message["room"]).send({
+            "text": json.dumps({
+                "curr_slide": message['id'],
+            }),
+        })
+    else:
+        pass
 
 @channel_session_user
 @catch_client_error
