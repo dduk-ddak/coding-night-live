@@ -94,21 +94,6 @@ socket.onmessage = function (message) {
   } else if (data.curr_slide) {
     // notice users for current slide that admin is watching
     cnl_slides.currSlide(data.curr_slide);
-  } else if (data.msg_type) {
-    // msg_types are defined in manage_room/setting.py
-    switch (data.msg_type) {
-      case 4:
-        // Some user joined room
-        console.log("Some user joined room");
-        break;
-      case 5:
-        // Some user left room
-        console.log("Some user left room");
-        break;
-      default:
-        console.log("Unsupported message type!");
-        return;
-    }
   } else {
     console.log("Cannot handle message!");
   }

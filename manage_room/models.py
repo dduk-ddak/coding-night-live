@@ -6,8 +6,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from channels import Group
 
-from .setting import MSG_TYPE_MESSAGE
-
 # Create your models here.
 
 class Room(models.Model):
@@ -31,17 +29,6 @@ class Room(models.Model):
         messages as they are generated.
         """
         return Group(self.label)
-
-    def send_message(self, msg_type=MSG_TYPE_MESSAGE):
-        """
-        Called to send a message to the room on behalf of a user.
-        """
-        final_msg = {'room': str(self.label), 'msg_type': msg_type,}
-
-        # Send out the message to everyone in the room
-        self.websocket_group.send(
-            {"text": json.dumps(final_msg)}
-        )
 
     def send_title(self, new_title):
         self.title = new_title
