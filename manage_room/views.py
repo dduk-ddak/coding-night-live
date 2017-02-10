@@ -60,10 +60,10 @@ class RedirectRoomView(TemplateView):
         room = Room.objects.get(label=label)
         notices = get_notice_list(label).reverse()
         chats, replies = get_chat_list(label)
+        polls = get_poll_list(label)
         
         title_list = []
         header = Slide.objects.get(title="header@slide", room=room)
-        #header = Slide.objects.get(now_id=header.next_id)
         while header.next_id != 0:
             header = Slide.objects.get(now_id=header.next_id)
             value = (str(header.title), str(header.now_id))
