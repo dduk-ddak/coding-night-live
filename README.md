@@ -64,7 +64,7 @@ And we welcome any documentation contribution.
 
 ## Bug Report & contribution
 
-We welcome any and all suggestions. Please follow our [guideline](https://github.com/dduk-ddak/coding-night-live/wiki/5.-Contributing) when contributing our project.
+We welcome any and all suggestions. Please follow our [guideline](https://github.com/dduk-ddak/coding-night-live/wiki/5.-Contributing-guide) when contributing our project.
 
 If you find a bug, please report it to us using the [Issues](https://github.com/dduk-ddak/coding-night-live/issues) page on GitHub.
 
