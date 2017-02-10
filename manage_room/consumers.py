@@ -78,7 +78,7 @@ def room_leave(message):
     })
 
     curr_tot = cache.get(message["room"])
-    if curr_tot < 2:
+    if curr_tot and curr_tot < 2:
         cache.expire(message["room"], timeout=0)
     else:
         cache.set(message["room"], curr_tot - 1, timeout=7200)
