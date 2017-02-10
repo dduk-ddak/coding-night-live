@@ -438,8 +438,8 @@ var cnl_chats = {
       'title': question,
       'width': poll_size,
       'height': poll_size,
-      'chartArea': { left: '8%', top: '8%', width: "100%", height: "100%" },
-      'legend': {'position': 'center', 'alignment': 'center'}
+      'chartArea': { width: "100%", height: "80%" },
+      'legend': {'position': 'bottom', 'alignment': 'center'}
     };
     if(question.length === 0) options['title'] = 'poll_' + hash_value;
 
