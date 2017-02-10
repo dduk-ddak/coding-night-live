@@ -414,6 +414,8 @@ var cnl_chats = {
 
   // Create a result chart / from server
   resultPoll: function (obj) {
+    this.resultPollCache[obj.hash_value] = obj;
+
     var question = obj.question;
     var answer = JSON.parse(obj.answer);
     var answer_count = JSON.parse(obj.answer_count);
@@ -458,6 +460,8 @@ var cnl_chats = {
     }));
   },
 };
+
+cnl_chats.resultPollCache = [];
 
 cnl_chats.chatHashList = [];
 

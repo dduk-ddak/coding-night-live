@@ -460,10 +460,18 @@
         cnl_chats.chatHashList.push($(this).attr('id').split('_')[1]);
       });
 
+      var resize_timeout;
       $(window).resize(function() {
         chatListResize();
         slideListResize();
         mdImageResize();
+
+        clearTimeout(resize_timeout);
+        resize_timeout = setTimeout(function() {
+          for (var key in cnl_chats.resultPollCache) {
+            cnl_chats.resultPoll(cnl_chats.resultPollCache[key]);
+          }
+        }, 300);
       });
     </script>
   </body>
