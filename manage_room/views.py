@@ -34,7 +34,6 @@ def RoomCreateView(request):
     header.next_id = first_slide.now_id
     header.save()
 
-
     return HttpResponseRedirect(url)
 
 # delete a room
