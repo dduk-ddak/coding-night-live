@@ -57,7 +57,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 ## Wiki
 
-We have a wiki page for introduction our project, installation and settings information, and some documentation.
+We have a [wiki](https://github.com/dduk-ddak/coding-night-live/wiki) page for introduction our project, installation and settings information, and some documentation.
 
 And we welcome any documentation contribution.
 
@@ -65,7 +65,7 @@ And we welcome any documentation contribution.
 
 We welcome any and all suggestions. Please follow our [guideline](https://github.com/dduk-ddak/coding-night-live/wiki/5.-Contributing) when contributing our project.
 
-If you find a bug, please report it to us using the Issues page on GitHub.
+If you find a bug, please report it to us using the [Issues](https://github.com/dduk-ddak/coding-night-live/issues) page on GitHub.
 
 And please add the appropriate Label("bug", ..).
 
