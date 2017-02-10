@@ -455,6 +455,9 @@
       slideListResize();
       mdImageResize();
 
+      // scroll to the bottom
+      document.getElementById("chat_list_scroll").scrollTop = document.getElementById("chat_list_scroll").scrollHeight;
+
       // init hash list
       $('.preloaded-chat').each(function() {
         cnl_chats.chatHashList.push($(this).attr('id').split('_')[1]);
