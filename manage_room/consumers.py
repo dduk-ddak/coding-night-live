@@ -4,7 +4,7 @@ import json
 from django.db import transaction
 from django.core.cache import cache
 from channels import Channel, Group
-from channels.auth import channel_session_user_from_http, channel_session_user, transfer_user, http_session_user
+from channels.auth import channel_session_user_from_http, channel_session_user
 
 from .models import Room, Slide
 

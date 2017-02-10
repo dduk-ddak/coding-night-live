@@ -10,20 +10,18 @@ from manage_room.consumers import check_admin
 from manage_room.utils import get_room_or_error, catch_client_error
 
 from .models import ChatAndReply, Notice, Poll
-from .setting import NOTIFY_USERS_NOTICE_POLL_CHAT
 
 @channel_session_user
 @catch_client_error
 def new_chat(message):
     room = get_room_or_error(message["room"])
 
-    if NOTIFY_USERS_NOTICE_POLL_CHAT:
-        if message["is_reply"]:
-            chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"], assist_hash=message["hash"])
-            chat.send_message_reply(message["description"], message["hash"], room.label)
-        else:
-            chat = ChatAndReply.objects.create(room=room, description=message["description"])
-            chat.send_message(message["description"], room.label)
+    if message["is_reply"]:
+        chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"], assist_hash=message["hash"])
+        chat.send_message_reply(message["description"], message["hash"], room.label)
+    else:
+        chat = ChatAndReply.objects.create(room=room, description=message["description"])
+        chat.send_message(message["description"], room.label)
 
 @channel_session_user
 @catch_client_error
