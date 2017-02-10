@@ -414,6 +414,8 @@ var cnl_chats = {
 
   // Create a result chart / from server
   resultPoll: function (obj) {
+    this.resultPollCache[obj.hash_value] = obj;
+
     var question = obj.question;
     var answer = JSON.parse(obj.answer);
     var answer_count = JSON.parse(obj.answer_count);
@@ -435,7 +437,6 @@ var cnl_chats = {
 
     // Set chart options
     var options = {
-      'title': question,
       'width': poll_size,
       'height': poll_size,
       'chartArea': { width: "100%", height: "80%" },
@@ -458,6 +459,8 @@ var cnl_chats = {
     }));
   },
 };
+
+cnl_chats.resultPollCache = [];
 
 cnl_chats.chatHashList = [];
 
