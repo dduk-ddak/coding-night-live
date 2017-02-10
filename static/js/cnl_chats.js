@@ -354,9 +354,6 @@ var cnl_chats = {
     var q_str = obj.question
     q_str = q_str.replace(/'/g, "\\'");
     q_str = q_str.replace(/"/g, '\\"');
-    if(q_str.length === 0) {
-      q_str = 'poll_' + obj.hash_value;
-    }
 
     // it is not admin
     if($('#polls-wrapper').length !== 0) {
@@ -373,7 +370,8 @@ var cnl_chats = {
         <div id="poll_' + obj.hash_value + '">\
           <div class="card">\
             <div class="card-header" style="padding-left:15px; padding-bottom:0.5em; padding-top:0.5em;">\
-              <div style="float:left; margin-right:10px;"><i class="fa fa-pie-chart" aria-hidden="true"></i> ' + q_str + '</div>\
+              <div style="float:left; margin-right:10px;">\
+                <i class="fa fa-pie-chart" aria-hidden="true"></i> ' + q_str + '</div>\
             </div>\
             <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
               <div id="poll_holder_' + obj.hash_value + '"></div>\

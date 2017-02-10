@@ -40,6 +40,9 @@ def new_poll(message):
     answers = json.loads(message["answer"])
     answer_count = json.dumps([0] * len(answers))
     poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
+    if not message["question"]:
+        poll.question = 'poll_' + poll.hash_value
+        poll.save()
 
     poll.start_poll(message["room"])
 
