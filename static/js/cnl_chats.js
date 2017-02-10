@@ -358,10 +358,12 @@ var cnl_chats = {
 
     // it is not admin
     if($('#polls-wrapper').length !== 0) {
-      var a_strs_str = '<h1 polls-hash="' + obj.hash_value + '" id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>';
+      var a_strs_str = '<h1 id="polls-question" class="display-4" align="center" style="margin: 50px auto; display: block; max-width: 1000px; text-align: center;">' + q_str + '</h1>';
       for(var i=0; i<a_strs.length; i+=1) {
-        a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="cnl_chats.endPoll(\'' + i + '\',\'' + q_str + '\')">' + a_strs[i] + '</button>';
+        a_strs_str += '<button type="button" class="btn btn-secondary btn-lg btn-block" onclick="cnl_chats.endPoll(\'' + i + '\', \'' + q_str + '\', \'' + obj.hash_value + '\')">' + a_strs[i] + '</button>';
       }
+      a_strs_str = '<div class="poll-prompt" id="poll_prompt_' + obj.hash_value + '">' + a_strs_str + '</div>';
+      console.log(a_strs_str);
 
       $('#contents-wrapper').css('visibility', 'hidden');
       $('#polls-wrapper').append(a_strs_str);
@@ -379,7 +381,7 @@ var cnl_chats = {
             </div>\
           </div>\
         </div>');
-      $('#chat_list_items').append(appended_elem);
+    $('#chat_list_items').append(appended_elem);
 
     if (is_end_of_scroll) {
       $('#chat_list_scroll').animate({scrollTop: appended_elem.position().top}, 'fast');
@@ -390,19 +392,15 @@ var cnl_chats = {
         $('#chat_scroll_button').css('visibility', 'visible');
       }
     }
-    $('#qna_card_block').animate({backgroundColor:'#adf'}, 'fast');
-    $('#poll_' + obj.hash_value + ' .card-block').animate({backgroundColor:'#adf'}, 'fast');
-    setTimeout(function() {
-      $('#qna_card_block').animate({backgroundColor:'#ffffff'}, 'slow');
-      $('#poll_' + obj.hash_value + ' .card-block').animate({backgroundColor:'#ffffff'}, 'slow');
-    }, 1000);
   },
 
   // User to Server
-  endPoll: function (index, question) {
-    var polls_hash = $('#polls-wrapper h1').attr('polls-hash');
-    $('#polls-wrapper').empty();
-    $('#contents-wrapper').css('visibility', 'visible');
+  endPoll: function (index, question, polls_hash) {
+    $('#poll_prompt_' + polls_hash).remove();
+    if($('.poll-prompt').length === 0) {
+      $('#polls-wrapper').empty();
+      $('#contents-wrapper').css('visibility', 'visible');
+    }
 
     socket.send(JSON.stringify({
       "command": "end_poll",
