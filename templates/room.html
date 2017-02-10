@@ -190,7 +190,10 @@
               </div>
 
               <!-- Toggle notice button -->
-              <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block" style="height:25px;"><i id="notice-toggler" class="fa fa-sort-asc" aria-hidden="true"></i></a>
+              <a onclick="toggleNotice();" class="card-text btn btn-sm btn-block" style="height:25px;">
+                <i id="notice_toggler_asc" style="display:inline;" class="fa fa-sort-asc" aria-hidden="true"></i>
+                <i id="notice_toggler_desc" style="display:none;" class="fa fa-sort-desc" aria-hidden="true"></i>
+              </a>
 
             </div>
           </div>
@@ -296,13 +299,13 @@
       function toggleNotice() {
         $('#hidden-notice').slideToggle({duration:200, step:chatListResize});
 
-        if($('#notice-toggler').hasClass('fa-sort-desc')) {
-          $('#notice-toggler').removeClass('fa-sort-desc');
-          $('#notice-toggler').addClass('fa-sort-asc');
+        if($('#notice_toggler_asc').is(':visible')) {
+          $('#notice_toggler_asc').css('display', 'none');
+          $('#notice_toggler_desc').css('display', 'inline');
         }
-        else if($('#notice-toggler').hasClass('fa-sort-asc')) {
-          $('#notice-toggler').removeClass('fa-sort-asc');
-          $('#notice-toggler').addClass('fa-sort-desc');
+        else {
+          $('#notice_toggler_desc').css('display', 'none');
+          $('#notice_toggler_asc').css('display', 'inline');
         }
       }
 
