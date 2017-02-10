@@ -323,10 +323,10 @@ var cnl_chats = {
       }
     }
     $('#qna_card_block').animate({backgroundColor:'#adf'}, 'fast');
-    $('#chat_' + obj.hash_value + ' .card-header').animate({backgroundColor:'#adf'}, 'fast');
+    $('#chat_' + obj.hash_value + ' .card-block').animate({backgroundColor:'#adf'}, 'fast');
     setTimeout(function() {
       $('#qna_card_block').animate({backgroundColor:'#ffffff'}, 'slow');
-      $('#chat_' + obj.hash_value + ' .card-header').animate({backgroundColor:'#ffffff'}, 'slow');
+      $('#chat_' + obj.hash_value + ' .card-block').animate({backgroundColor:'#ffffff'}, 'slow');
     }, 1000);
   },
 

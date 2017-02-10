@@ -59,7 +59,7 @@ class RedirectRoomView(TemplateView):
 
         room = Room.objects.get(label=label)
         notices = get_notice_list(label).reverse()
-        chat_and_reply = get_chat_list(label)   # [0]: chat / [1] : reply
+        chats, replies = get_chat_list(label)
         
         title_list = []
         header = Slide.objects.get(title="header@slide", room=room)
@@ -73,6 +73,18 @@ class RedirectRoomView(TemplateView):
         if notices:
             head_notice, notices = notices[0], notices[1:]
 
+        reply_dict = {}
+        for idx in range(len(chats)):
+            reply_dict[chats[idx].hash_value] = []
+        for reply in replies:
+            reply_dict[reply.assist_hash].append(reply)
+
+        all_chats = []
+        for chat in chats:
+            all_chats.append(chat)
+            for reply in reply_dict[chat.hash_value]:
+                all_chats.append(reply)
+
         is_admin = False
         if not self.request.user.is_anonymous():
             try:
@@ -82,7 +94,7 @@ class RedirectRoomView(TemplateView):
                 # Matching query does not exist - request.user is not a admin_user
                 pass
 
-        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "chats": chat_and_reply[0], "replies": chat_and_reply[1], "slides": title_list}
+        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "all_chats": all_chats, "slides": title_list}
         # future ..
         # polls = get_poll_list(label)
         # return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "polls": polls}
