@@ -83,30 +83,33 @@ def room_leave(message):
 @channel_session_user
 @catch_client_error
 def new_slide(message):
-    check_admin(message)
-    #need to add admin_user authentication
-    room = get_room_or_error(message["room"])
-    with transaction.atomic():
-        last_slide = Slide.objects.get(next_id=0, room=room)
-        slide = Slide.objects.create(room=room)
-        last_slide.next_id = slide.now_id
-        last_slide.save()
+    if check_admin(message):
+        room = get_room_or_error(message["room"])
+        with transaction.atomic():
+            last_slide = Slide.objects.get(next_id=0, room=room)
+            slide = Slide.objects.create(room=room)
+            last_slide.next_id = slide.now_id
+            last_slide.save()
 
-    slide.send_idx(message["command"])
+        slide.send_idx(message["command"])
+    else:
+        pass
 
 @channel_session_user
 @catch_client_error
 def del_slide(message):
-    #need to add admin_user authentication
-    room = get_room_or_error(message["room"])
-    with transaction.atomic():
-        delete_slide = Slide.objects.get(room=room, now_id=message["id"])
-        slide = Slide.objects.get(room=room, next_id=message["id"])
-        slide.next_id = delete_slide.next_id
-        delete_slide.delete()
-        slide.save()
-    
-    delete_slide.send_idx(message["command"])
+    if check_admin(message):
+        room = get_room_or_error(message["room"])
+        with transaction.atomic():
+            delete_slide = Slide.objects.get(room=room, now_id=message["id"])
+            slide = Slide.objects.get(room=room, next_id=message["id"])
+            slide.next_id = delete_slide.next_id
+            delete_slide.delete()
+            slide.save()
+        
+        delete_slide.send_idx(message["command"])
+    else:
+        pass
 
 @channel_session_user
 @catch_client_error
