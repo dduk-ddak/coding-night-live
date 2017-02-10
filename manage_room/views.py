@@ -94,7 +94,7 @@ class RedirectRoomView(TemplateView):
                 # Matching query does not exist - request.user is not a admin_user
                 pass
 
-        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "all_chats": all_chats, "slides": title_list}
+        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "all_chats": all_chats, "slides": title_list, "polls": polls}
         # future ..
         # polls = get_poll_list(label)
         # return {'title': room.title, "notices": notices, "chats": chat_and_reply[0], "replys": chat_and_reply[1], "polls": polls}
