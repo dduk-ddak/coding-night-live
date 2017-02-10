@@ -436,7 +436,13 @@ var cnl_chats = {
     var poll_size = $('#poll_holder_' + hash_value).width();
 
     // Set chart options
-    var options = {'title': question, 'width': poll_size, 'height': poll_size};
+    var options = {
+      'title': question,
+      'width': poll_size,
+      'height': poll_size,
+      'chartArea': { left: '8%', top: '8%', width: "100%", height: "100%" },
+      'legend': {'position': 'center', 'alignment': 'center'}
+    };
     if(question.length === 0) options['title'] = 'poll_' + hash_value;
 
     // Instantiate and draw our chart, passing in some options.
