@@ -71,14 +71,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 fuzzythecat
-Younjoon, Chung
+Younjoon Chung
 fuzzy0427@gmail.com
 
 juice500ml
-Kwanghee, Choi
+Kwanghee Choi
 juice500ml@gmail.com
 
 punkyoon
-Jiyoon, Ha
+Jiyoon Ha
 punkkid001@gmail.com
 ```
