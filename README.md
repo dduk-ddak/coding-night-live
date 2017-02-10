@@ -26,8 +26,8 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 ### Build Requirements
 
 * `Python 3` installed ([Python 3.5.2](https://www.python.org/downloads/release/python-352/) recommended)
-* `Django 1.9` installed ([Django 1.10.5](https://www.djangoproject.com/download/1.10.5/tarball/) recommended)
-* `redis 3.x` installed ([Redis 3.2](http://download.redis.io/releases/redis-3.2.7.tar.gz) recommended)
+* `Django 1.9` installed ([Django 1.10.5](https://www.djangoproject.com/download/) recommended)
+* `redis 3.x` installed ([Redis 3.2](https://redis.io/download) recommended)
 *  And you need to install additional packages.. [Check a requirements.txt](https://github.com/dduk-ddak/coding-night-live/blob/master/requirements.txt)
 
 ### More detailed installation and settings information
