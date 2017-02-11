@@ -50,11 +50,13 @@ def RoomListView(request):
     return render(request, 'list.html', {'rooms': rooms})
 
 # convert markdown to pdf
-def MarkdownToPdfView(request, o):
-    #room = Room.objects.get(link=request.path)
-    #slides = Slide.objects.filter(room=room)
-    #return render(request, 'sample.pdf', {})
-    return HttpResponse('<h1>Hello this PDF</h1>')
+def MarkdownToPdfView(request, label):
+    label = label.strip('/')
+    try:
+        room = Room.objects.get(label=label)
+        return HttpResponse('<h1>Hello this PDF</h1>')
+    except:
+        return HttpResponse('<h1>' + label + ' room does not exist!</h1>')
 
 
 class RedirectRoomView(TemplateView):
