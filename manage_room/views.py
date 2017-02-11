@@ -62,7 +62,8 @@ def MarkdownToPdfView(request, label):
             slides.append(header)
         notices = get_notice_list(label).reverse()
         
-        return render(request, 'print.html', {'slides': slides, 'notices': notices})
+        data = {'slides': slides, 'notices': notices, 'room_title': room.title, 'author': room.admin_user, 'time': room.time}
+        return render(request, 'print.html', data)
     except:
         return HttpResponse('<h1>' + label + ' room does not exist!</h1>')
 
