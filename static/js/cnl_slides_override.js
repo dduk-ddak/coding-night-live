@@ -1,3 +1,16 @@
+// get slide with index "idx" from server
+// overriden version has saving unsaved changes in curr_slide
+cnl_slides.getSlideIndex_user = cnl_slides.getSlideIndex;
+cnl_slides.getSlideIndex = function(idx) {
+  // save changes
+  if(cnl_globals.typing_timer != null) {
+    clearTimeout(cnl_globals.typing_timer);
+    cnl_slides.setSlideText(cnl_globals.typing_buffer);
+  }
+
+  cnl_slides.getSlideIndex_user(idx);
+}
+
 // if markdown editor's string is changed, this function is called
 // socket connection if this user updates the string
 cnl_slides.setSlideText_user = cnl_slides.setSlideText;
@@ -10,16 +23,16 @@ cnl_slides.setSlideText = function (str) {
   }
   // this user updated
   else {
-    var diff = cnl_globals.dmp.diff_main(this.curr_slide_text, str, false);
-    var patches = cnl_globals.dmp.patch_make(this.curr_slide_text, diff);
+    var diff = cnl_globals.dmp.diff_main(cnl_slides.curr_slide_text, str, false);
+    var patches = cnl_globals.dmp.patch_make(cnl_slides.curr_slide_text, diff);
     var patch_text = cnl_globals.dmp.patch_toText(patches);
-    var pre_hash = cnl_globals.hash(this.curr_slide_text);
+    var pre_hash = cnl_globals.hash(cnl_slides.curr_slide_text);
     var curr_hash = cnl_globals.hash(str);
 
     socket.send(JSON.stringify({
       "command": "change_slide",
       "room": room_label,
-      "id": this.curr_slide_idx,
+      "id": cnl_slides.curr_slide_idx,
       "patch_text": patch_text,
       "pre_hash": pre_hash,
       "curr_hash": curr_hash,
@@ -67,20 +80,22 @@ cnl_slides.setSlideIndex = function (data) {
 cnl_slides.getDelSlide = function (idx) {
   // called from modal
   if (typeof idx == 'undefined') {
-    idx = this.curr_slide_idx;
+    idx = cnl_slides.curr_slide_idx;
   }
-  /*
-  // If that slide was the only slide, get new one
-  if($('#slide_list li').length === 1) {
-    this.getNewSlide();
-  }
-  */
 
-  socket.send(JSON.stringify({
-    "command": "del_slide",
-    "id": idx,
-    "room": room_label
-  }));
+  // If that slide was the only slide, empty this slide
+  if($('#slide_list li').length === 1) {
+    cnl_globals.editor.codemirror.doc.setValue('');
+    cnl_slides.setSlideText('');
+    cnl_slides.getRenameSlide('', idx);
+  }
+  else {
+    socket.send(JSON.stringify({
+      "command": "del_slide",
+      "id": idx,
+      "room": room_label
+    }));
+  }
 }
 
 // send request for changing slide order to server
@@ -97,15 +112,17 @@ cnl_slides.getChangeSlideOrder = function (idx, next) {
 
 // send request for renaming slide
 // socket connection always
-cnl_slides.getRenameSlide = function () {
-  var idx = this.curr_slide_idx;
-  var name = $('#slide_name_input').val();
+cnl_slides.getRenameSlide = function (name, idx) {
+  if (typeof name == 'undefined') {
+    name = $('#slide_name_input').val();
+    idx = cnl_slides.curr_slide_idx;
+  }
   if(name.length === 0) name = 'Unnamed slide';
-  
+
   socket.send(JSON.stringify({
-      "command": "rename_slide_title",
-      "title": name,
-      "id": idx,
-      "room": room_label
-    }));
+    "command": "rename_slide_title",
+    "title": name,
+    "id": idx,
+    "room": room_label
+  }));
 }
