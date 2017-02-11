@@ -3,6 +3,7 @@ var cnl_slides = {
   curr_slide_idx: 0,
 
   // get slide with index "idx" from server
+  // this is overriden at admin to save unsaved changes in curr_slide.
   getSlideIndex: function (idx) {
     if(idx === this.curr_slide_idx) {
       return;
@@ -36,10 +37,8 @@ var cnl_slides = {
   },
 
   // callback for getDelSlide (only admin can call getDelSlide)
-  // this function is overriden for admin (because of tracking current slide that admin is watching)
   setDelSlide: function (idx) {
     var curr_slide = $('#slide_' + idx);
-    curr_slide.remove();
 
     if (idx === this.curr_slide_idx) {
       var next_slide = curr_slide.next();
@@ -49,6 +48,8 @@ var cnl_slides = {
       var next_slide_idx = parseInt(next_slide.attr('id').split('_')[1]);
       this.getSlideIndex(next_slide_idx);
     }
+
+    curr_slide.remove();
   },
 
   // current showing slide's text & setter
