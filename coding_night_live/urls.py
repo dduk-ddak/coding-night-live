@@ -28,5 +28,6 @@ urlpatterns = [
     url(r'^services/new/', manage_room.views.RoomCreateView, name='new'),
     url(r'^services/delete/(?P<pk>([a-z]{3,}-[a-z]{3,}-[0-9]{1,4}))/$', manage_room.views.RoomDeleteView, name='delete'),
     url(r'^([a-z]{3,}-[a-z]{3,}-[0-9]{1,4})/$', manage_room.views.RedirectRoomView.as_view(), name='redirect_room'),
+    url(r'^([a-z]{3,}-[a-z]{3,}-[0-9]{1,4})/pdf/$', manage_room.views.MarkdownToPdfView, name='get_pdf'),
     url(r'^auth/', include('django.contrib.auth.urls'), {'next_page': '/'}),
 ]

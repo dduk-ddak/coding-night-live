@@ -49,6 +49,14 @@ def RoomListView(request):
     rooms = Room.objects.filter(admin_user=request.user).order_by('time')
     return render(request, 'list.html', {'rooms': rooms})
 
+# convert markdown to pdf
+def MarkdownToPdfView(request, o):
+    #room = Room.objects.get(link=request.path)
+    #slides = Slide.objects.filter(room=room)
+    #return render(request, 'sample.pdf', {})
+    return HttpResponse('<h1>Hello this PDF</h1>')
+
+
 class RedirectRoomView(TemplateView):
     template_name='room.html'
     
@@ -97,5 +105,5 @@ class RedirectRoomView(TemplateView):
             except:
                 # Matching query does not exist - request.user is not a admin_user
                 pass
-        
-        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "all_chats": all_chats, "slides": title_list}
+        pdf_link = room.link + '/pdf/'
+        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "all_chats": all_chats, "slides": title_list, "pdf": pdf_link}
