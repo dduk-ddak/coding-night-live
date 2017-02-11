@@ -15,8 +15,6 @@ from haikunator import Haikunator
 from .models import Room, Slide
 from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 
-import markdown2
-
 # Create your views here.
 # create a room and redirect to the room
 @login_required
@@ -65,9 +63,8 @@ def MarkdownToPdfView(request, label):
             text += '\n\n'
             text += header.md_blob
             text += '\n'
-        html_text = markdown2.markdown(text)
         
-        return HttpResponse(html_text)
+        return HttpResponse(text)
     except:
         return HttpResponse('<h1>' + label + ' room does not exist!</h1>')
 
