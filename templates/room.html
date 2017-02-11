@@ -94,11 +94,11 @@
         <i class="fa fa-pencil" style="display:inline-block; cursor:pointer; color:white;" aria-hidden="true" data-toggle="modal" data-target="#rename_room_modal"></i>
       {% endif %}
       <!-- Copy a url -->
-      <a onclick="window.prompt('Copy to Clipboard: Ctrl+C, Enter', document.location.href);" style="padding-left:20px;" data-toggle="tooltip" data-placement="bottom" title="Share via URL"><i class="fa fa-link" aria-hidden="true" style="color:white;"></i></a>
+      <a id="copy_url_button" href="#" style="padding-left:20px;" data-toggle="tooltip" data-placement="bottom" title="Copy URL to share"><i class="fa fa-link" aria-hidden="true" style="color:white;"></i></a>
       <!-- Download PDF file -->
       <a href="{{ pdf }}" data-toggle="tooltip" data-placement="bottom" title="Download PDF"><i class="fa fa-download" aria-hidden="true" style="color:white;"></i></a>
       <!-- Report a bug -->
-      <a href="https://github.com/dduk-ddak/coding-night-live/issues" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Report Bugs"><i class="fa fa-bug" aria-hidden="true" style="color:white;"></i></a>
+      <a href="https://github.com/dduk-ddak/coding-night-live/issues" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Report bugs"><i class="fa fa-bug" aria-hidden="true" style="color:white;"></i></a>
 
       <!-- Navbar: People count -->
       <h3 class="navbar-text float-xs-right" style="color:white">
@@ -289,6 +289,7 @@
     <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.0/clipboard.min.js"></script>
 
     {% load staticfiles %}
     <script src="{% static "js/reconnecting-websocket.min.js" %}" type="text/javascript"></script>
@@ -298,6 +299,12 @@
       $(document).ready(function() {
         // tooltip init
         $('[data-toggle="tooltip"]').tooltip();
+        // copy_url_button init
+        new Clipboard('#copy_url_button', {
+          text: function(trigger) {
+            return document.location.href;
+          }
+        });
 
         {% if admin is True %}
 
