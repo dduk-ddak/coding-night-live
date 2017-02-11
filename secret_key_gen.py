@@ -12,4 +12,4 @@ with open('secret.json', 'w') as result_file:
     json.dump(value, result_file, ensure_ascii=False)
 
 print('Generated SECRET_KEY result : ' + SECRET_KEY)
-print('Check a "secret.json" file in this directory')
+print('Check if "secret.json" file is generated at the same directory with manage.py')
