@@ -9,6 +9,10 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [View in Korean version](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/README.ko.md)
 * For more detailed information, [we have our Wiki](https://github.com/dduk-ddak/coding-night-live/wiki)!
 
+## Overview
+
+![Overview](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/0.%20Overview.gif)
+
 ## Video Demo
 [![intro image](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/video_demo_intro.PNG)](https://youtu.be/-EFYUEsLLDo)
 
