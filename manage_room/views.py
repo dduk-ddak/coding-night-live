@@ -54,17 +54,9 @@ def MarkdownToPdfView(request, label):
     label = label.strip('/')
     try:
         room = Room.objects.get(label=label)
-        header = Slide.objects.get(title="header@slide", room=room)
+        slides = Slide.objects.filter(room=room)
         
-        text = ""
-        while header.next_id != 0:
-            header = Slide.objects.get(now_id=header.next_id, room=room)
-            text += ('#' + str(header.title))
-            text += '\n\n'
-            text += header.md_blob
-            text += '\n'
-        
-        return HttpResponse(text)
+        return render(request, 'print.html', {'slides': slides})
     except:
         return HttpResponse('<h1>' + label + ' room does not exist!</h1>')
 
