@@ -102,4 +102,3 @@ secret.json
 # PDF files
 static/pdfs/*.md
 static/pdfs/*.pdf
-
