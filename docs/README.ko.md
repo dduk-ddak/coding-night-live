@@ -12,25 +12,31 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * 댓글 형식의 자유로운 질의응답
 * 코드 공유(문법 하이라이팅) 및 정보 공유(공지 사항, 발표 자료, ...)
 * 별도로 생성된 코드랩 URL을 가진 사람만 참여 가능
-* 세미나 완료 후 `pdf`형식으로 코드랩 내용 내보내기 가능
 * 코드랩 참여 인원 파악 가능
+* 협업 코드 작성 *(추후 지원 예정)*
+* 세미나 완료 후 `pdf`형식으로 코드랩 내용 내보내기 가능 *(추후 지원 예정)*
 
 ## 사용한 오픈소스
-* `python` 3.x
-* `django` 1.9 or later
-* `django-allauth`
-* `python-social-auth`
-* `bootstrap`
-* `react`
-* `socket.io`
-* `codemirror`
-* `bootstrap4 (alpha)`
-* `jquery`
-* `ajax`
-* `highlight.js`
-* `markdown-it`
-* `iscroll`
-* `redis`
+* [`python`](https://www.python.org/) 3.5 +
+* [`django`](https://github.com/django/django) 1.9 +
+* [`django-allauth`](https://github.com/pennersr/django-allauth)
+* [`django-redis`](https://github.com/niwinz/django-redis)
+* [`python-social-auth`](https://github.com/omab/python-social-auth)
+* [`bootstrap`](https://github.com/twbs/bootstrap)
+* [`CodeMirror`](https://github.com/codemirror/CodeMirror)
+* [`bootstrap4 (alpha)`](https://v4-alpha.getbootstrap.com/)
+* [`jquery`](https://github.com/jquery/jquery)
+* [`highlight.js`](https://github.com/isagalaev/highlight.js)
+* [`markdown-it`](https://github.com/markdown-it/markdown-it)
+* [`redis`](https://github.com/antirez/redis)
+* [`simplemde-markdown-editor`](https://github.com/NextStepWebs/simplemde-markdown-editor)
+* [`jquery-ui`](https://github.com/jquery/jquery-ui)
+* [`Font-Awesome`](https://github.com/FortAwesome/Font-Awesome)
+* [`google-diff-match-patch`](https://code.google.com/p/google-diff-match-patch/)
+* [`reconnecting-websocket`](https://github.com/joewalnes/reconnecting-websocket)
+* [`tether`](https://github.com/HubSpot/tether/)
+* [`google-chart`](https://github.com/GoogleWebComponents/google-chart)
+* [`github-markdown-css`](https://github.com/sindresorhus/github-markdown-css)
 
 
 ## 서비스 이용해보기
@@ -42,23 +48,27 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 
     ```sudo pip install -r requirements.txt```
 
-3. 프로젝트 migrate 명령 실행하기
+3. SECRET_KEY 생성하기
+
+    ```python secret_key_gen.py```
+
+4. 프로젝트 migrate 명령 실행하기
 
     ```python manage.py migrate```
 
-4. 프로젝트 관리자 계정 생성하기
+5. 프로젝트 관리자 계정 생성하기
 
     ```python manage.py createsuperuser```
 
-5. REDIS 실행시키기
+6. REDIS 실행시키기
 
     ``` redis-server ```
 
-6. 프로젝트 서버 실행시키기
+7. 프로젝트 서버 실행시키기
 
     ```python manage.py runserver```
 
-7. `Google API Console`에서 `OAuth 2.0 Client ID` 생성하기
+8. `Google API Console`에서 `OAuth 2.0 Client ID` 생성하기
 
     * [Google API Console](https://console.developers.google.com/)
     * **사용자 인증 정보** 클릭
@@ -66,7 +76,7 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
     * **이름**은 임의로 입력해준다.
     * **승인된 자바스크립트 원본**은 `http://localhost:8000`를 입력해주고, **승인된 리디렉션 URI**는 `http://localhost:8000/accounts/google/login/callback/`를 입력해준다.
 
-8. `localhost:8000/admin`에 접속 후 application 설정 추가하기
+9. `localhost:8000/admin`에 접속 후 application 설정 추가하기
     * **Sites**에서 `example.com`을 `localhost:8000`으로 변경하기
     * **Social Applications**에서 **ADD SOCIAL APPLICATION** 클릭하기
     * **Provider**는 `Google`선택, **Name**에는 Google API Console의 OAuth Client ID의 `이름` 입력하기

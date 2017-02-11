@@ -15,13 +15,13 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 ## Features
 * Markdown-based slides
 * Live slide/code sharing
-* Collaborative code editing (future)
 * Syntax highlighting for over 100 languages
 * Track participants with live polling
 * User-friendly Q&A through comments
 * Catchy announcements with notice
 * Join codelab via unique URL created for each event 
-* Export codelab to pdf (future)
+* Export codelab to pdf *(future)*
+* Collaborative code editing *(future)*
 
 ## Installation and Settings
 
@@ -37,8 +37,8 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 [Please visit our wiki page.](https://github.com/dduk-ddak/coding-night-live/wiki/2.-Installation-and-Settings)
 
 ## Third Party Libraries
-* [`python`](https://www.python.org/) 3.x
-* [`django`](https://github.com/django/django) 1.9 or later
+* [`python`](https://www.python.org/) 3.5 +
+* [`django`](https://github.com/django/django) 1.9 +
 * [`django-allauth`](https://github.com/pennersr/django-allauth)
 * [`django-redis`](https://github.com/niwinz/django-redis)
 * [`python-social-auth`](https://github.com/omab/python-social-auth)
@@ -70,7 +70,7 @@ We welcome any and all suggestions. Please follow our [guideline](https://github
 
 If you find a bug, please report it to us using the [Issues](https://github.com/dduk-ddak/coding-night-live/issues) page on GitHub.
 
-And please add the appropriate Label("bug", ..).
+And please add the appropriate Label(`bug`, ..).
 
 ## License
 Coding-Night-Live is licensed under the MIT license.
