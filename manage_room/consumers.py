@@ -115,7 +115,11 @@ def del_slide(message):
                 delete_slide.delete()
                 slide.save()
             
-            delete_slide.send_idx(message["command"])
+            Group(message["room"]).send({
+                "text": json.dumps({
+                    "del_slide": message["id"],
+                }),
+            })
     else:
         pass
 
