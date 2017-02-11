@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<meta name="author" content=""/>
+		<meta name="date" content=""/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/github-markdown.css" %}" type="text/css">
+    <link rel="stylesheet" media="print" href="{% static "css/cnl_print.css" %}" type="text/css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.2.2/markdown-it.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+	</head>
+
+	<body>
+    <div class="footer">
+      <p style="text-align:center; margin-bottom:0;"><i><b>Written by {{author}}</b></i> | <i>Powered by coding-night-live</i></p>
+    </div>
+		<div class="whole-page">
+      <div class="display-1" style="margin-top:30%;">{{room_title}}</div>
+      <div class="blockquote blockquote-reverse" style="margin-top:20%;">
+        <p class="h1" style="text-align:right;">{{author}}</p>
+        <p class="h1 text-muted" style="text-align:right;">{{time}}</p>
+      </div>
+		</div>
+
+    <div id="notice" class="slide-box">
+      <div class="display-4">Notice</div>
+      {% for notice in notices %}
+        <h3 style="margin-top:5%">{{notice.description}}</h3>
+        <h5 class="text-muted">{{notice.time}}</h5>
+      {% endfor %}
+    </div>
+
+    {% for slide in slides %}
+      <div id="slide_{{slide.now_id}}" class="slide-box">
+        <div class="display-4 slide-title" style="margin-bottom:5%;">{{slide.title}}</div>
+        <div id="slide_md_{{slide.now_id}}"></div>
+        <div id="slide_pre_{{slide.now_id}}">{{slide.md_blob}}</div>
+      </div>
+    {% endfor %}
+
+    <script>
+     var md = markdownit({
+        html: true,
+        breaks: false,
+        highlight: function (str, lang){
+          // add line numbers for result
+          var line_numbers = str.split('\n').length - 1;
+          if(str[str.length-1] !== '\n') line_numbers += 1;
+          var ret_lines = '';
+          for(i=1; i<=line_numbers; i++) {
+            ret_lines += '<p style="text-align:right; margin-bottom:0;">' + i + '</p>';
+          }
+          if(lang && hljs.getLanguage(lang)){
+            try {
+              // Return string **has** to be a one-liner
+              return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + hljs.highlight(lang, str).value + '</div></div>';
+            } catch(_){}
+          }
+          return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + str + '</div></div>';
+        },
+      });
+      var pre_blob = null;
+      {% for slide in slides %}
+        pre_blob = $('#slide_pre_{{slide.now_id}}').detach();
+        document.getElementById('slide_md_{{slide.now_id}}').innerHTML = md.render(pre_blob.text());
+      {% endfor %}
+      $('.slide-box div blockquote').addClass('blockquote');
+      window.print();
+    </script>
+	</body>
+</html>
