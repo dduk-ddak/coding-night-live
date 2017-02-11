@@ -95,3 +95,6 @@ ENV/
 # Redis db
 *.rdb
 *.swp
+
+# For hide SECRET_KEY
+secret.json
