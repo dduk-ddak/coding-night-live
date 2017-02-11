@@ -74,7 +74,7 @@ class RedirectRoomView(TemplateView):
         title_list = []
         header = Slide.objects.get(title="header@slide", room=room)
         while header.next_id != 0:
-            header = Slide.objects.get(now_id=header.next_id)
+            header = Slide.objects.get(now_id=header.next_id, room=room)
             value = (str(header.title), str(header.now_id))
             title_list.append(value)
 
