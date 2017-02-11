@@ -68,7 +68,7 @@ def MarkdownToPdfView(request, label):
             text += header.md_blob
             text += '\n'
 
-        md_file_name = './pdfs/' + str(label) + '.md'
+        md_file_name = './static/pdfs/' + str(label) + '.md'
         with open(md_file_name, 'w') as md_file:
             md_file.write(text)
         
