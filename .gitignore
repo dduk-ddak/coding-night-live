@@ -98,3 +98,8 @@ ENV/
 
 # For hide SECRET_KEY
 secret.json
+
+# PDF files
+/pdfs/*.md
+/pdfs/*.pdf
+
