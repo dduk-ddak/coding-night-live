@@ -100,14 +100,18 @@ def new_slide(message):
 def del_slide(message):
     if check_admin(message):
         room = get_room_or_error(message["room"])
-        with transaction.atomic():
-            delete_slide = Slide.objects.get(room=room, now_id=message["id"])
-            slide = Slide.objects.get(room=room, next_id=message["id"])
-            slide.next_id = delete_slide.next_id
-            delete_slide.delete()
-            slide.save()
-        
-        delete_slide.send_idx(message["command"])
+        is_last = Slide.objects.filter(room=room).count()
+        if is_last <=2:
+            pass
+        else:
+            with transaction.atomic():
+                delete_slide = Slide.objects.get(room=room, now_id=message["id"])
+                slide = Slide.objects.get(room=room, next_id=message["id"])
+                slide.next_id = delete_slide.next_id
+                delete_slide.delete()
+                slide.save()
+            
+            delete_slide.send_idx(message["command"])
     else:
         pass
 
