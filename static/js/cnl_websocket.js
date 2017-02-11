@@ -55,6 +55,8 @@ socket.onmessage = function (message) {
     //Handle Leaving
     console.log("Leaving room " + data.leave);
     data.leave.remove();
+  } else if (data.cannot_delete_last) {
+    alert("The last one cannot be deleted!");
   } else if (data.chat) {
     // New chat
     cnl_chats.newChat(data);
