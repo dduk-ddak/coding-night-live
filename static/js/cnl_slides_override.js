@@ -69,11 +69,12 @@ cnl_slides.getDelSlide = function (idx) {
   if (typeof idx == 'undefined') {
     idx = this.curr_slide_idx;
   }
-
+  /*
   // If that slide was the only slide, get new one
   if($('#slide_list li').length === 1) {
     this.getNewSlide();
   }
+  */
 
   socket.send(JSON.stringify({
     "command": "del_slide",
