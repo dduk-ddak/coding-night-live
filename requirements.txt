@@ -14,3 +14,4 @@ channels
 asgi_redis
 pyhaikunator
 django-redis
+raven

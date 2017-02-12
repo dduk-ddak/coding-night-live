@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import raven
 import json
 
 from django.core.exceptions import ImproperlyConfigured
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'channels',    # channels setting
     'manage_room',
     'manage_chat',
+    'raven.contrib.django.raven_compat',
 ]
 
 SITE_ID = 1
@@ -137,6 +139,11 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
+}
+
+RAVEN_CONFIG = {
+    'dsn': 'https://409200b5b8f84171a471ec6196b2bea4:0040fbd830e940d5acb50b86c8723b0b@sentry.io/138202',
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
 }
 
 # Password validation
