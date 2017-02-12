@@ -1,4 +1,7 @@
 # Coding-Night-Live
+
+[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/dduk-ddak/coding-night-live/blob/master/LICENSE) [![DOI](https://zenodo.org/badge/76672254.svg)](https://zenodo.org/badge/latestdoi/76672254)
+
 Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication Application입니다. [소개 동영상](https://youtu.be/-EFYUEsLLDo)
 >코드랩이란 특정 기능을 개발하기 위해 단계를 나누고 목표를 세워 함께 배워나가는 행사입니다
 
