@@ -9,6 +9,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [View in Korean version](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/README.ko.md)
 * For more detailed information, [we have our Wiki](https://github.com/dduk-ddak/coding-night-live/wiki)!
 * [Deployed on `Azure`](http://coding-night-live.japaneast.cloudapp.azure.com/)
+* [Deployed on `AWS`](http://ec2-52-79-105-77.ap-northeast-2.compute.amazonaws.com/)
 
 ## Overview
 
