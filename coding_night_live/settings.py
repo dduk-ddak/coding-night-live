@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'manage_room',
     'manage_chat',
     'raven.contrib.django.raven_compat',
+    'coding_night_live',
 ]
 
 SITE_ID = 1
