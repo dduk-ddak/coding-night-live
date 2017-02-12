@@ -13,8 +13,8 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * 코드 공유(문법 하이라이팅) 및 정보 공유(공지 사항, 발표 자료, ...)
 * 별도로 생성된 코드랩 URL을 가진 사람만 참여 가능
 * 코드랩 참여 인원 파악 가능
+* 세미나 완료 후 `pdf`형식으로 코드랩 내용 내보내기 가능
 * 협업 코드 작성 *(추후 지원 예정)*
-* 세미나 완료 후 `pdf`형식으로 코드랩 내용 내보내기 가능 *(추후 지원 예정)*
 
 ## 사용한 오픈소스
 * [`python`](https://www.python.org/) 3.5 +
@@ -37,6 +37,7 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * [`tether`](https://github.com/HubSpot/tether/)
 * [`google-chart`](https://github.com/GoogleWebComponents/google-chart)
 * [`github-markdown-css`](https://github.com/sindresorhus/github-markdown-css)
+* [`clipboard.js`](https://clipboardjs.com/)
 
 
 ## 서비스 이용해보기

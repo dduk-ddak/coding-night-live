@@ -24,7 +24,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * User-friendly Q&A through comments
 * Catchy announcements with notice
 * Join codelab via unique URL created for each event 
-* Export codelab to pdf *(future)*
+* Export codelab to pdf
 * Collaborative code editing *(future)*
 
 ## Installation and Settings
@@ -61,6 +61,7 @@ For further instructions on installation, [please visit our wiki page.](https://
 * [`tether`](https://github.com/HubSpot/tether/)
 * [`google-chart`](https://github.com/GoogleWebComponents/google-chart)
 * [`github-markdown-css`](https://github.com/sindresorhus/github-markdown-css)
+* [`clipboard.js`](https://clipboardjs.com/)
 
 ## Wiki
 
