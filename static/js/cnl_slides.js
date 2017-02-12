@@ -95,7 +95,7 @@ var cnl_slides = {
 
         // Case 3: Late update
         else {
-          console.log('late update triggered')
+          //console.log('late update triggered')
           socket.send(JSON.stringify({
             "command": "get_slide_diff",
             "room": room_label,

@@ -1,7 +1,7 @@
 // Correctly decide between ws:// and wss://
 var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
 var ws_path = ws_scheme + "://" + window.location.host + "/room/";
-console.log("Connecting to " + ws_path);
+//console.log("Connecting to " + ws_path);
 
 var socket = new ReconnectingWebSocket(ws_path);  // Create websocket
 var room_label = window.location.pathname;
@@ -12,7 +12,7 @@ var had_count = false;
 
 // Socket opening
 socket.onopen = function () {
-  console.log("connected websocket");
+  //console.log("connected websocket");
 
   if(had_count === false) {
     socket.send(JSON.stringify({
@@ -29,7 +29,7 @@ socket.onopen = function () {
 
 // Browser closing
 window.onbeforeunload = function () {
-  console.log("disconnected websocket");
+  //console.log("disconnected websocket");
 
   socket.send(JSON.stringify({
     "command": "leave",
@@ -39,7 +39,7 @@ window.onbeforeunload = function () {
 
 socket.onmessage = function (message) {
   // Decode JSON
-  console.log("[Message] " + message.data);
+  //console.log("[Message] " + message.data);
   var data = JSON.parse(message.data);
 
   //Handle errors
@@ -50,10 +50,10 @@ socket.onmessage = function (message) {
 
   if (data.join) {
     // Handle joining
-    console.log("Joining room " + data.join);
+    //console.log("Joining room " + data.join);
   } else if (data.leave) {
     //Handle Leaving
-    console.log("Leaving room " + data.leave);
+    //console.log("Leaving room " + data.leave);
     data.leave.remove();
   } else if (data.cannot_delete_last) {
     alert("The last one cannot be deleted!");
@@ -97,6 +97,6 @@ socket.onmessage = function (message) {
     // notice users for current slide that admin is watching
     cnl_slides.currSlide(data.curr_slide);
   } else {
-    console.log("Cannot handle message!");
+    //console.log("Cannot handle message!");
   }
 };
