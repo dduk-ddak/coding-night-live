@@ -1,0 +1,26 @@
+version: '2'
+services:
+  coding_night_live:
+    build: .
+    working_dir: /opt/coding-night-live
+    command: bash -c "python secret_key_gen.py && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "8000:8000"
+    networks:
+      - front
+      - back
+    depends_on:
+      - redis
+    links:
+      - redis
+  redis:
+    image: redis
+    networks:
+      - "back"
+    ports:
+      - "6379:6379"
+networks:
+  front:  # exposed
+  back:  # not exposed (DO NOT OPEN THESE PORTS)
