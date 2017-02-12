@@ -41,7 +41,8 @@ Coding-Night-Live는 코드랩에 이용할 수 있는 Web-based Communication A
 * [`google-chart`](https://github.com/GoogleWebComponents/google-chart)
 * [`github-markdown-css`](https://github.com/sindresorhus/github-markdown-css)
 * [`clipboard.js`](https://clipboardjs.com/)
-* [`raven`] (https://github.com/getsentry/raven-python/)
+* [`raven`](https://github.com/getsentry/raven-python/)
+* [`twisted`](https://github.com/twisted/twisted/)
 
 
 ## 서비스 이용해보기
