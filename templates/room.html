@@ -99,6 +99,7 @@
       <a href="{{ pdf }}" data-toggle="tooltip" data-placement="bottom" title="Download PDF" target="_blank"><i class="fa fa-download" aria-hidden="true" style="color:white;"></i></a>
       <!-- Report a bug -->
       <a href="https://github.com/dduk-ddak/coding-night-live/issues" target="_blank" data-toggle="tooltip" data-placement="bottom" title="Report bugs"><i class="fa fa-bug" aria-hidden="true" style="color:white;"></i></a>
+      <span id="copied-notify" class="h6" style="color:white; margin-left:1em; opacity:0.0;">Copied!</span>
 
       <!-- Navbar: People count -->
       <h3 class="navbar-text float-xs-right" style="color:white">
@@ -302,7 +303,10 @@
         // copy_url_button init
         new Clipboard('#copy_url_button', {
           text: function(trigger) {
-            alert("Copy to Clipboard!");
+            $('#copied-notify').animate({opacity: 1.0}, 'fast');
+            setTimeout(function() {
+              $('#copied-notify').animate({opacity: 0.0}, 'fast');
+            }, 1000);
             return document.location.href;
           }
         });
