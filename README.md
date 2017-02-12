@@ -29,16 +29,16 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 ## Installation and Settings
 
-### Build Requirements
+#### Build Requirements
 
 * `Python 3` installed ([Python 3.5.2](https://www.python.org/downloads/release/python-352/) recommended)
 * `Django 1.9` installed ([Django 1.10.5](https://www.djangoproject.com/download/) recommended)
 * `redis 3.x` installed ([Redis 3.2](https://redis.io/download) recommended)
-*  And you need to install additional packages.. [Check a requirements.txt](https://github.com/dduk-ddak/coding-night-live/blob/master/requirements.txt)
+* [Check requirements.txt](https://github.com/dduk-ddak/coding-night-live/blob/master/requirements.txt) for additional python packages
 
-### More detailed installation and settings information
+#### Installation
 
-[Please visit our wiki page.](https://github.com/dduk-ddak/coding-night-live/wiki/2.-Installation-and-Settings)
+For further instructions on installation, [please visit our wiki page.](https://github.com/dduk-ddak/coding-night-live/wiki/2.-Installation-and-Settings)
 
 ## Third Party Libraries
 * [`python`](https://www.python.org/) 3.5 +
@@ -64,17 +64,14 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 ## Wiki
 
-We have a [wiki](https://github.com/dduk-ddak/coding-night-live/wiki) page for introduction our project, installation and settings information, and some documentation.
+We have a [wiki](https://github.com/dduk-ddak/coding-night-live/wiki) page for project introduction, installation guide, and some documentation.
+We welcome any documentation contribution.
 
-And we welcome any documentation contribution.
+## Bug Report & Contribution
 
-## Bug Report & contribution
+We welcome any and all suggestions. Please follow our [guideline](https://github.com/dduk-ddak/coding-night-live/wiki/5.-Contributing-guide) when contributing to our project.
 
-We welcome any and all suggestions. Please follow our [guideline](https://github.com/dduk-ddak/coding-night-live/wiki/5.-Contributing-guide) when contributing our project.
-
-If you find a bug, please report it to us using the [Issues](https://github.com/dduk-ddak/coding-night-live/issues) page on GitHub.
-
-And please add the appropriate Label(`bug`, ..).
+If you find a bug, please report it to us using the [Issues](https://github.com/dduk-ddak/coding-night-live/issues) page on GitHub, with appropriate labels(`bug`, ..)!
 
 ## License
 Coding-Night-Live is licensed under the MIT license.
