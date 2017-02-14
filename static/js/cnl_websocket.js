@@ -29,7 +29,7 @@ socket.onopen = function () {
 
 // Browser closing
 window.onbeforeunload = function () {
-  //console.log("disconnected websocket");
+  // console.log("disconnected websocket");
 
   socket.send(JSON.stringify({
     "command": "leave",
@@ -38,15 +38,12 @@ window.onbeforeunload = function () {
 };
 
 socket.onmessage = function (message) {
-  console.log(message);
   // Decode JSON
-  //console.log("[Message] " + message.data);
+  // console.log("[Message] " + message.data);
   var data = JSON.parse(message.data);
 
   //Handle errors
   if (data.error) {
-    console.log(data.error);
-    console.log(data.error == 'ROOM_INVALID');
     if (data.error == 'ROOM_INVALID') {
       // redirect to home
       alert("Admin has deleted this room.");
@@ -59,14 +56,7 @@ socket.onmessage = function (message) {
     }
   }
 
-  if (data.join) {
-    // Handle joining
-    //console.log("Joining room " + data.join);
-  } else if (data.leave) {
-    // Handle Leaving
-    // console.log("Leaving room " + data.leave);
-    // data.leave.remove();
-  } else if (data.cannot_delete_last) {
+  if (data.cannot_delete_last) {
     alert("The last one cannot be deleted!");
   } else if (data.chat) {
     // New chat
