@@ -13,4 +13,4 @@ class MainView(TemplateView):
         return super(MainView, self).dispatch(request, *args, **kwargs)
 
 def PageNotFound(request):
-    return render(request, '404.html', {})
+    return render(request, '404.html', status=404)
