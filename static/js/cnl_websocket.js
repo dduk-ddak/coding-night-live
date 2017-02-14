@@ -38,23 +38,34 @@ window.onbeforeunload = function () {
 };
 
 socket.onmessage = function (message) {
+  console.log(message);
   // Decode JSON
   //console.log("[Message] " + message.data);
   var data = JSON.parse(message.data);
 
   //Handle errors
   if (data.error) {
-    alert(data.error);
-    return;
+    console.log(data.error);
+    console.log(data.error == 'ROOM_INVALID');
+    if (data.error == 'ROOM_INVALID') {
+      // redirect to home
+      alert("Admin has deleted this room.");
+      window.location.replace(window.location.protocol + "//" + window.location.host);
+      socket = 0;
+    }
+    else {
+      alert(data.error);
+      return;
+    }
   }
 
   if (data.join) {
     // Handle joining
     //console.log("Joining room " + data.join);
   } else if (data.leave) {
-    //Handle Leaving
-    //console.log("Leaving room " + data.leave);
-    data.leave.remove();
+    // Handle Leaving
+    // console.log("Leaving room " + data.leave);
+    // data.leave.remove();
   } else if (data.cannot_delete_last) {
     alert("The last one cannot be deleted!");
   } else if (data.chat) {
