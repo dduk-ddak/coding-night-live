@@ -42,23 +42,23 @@ socket.onmessage = function (message) {
   // console.log("[Message] " + message.data);
   var data = JSON.parse(message.data);
 
-  //Handle errors
+  // Handle errors: does nothing afterwards
   if (data.error) {
     if (data.error == 'ROOM_INVALID') {
       // redirect to home
       alert("Admin has deleted this room.");
       window.location.replace(window.location.protocol + "//" + window.location.host);
       socket = 0;
+    } else if (data.error == "CANNOT_DELETE_LAST") {
+      alert("The last one cannot be deleted!");
     }
     else {
       alert(data.error);
-      return;
     }
+    return;
   }
 
-  if (data.cannot_delete_last) {
-    alert("The last one cannot be deleted!");
-  } else if (data.chat) {
+  if (data.chat) {
     // New chat
     cnl_chats.newChat(data);
   } else if (data.notice) {

@@ -102,11 +102,7 @@ def del_slide(message):
         room = get_room_or_error(message["room"])
         is_last = Slide.objects.filter(room=room).count()
         if is_last <=2:
-            message.reply_channel.send({
-                "text": json.dumps({
-                    "cannot_delete_last": room.label,
-                }),
-            })
+            raise ClientError("CANNOT_DELETE_LAST")
         else:
             with transaction.atomic():
                 delete_slide = Slide.objects.get(room=room, now_id=message["id"])
