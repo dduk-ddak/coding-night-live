@@ -27,6 +27,14 @@ socket.onopen = function () {
   cnl_slides.getSlideIndex(first_slide_idx);
 };
 
+// Browser reloading
+window.onpageshow = function(e) {
+  // if page is cached, reload for socket refresh
+  if (e.persisted) {
+    window.location.reload();
+  }
+}
+
 // Browser closing
 window.onbeforeunload = function () {
   // console.log("disconnected websocket");
