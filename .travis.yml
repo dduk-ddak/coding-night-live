@@ -3,9 +3,6 @@ language: python
 python:
   - "3.5"
 
-before_install:
-  - "sudo apt-get install -y python3-pip"
-
 install:
   - "sudo pip3 install -r requirements.txt"
 
