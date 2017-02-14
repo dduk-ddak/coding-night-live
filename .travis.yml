@@ -7,4 +7,4 @@ install:
   - "sudo pip install -r requirements.txt"
 
 script:
-  - "python secret_key_gen.py"
+  - "python3 secret_key_gen.py"
