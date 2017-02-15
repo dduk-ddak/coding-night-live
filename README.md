@@ -75,6 +75,8 @@ We welcome any and all suggestions. Please follow our [guideline](https://github
 
 If you find a bug, please report it to us using the [Issues](https://github.com/dduk-ddak/coding-night-live/issues) page on GitHub, with appropriate labels(`bug`, ..)!
 
+And we're also using error logging system with [`Sentry`](https://sentry.io/dduk-ddak/). so you don't need a capture page for every error log.
+
 ## License
 Coding-Night-Live is licensed under the MIT license.
 ```
