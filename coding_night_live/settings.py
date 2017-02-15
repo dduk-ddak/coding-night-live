@@ -39,7 +39,7 @@ def get_secret(setting, secret=secret):
 SECRET_KEY = get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -188,3 +188,4 @@ LOGOUT_URL = "/"
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]    #static files DIR
+STATIC_ROOT = os.path.join(BASE_DIR, 'collectd_static')
