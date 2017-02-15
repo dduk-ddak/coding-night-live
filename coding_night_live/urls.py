@@ -16,6 +16,9 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 from coding_night_live.views import MainView, PageNotFound
 
 import manage_room.views
@@ -30,5 +33,5 @@ urlpatterns = [
     url(r'^([a-z]{3,}-[a-z]{3,}-[0-9]{1,4})/$', manage_room.views.RedirectRoomView.as_view(), name='redirect_room'),
     url(r'^([a-z]{3,}-[a-z]{3,}-[0-9]{1,4})/pdf/$', manage_room.views.MarkdownToPdfView, name='get_pdf'),
     url(r'^auth/', include('django.contrib.auth.urls'), {'next_page': '/'}),
-     url(r'^404/$', PageNotFound, name='page_not_found'),
-]
+    url(r'^404/$', PageNotFound, name='page_not_found'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
