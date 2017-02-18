@@ -342,6 +342,8 @@ var cnl_chats = {
           <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
           <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
         </div>');
+    chatListResize();
+
     $('#notice_card_block').animate({backgroundColor:'#adf'}, 'fast');
     setTimeout(function() {
       $('#notice_card_block').animate({backgroundColor:'#ffffff'}, 'slow');
