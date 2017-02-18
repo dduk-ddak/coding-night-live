@@ -9,7 +9,8 @@ RUN pip install -r requirements.txt
 COPY . /opt/coding-night-live
 
 #nginx
-#RUN apt-ger install -y nginx
-#ADD ln -s coding-night-live_nginx.conf /etc/nginx/site-enabled/
+#RUN apt-get install -y nginx
+#RUN ln -s coding-night-live_nginx.conf /etc/nginx/site-enabled/
 
 EXPOSE 8000
+# EXPOSE 80

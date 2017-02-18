@@ -4,10 +4,12 @@ services:
     build: .
     working_dir: /opt/coding-night-live
     command: bash -c "python secret_key_gen.py && python manage.py migrate && python manage.py createsuperuserauto && python manage.py runserver 0.0.0.0:8000"
+	#command: bash -c "python secret_key_gen.py && python manage.py migrate && python manage.py createsuperuserauto && python manage.py runserver 0.0.0.0:80"
     environment:
       - REDIS_HOST=redis
-    ports:
+    ports: 
       - "80:8000"
+	  #- "80:80"
     networks:
       - front
       - back
