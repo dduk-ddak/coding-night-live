@@ -1,5 +1,5 @@
 # Coding-Night-Live
-[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/dduk-ddak/coding-night-live/blob/master/LICENSE) [![DOI](https://zenodo.org/badge/76672254.svg)](https://zenodo.org/badge/latestdoi/76672254)
+[![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/dduk-ddak/coding-night-live/blob/master/LICENSE) [![DOI](https://zenodo.org/badge/76672254.svg)](https://zenodo.org/badge/latestdoi/76672254) [![Build Status](https://travis-ci.org/dduk-ddak/coding-night-live.svg?branch=master)](https://travis-ci.org/dduk-ddak/coding-night-live)
 
 **Coding-Night-Live** is a Web-Based Communication Application for codelabs.
 > Codelab is a fun step-by-step, seminar-based approach to developing a software together. 
@@ -12,7 +12,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [Deployed on `AWS`](http://ec2-52-79-105-77.ap-northeast-2.compute.amazonaws.com/)
 
 ## Overview
-
+### [Youtube Introduction for coding-night-live v1.0](https://youtu.be/EgOmuShXVNE)
 ![Overview](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/0.%20Overview.gif)
 
 ## Features
@@ -74,6 +74,8 @@ We welcome any documentation contribution.
 We welcome any and all suggestions. Please follow our [guideline](https://github.com/dduk-ddak/coding-night-live/wiki/5.-Contributing-guide) when contributing to our project.
 
 If you find a bug, please report it to us using the [Issues](https://github.com/dduk-ddak/coding-night-live/issues) page on GitHub, with appropriate labels(`bug`, ..)!
+
+And we're also using error logging system with [`Sentry`](https://sentry.io/dduk-ddak/). so you don't need a capture page for every error log.
 
 ## License
 Coding-Night-Live is licensed under the MIT license.
