@@ -69,6 +69,8 @@ def room_leave(message):
     })
 
     curr_tot = cache.get(message["room"])
+    if not curr_tot:
+        curr_tot = 1
     if curr_tot and curr_tot < 2:
         cache.expire(message["room"], timeout=0)
     else:
