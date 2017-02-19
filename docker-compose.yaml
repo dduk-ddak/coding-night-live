@@ -1,15 +1,17 @@
 version: '2'
 services:
+  redis:
+    image: redis
+    networks:
+      - "back"
+    ports:
+      - "6379:6379"
   coding_night_live:
     build: .
     working_dir: /opt/coding-night-live
-    command: bash -c "python secret_key_gen.py && python manage.py migrate && python manage.py createsuperuserauto && python manage.py runserver 0.0.0.0:8000"
-	#command: bash -c "python secret_key_gen.py && python manage.py migrate && python manage.py createsuperuserauto && python manage.py runserver 0.0.0.0:80"
+    command: bash -c "python manage.py migrate && python manage.py createsuperuserauto && python manage.py runworker"
     environment:
       - REDIS_HOST=redis
-    ports: 
-      - "80:8000"
-	  #- "80:80"
     networks:
       - front
       - back
@@ -17,12 +19,26 @@ services:
       - redis
     links:
       - redis
-  redis:
-    image: redis
-    networks:
-      - "back"
+  nginx:
+    image: nginx
     ports:
-      - "6379:6379"
+      - "80:80"
+  daphne:
+    build: .
+    command: bash -c "daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer"
+    links:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "8001:8001"
+    networks:
+      - front
+      - back
+    depends_on:
+      - redis
+    links:
+      - redis
 networks:
   front:  # exposed
   back:  # not exposed (DO NOT OPEN THESE PORTS)
