@@ -27,6 +27,12 @@
         border-width: thin;
         border-style:solid;
       }
+      .click_div {
+        padding: 10px; 0px; 10px; 0px;
+        cursor: pointer;
+      }
+      .click_div:hover {
+        background-color: #ddd;
     </style>
   </head>
 
@@ -167,6 +173,28 @@
 
         <!-- Right Div -->
         <div class="col-md-3">
+
+          <!-- Right Div: Timer -->
+          {% if admin is True %}
+            <div class="card" style="margin-top:1em;">
+              <div class="card-block" style="padding:10px;">
+                <h1 class="card-title display-4" style="margin: 0px;" align="center">
+                  <span id="timer_minute">00</span>:<span id="timer_second">00</span>
+                </h1>
+                <div class="row" style="margin:0px;">
+                  <div class="click_div col-4 col-md-4" align="center" onclick="startTimer()">
+                    <i class="fa fa-play" aria-hidden="true"></i>
+                  </div>
+                  <div class="click_div col-4 col-md-4" align="center" onclick="pauseTimer()">
+                    <i class="fa fa-pause" aria-hidden="true"></i>
+                  </div>
+                  <div class="click_div col-4 col-md-4" align="center" onclick="stopTimer()">
+                    <i class="fa fa-stop" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
 
           <!-- Right Div: Notice -->
           <div id="notice_card" class="card" style="margin-top:1em;">
@@ -447,6 +475,40 @@
         $('#chat_list_scroll').animate({scrollTop: toBeScrolledPosition()}, 'slow');
         $('#chat_scroll_button').css('visibility', 'hidden');
       }
+
+      {% if admin is True %}
+        var timer_total_second = 0;
+        var timer_timeout = null;
+        function startTimer() {
+          if(timer_timeout == null) {
+            timer_timeout = window.setInterval(function() {
+              timer_total_second++;
+
+              var min_str = Math.floor(timer_total_second / 60);
+              if(min_str < 10) min_str = '0' + min_str;
+              else min_str = '' + min_str;
+
+              var sec_str = timer_total_second % 60;
+              if(sec_str < 10) sec_str = '0' + sec_str;
+              else sec_str = '' + sec_str;
+
+              $('#timer_minute').text(min_str);
+              $('#timer_second').text(sec_str);
+            }, 1000);
+          }
+        }
+        function pauseTimer() {
+          window.clearInterval(timer_timeout);
+          timer_timeout = null;
+        }
+        function stopTimer() {
+          window.clearInterval(timer_timeout);
+          timer_timeout = null;
+          timer_total_second = 0;
+          $('#timer_minute').text('00');
+          $('#timer_second').text('00');
+        }
+      {% endif %}
     </script>
 
     <script src="{% static "js/cnl_globals.js" %}" type="text/javascript"></script>
