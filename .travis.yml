@@ -7,9 +7,7 @@ install:
   - "pip install -r requirements.txt"
   - "pip install flake8"
 
-before_script:
-  - "flake8 --count --exclude ./doc,./manage_room/diff_match_patch"
-
 script:
   - "python secret_key_gen.py"
   - "python manage.py migrate"
+  - "flake8 --count --exclude ./docs,./manage_room/diff_match_patch"
