@@ -5,6 +5,10 @@ python:
 
 install:
   - "pip install -r requirements.txt"
+  - "pip install flake8"
+
+before_script:
+  - "flake --count --exclude ./doc,./manage_room/diff_match_patch"
 
 script:
   - "python secret_key_gen.py"
