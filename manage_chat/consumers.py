@@ -2,10 +2,8 @@
 import json
 
 from django.db import transaction
-from channels import Channel, Group
-from channels.auth import channel_session_user_from_http, channel_session_user
+from channels.auth import channel_session_user
 
-from manage_room.models import Room
 from manage_room.consumers import check_admin
 from manage_room.utils import get_room_or_error, catch_client_error
 

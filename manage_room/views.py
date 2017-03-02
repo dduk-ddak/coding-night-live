@@ -1,13 +1,10 @@
 # /services/list.html - manage the room (create, delete, ..)
-import random
+from django.http import HttpResponse, HttpResponseRedirect
 
-from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
-
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.db import transaction
 from django.views.generic.base import TemplateView
 from django.contrib.sites.models import Site
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
 from haikunator import Haikunator
@@ -21,7 +18,7 @@ from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 def RoomCreateView(request):
     url = 'http://' + Site.objects.get_current().domain + '/'
     room = None
-
+    
     while not room:
         with transaction.atomic():
             share_link = Haikunator.haikunate()  # Ex) 'icy-dream-4198'
@@ -69,7 +66,7 @@ def MarkdownToPdfView(request, label):
 
 
 class RedirectRoomView(TemplateView):
-    template_name='room.html'
+    template_name = 'room.html'
     
     def get_context_data(self, **kwargs):
         label = self.request.path
@@ -111,7 +108,7 @@ class RedirectRoomView(TemplateView):
         is_admin = False
         if not self.request.user.is_anonymous():
             try:
-                check_admin = Room.objects.get(label=label, admin_user=self.request.user)  #check admin user
+                admin = Room.objects.get(label=label, admin_user=self.request.user)  # check admin user
                 is_admin = True
             except:
                 # Matching query does not exist - request.user is not a admin_user

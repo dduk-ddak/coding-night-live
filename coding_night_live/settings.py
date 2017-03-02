@@ -29,12 +29,14 @@ secret_file = os.path.join(BASE_DIR, 'secret.json')
 with open(secret_file, 'r') as f:
     secret = json.loads(f.read())
 
+
 def get_secret(setting, secret=secret):
     try:
         return secret[setting]
     except KeyError:
         error_msg = "Set the {0} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
+
 
 SECRET_KEY = get_secret('SECRET_KEY')
 
@@ -81,7 +83,7 @@ ROOT_URLCONF = 'coding_night_live.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'),],    # templates DIR
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],    # templates DIR
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,9 +105,9 @@ WSGI_APPLICATION = 'coding_night_live.wsgi.application'
 
 # django social auth setting
 SOCIALACCOUNT_PROVIDERS = \
-    { 'google':
-        { 'SCOPE': ['profile', 'email'],
-          'AUTH_PARAMS': { 'access_type': 'online' } }}
+    {'google':
+        {'SCOPE': ['profile', 'email'],
+         'AUTH_PARAMS': {'access_type': 'online'}}}
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -117,7 +119,8 @@ DATABASES = {
     }
 }
 
-redis_host = os.environ.get('REDIS_HOST', 'localhost')    # redis host definition
+# redis host definition
+redis_host = os.environ.get('REDIS_HOST', 'localhost')
 
 # channel layer definitions
 CHANNEL_LAYERS = {
@@ -187,4 +190,4 @@ LOGOUT_URL = "/"
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]    #static files DIR
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]    # static files DIR
