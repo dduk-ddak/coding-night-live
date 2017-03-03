@@ -6,9 +6,16 @@ services:
       - back
       - front
     ports:
-      - "80:8000"
+      - "80:80"
     links:
-      - daphne:daphne
+       - daphne
+    depends_on:
+      - daphne
+    environment:
+       DAPHNE_HOST: daphne
+    volumes_from:
+      - "worker"
+      #- "daphne"
   redis:
     image: redis
     networks:
