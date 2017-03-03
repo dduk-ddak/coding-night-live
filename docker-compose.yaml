@@ -51,8 +51,7 @@ services:
     links:
       - redis
     volumes:
-      - /usr/local/lib/python3.6/site-packages/django/contrib/admin/static/admin
-      - /opt/coding-night-live/static
+      - /opt/coding-night-live/collected_static
 networks:
   front:  # exposed
   back:  # not exposed (DO NOT OPEN THESE PORTS)
