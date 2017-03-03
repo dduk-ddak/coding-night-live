@@ -15,4 +15,3 @@ class Command(BaseCommand):
         admin.is_active = True
         admin.is_admin = True
         admin.save()
-
