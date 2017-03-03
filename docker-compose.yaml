@@ -11,11 +11,11 @@ services:
        - daphne
     depends_on:
       - daphne
+      - worker
     environment:
        DAPHNE_HOST: daphne
     volumes_from:
-      - "worker"
-      #- "daphne"
+      - daphne
   redis:
     image: redis
     networks:
@@ -50,6 +50,9 @@ services:
       - redis
     links:
       - redis
+    volumes:
+      - /usr/local/lib/python3.6/site-packages/django/contrib/admin/static/admin
+      - /opt/coding-night-live/static
 networks:
   front:  # exposed
   back:  # not exposed (DO NOT OPEN THESE PORTS)
