@@ -1,13 +1,33 @@
 version: '2'
 services:
-  coding_night_live:
+  nginx:
+    build: ./nginx
+    networks:
+      - back
+      - front
+    ports:
+      - "80:80"
+    links:
+      - daphne
+    depends_on:
+      - daphne
+      - worker
+    environment:
+       DAPHNE_HOST: daphne
+    volumes_from:
+      - daphne
+  redis:
+    image: redis
+    networks:
+      - "back"
+    ports:
+      - "6379:6379"
+  worker:
     build: .
     working_dir: /opt/coding-night-live
-    command: bash -c "python secret_key_gen.py && python manage.py migrate && python manage.py createsuperuserauto && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py createsuperuserauto && python manage.py runworker"
     environment:
       - REDIS_HOST=redis
-    ports:
-      - "80:8000"
     networks:
       - front
       - back
@@ -15,12 +35,23 @@ services:
       - redis
     links:
       - redis
-  redis:
-    image: redis
-    networks:
-      - "back"
+  daphne:
+    build: .
+    working_dir: /opt/coding-night-live
+    command: bash -c "daphne -b 0.0.0.0 -p 8000 coding_night_live.asgi:channel_layer"
     ports:
-      - "6379:6379"
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+    networks:
+      - front
+      - back
+    depends_on:
+      - redis
+    links:
+      - redis
+    volumes:
+      - /opt/coding-night-live/collected_static
 networks:
   front:  # exposed
   back:  # not exposed (DO NOT OPEN THESE PORTS)
