@@ -9,5 +9,5 @@ RUN pip install -r requirements.txt
 RUN python secret_key_gen.py
 RUN python manage.py collectstatic --noinput
 RUN python manage.py migrate
-EXPOSE 8000
 
+EXPOSE 8000

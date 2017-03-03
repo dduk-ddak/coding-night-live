@@ -44,8 +44,8 @@ services:
     environment:
       - REDIS_HOST=redis
     networks:
-      - front
-      - back
+     - front
+     - back
     depends_on:
       - redis
     links:
