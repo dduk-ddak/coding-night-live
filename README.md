@@ -12,7 +12,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 * [Deployed on `AWS`](http://ec2-52-79-105-77.ap-northeast-2.compute.amazonaws.com/)
 
 ## Overview
-
+### [Youtube Introduction for coding-night-live v1.0](https://youtu.be/EgOmuShXVNE)
 ![Overview](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/0.%20Overview.gif)
 
 ## Features

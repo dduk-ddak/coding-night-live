@@ -8,5 +8,6 @@ class RoomAdmin(admin.ModelAdmin):
 class SlideAdmin(admin.ModelAdmin):
     list_display = ('title', 'md_blob', 'now_id', 'next_id')
 
+
 admin.site.register(Room, RoomAdmin)
 admin.site.register(Slide, SlideAdmin)

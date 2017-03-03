@@ -1,7 +1,3 @@
-import json
-
-from django.shortcuts import render
-
 from .models import ChatAndReply, Notice, Poll
 from manage_room.models import Room
 
@@ -24,7 +20,7 @@ def get_notice_list(request):
     return notices
 
 def get_poll_list(request):
-    #request is room's label
+    # request is room's label
     room = Room.objects.get(label=request)
 
     polls = Poll.objects.filter(room=room).order_by('time')

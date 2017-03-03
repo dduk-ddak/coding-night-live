@@ -18,7 +18,6 @@ def catch_client_error(func):
     return inner
 
 
-#def get_room_or_error(room_label, user):
 def get_room_or_error(room_label):
     """
     Tries to fetch a room for the user, checking permissions along the way.

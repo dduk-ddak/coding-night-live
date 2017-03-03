@@ -35,4 +35,3 @@ urlpatterns = [
     url(r'^auth/', include('django.contrib.auth.urls'), {'next_page': '/'}),
     url(r'^404/$', PageNotFound, name='page_not_found'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-

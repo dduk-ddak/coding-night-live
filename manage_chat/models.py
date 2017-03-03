@@ -16,7 +16,7 @@ def _createHash():
     return hash.hexdigest()[:7]
 
 class Notice(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)    #fk
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     _id = models.AutoField(primary_key=True)
     time = models.DateTimeField(default=timezone.now)
     description = models.TextField()
@@ -65,10 +65,10 @@ class Poll(models.Model):
     
     def start_poll(self, label):
         final_msg = {
-                'start_poll': label,
-                'question': self.question,
-                'answer': self.answer,
-                'hash_value': self.hash_value,
+            'start_poll': label,
+            'question': self.question,
+            'answer': self.answer,
+            'hash_value': self.hash_value,
         }
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
@@ -76,11 +76,11 @@ class Poll(models.Model):
     
     def result_poll(self, label):
         final_msg = {
-                'result_poll': label,
-                'question': self.question,
-                'hash_value': self.hash_value,
-                'answer': self.answer,              # json list
-                'answer_count': self.answer_count,  # json list
+            'result_poll': label,
+            'question': self.question,
+            'hash_value': self.hash_value,
+            'answer': self.answer,              # json list
+            'answer_count': self.answer_count,  # json list
         }
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}

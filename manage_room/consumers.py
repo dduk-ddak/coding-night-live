@@ -3,8 +3,8 @@ import json
 
 from django.db import transaction
 from django.core.cache import cache
-from channels import Channel, Group
-from channels.auth import channel_session_user_from_http, channel_session_user
+from channels import Group
+from channels.auth import channel_session_user
 
 from .models import Room, Slide
 
@@ -14,27 +14,13 @@ from .exceptions import ClientError
 from .diff_match_patch.java_hashcode_conv import javaHash
 from .diff_match_patch import diff_match_patch
 
-### Chat channel handling ###
-
-# Channel_session_user loads the user out from the channel session and presents
-# it as message.user. There's also a http_session_user if you want to do this on
-# a low-level HTTP handler, or just channel_session if all you want is the
-# message.channel_session object without the auth fetching overhead.
+# Chat channel handling
 @channel_session_user
 @catch_client_error
 def room_join(message):
-    # Find the room they requested (by ID) and add ourselves to the send group
-    # Note that, because of channel_session_user, we have a message.user
-    # object that works just like request.user would. Security!
     room = get_room_or_error(message["room"])
-
-    # OK, add them in. The websocket_group is what we'll send messages
-    # to so that everyone in the chat room gets them.
     room.websocket_group.add(message.reply_channel)
-    #message.channel_session['room'] = list(set(message.channel_session['room']).union([room.label]))
-    # Send a message back that will prompt them to open the room
-    # Done server-side so that we could, for example, make people
-    # join rooms automatically.
+
     message.reply_channel.send({
         "text": json.dumps({
             "join": str(room.label),
@@ -60,7 +46,7 @@ def room_leave(message):
     room = get_room_or_error(message["room"])
 
     room.websocket_group.discard(message.reply_channel)
-    #message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.label]))
+    # message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.label]))
     # Send a message back that will prompt them to close the room
     message.reply_channel.send({
         "text": json.dumps({
@@ -69,6 +55,8 @@ def room_leave(message):
     })
 
     curr_tot = cache.get(message["room"])
+    if not curr_tot:
+        curr_tot = 1
     if curr_tot and curr_tot < 2:
         cache.expire(message["room"], timeout=0)
     else:
@@ -101,7 +89,8 @@ def del_slide(message):
     if check_admin(message):
         room = get_room_or_error(message["room"])
         is_last = Slide.objects.filter(room=room).count()
-        if is_last <=2:
+
+        if is_last <= 2:
             raise ClientError("CANNOT_DELETE_LAST")
         else:
             with transaction.atomic():
@@ -320,7 +309,7 @@ def check_admin(message):
     is_admin = False
     if not message.user.is_anonymous():
         try:
-            check_admin = Room.objects.get(admin_user=message.user, label=message["room"])
+            admin = Room.objects.get(admin_user=message.user, label=message["room"])
             is_admin = True
         except:
             pass
