@@ -41,7 +41,7 @@ def get_secret(setting, secret=secret):
 SECRET_KEY = get_secret('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -190,4 +190,5 @@ LOGOUT_URL = "/"
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]    # static files DIR
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]    #static files DIR
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')

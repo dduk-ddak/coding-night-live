@@ -1,0 +1,30 @@
+@page {
+  size: portrait;
+}
+.footer {
+  position: fixed;
+  bottom: -3%;
+  left: 0%;
+  right: 0%;
+  margin: 5% auto;
+}
+/* reset chapter and figure counters on the body */
+body {
+  counter-reset: chapternum;
+}
+
+/* increment chapter counter */
+.slide-title:before {
+  counter-increment: chapternum;
+  content: counter(chapternum) ". ";
+}
+
+.slide-box {
+  page-break-inside: avoid;
+  border-bottom: 20%;
+}
+
+.whole-page {
+  page-break-after: always;
+}
+
