@@ -15,4 +15,5 @@ asgi_redis
 pyhaikunator
 django-redis
 raven
-Twisted==16.0.0  # Issue #54. Not worked with Twisted==17.0.0
+Twisted==16.0.0
+# Issue #54. Not worked with Twisted==17.0.0
