@@ -1,3 +1,5 @@
+import sys
+
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
@@ -7,7 +9,11 @@ from allauth.socialaccount.models import SocialApp
 
 
 class Command(BaseCommand):
-    def social_app_setting(domain, client_id, secret):
+    def system_check(self):
+        # win32 / win64 / linux(Ubuntu)
+        print(sys.platform)
+
+    def social_app_setting(self, domain, client_id, secret):
         default_site_1 = Site.objects.get(id=1)
         default_site_1.domain = 'localhost:8000'    # Temp
         default_site_1.name = 'localhost:8000'    # Temp
@@ -27,4 +33,4 @@ class Command(BaseCommand):
         new_social_app.save()
     
     def handle(self, *args, **options):
-       print('test msg') 
+        self.system_check()
