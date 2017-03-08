@@ -1,4 +1,5 @@
 import sys
+import json
 
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
@@ -13,18 +14,23 @@ class Command(BaseCommand):
         # win32 / win64 / linux(Ubuntu)
         print(sys.platform)
 
+    def open_secret(self):
+        with open('secret.json', 'r') as f:
+            secret = json.loads(f.read())
+            self.social_app_setting(secret['DOMAIN'], secret['CLIENT_ID'], secret['SECRET'])
+
     def social_app_setting(self, domain, client_id, secret):
         default_site_1 = Site.objects.get(id=1)
-        default_site_1.domain = 'localhost:8000'    # Temp
-        default_site_1.name = 'localhost:8000'    # Temp
+        default_site_1.domain = domain
+        default_site_1.name = domain
         default_site_1.save()
 
         new_social_app = SocialApp(
             id=1,
             provider='google',
-            name='localhost:8000',
-            client_id='temp',
-            secret='temp',
+            name=domain,
+            client_id=client_id,
+            secret=secret,
             key='',
         )
 
@@ -34,3 +40,4 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
         self.system_check()
+        self.open_secret()
