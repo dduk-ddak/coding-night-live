@@ -2,13 +2,18 @@ import os
 import sys
 
 # Check OS
-if sys.platform == 'win32' or sys.platform == 'win64':
+platform = sys.platform
+if platform == 'win32' or platform == 'win64':
     print('Error: Cannot run in Windows..')
     exit(0)
 
+if platform == 'linux':
+    cmd = 'python3'
+else:
+    cmd = 'python'
+
 # Check Python Version (3 or 2)
-PYTHON_VERSION = sys.version_info[0]
-if PYTHON_VERSION == 2:
+if sys.version_info[0] == 2:
     print('Error: Cannot run in Python 2.x..')
     exit(0)
 
@@ -25,9 +30,9 @@ with open('requirements.txt', 'r') as packages:
         pip.main(['install', package])
 
 # DB Migration
-os.system('python secret_key_gen.py')
-os.system('python manage.py migrate')
+os.system('%s secret_key_gen.py'%cmd)
+os.system('%s manage.py migrate'%cmd)
 
 # Admin user setting
-os.system('python manage.py createsuperuserauto')
+os.system('%s manage.py createsuperuserauto'%cmd)
 
