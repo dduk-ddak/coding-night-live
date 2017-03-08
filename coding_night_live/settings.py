@@ -29,14 +29,12 @@ secret_file = os.path.join(BASE_DIR, 'secret.json')
 with open(secret_file, 'r') as f:
     secret = json.loads(f.read())
 
-
 def get_secret(setting, secret=secret):
     try:
         return secret[setting]
     except KeyError:
         error_msg = "Set the {0} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
-
 
 SECRET_KEY = get_secret('SECRET_KEY')
 
