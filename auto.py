@@ -22,7 +22,8 @@ try:
     import pip
 except ImportError:
     print("Installing pip...")
-    os.system('sudo apt-get install python3-pip')
+    if platform == 'linux':
+        os.system('sudo apt-get install python3-pip')
 with open('requirements.txt', 'r') as packages:
     for package in packages:
         if package[0] == '#':
@@ -36,3 +37,14 @@ os.system('%s manage.py migrate'%cmd)
 # Admin user setting
 os.system('%s manage.py createsuperuserauto'%cmd)
 
+# Install redis-server / nginx
+if platform == 'linux':
+    os.system('sudo apt-get install redis-server')
+    os.system('sudo apt-get install nginx')
+
+# Find nginx location
+
+
+# Server Deploy
+BASE_DIR = os.getcwd()
+os.system('sudo ln -s %s/local_nginx.conf /etc/nginx/sites-enabled/'%BASE_DIR)
