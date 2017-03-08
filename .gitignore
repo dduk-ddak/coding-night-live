@@ -98,3 +98,5 @@ ENV/
 
 # For hide SECRET_KEY
 secret.json
+pw.txt
+
