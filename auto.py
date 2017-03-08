@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 # Check OS
 platform = sys.platform
@@ -43,7 +44,7 @@ if platform == 'linux':
     os.system('sudo apt-get install nginx')
 
 # Find nginx location
-
+# nginx = subprocess.checkoutput('sudo find / -name nginx.conf', shell=True)
 
 # Server Deploy
 BASE_DIR = os.getcwd()
