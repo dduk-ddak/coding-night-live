@@ -1,6 +1,24 @@
 import os
 import sys
+import json
 import subprocess
+
+def open_secret():
+    with open('secret.json', 'r') as f:
+        print('Plesase write your OAuth Client ID: ')
+        client_id = str(input())
+        print('Please write your OAuth Secret: ')
+        secret = str(input())
+        print('Please write your Server Domain (ex. example.com): ')
+        domain = str(input())
+        
+        secret = json.loads(f.read())
+        secret['CLIENT_ID'] = client_id
+        secret['SECRET'] = secret
+        secret['DOMAIN'] = domain
+        secret = json.dumps(secret)
+    with open('secret.json', 'w') as f:
+        f.write(secret)
 
 # Check OS
 platform = sys.platform
@@ -8,10 +26,7 @@ if platform == 'win32' or platform == 'win64':
     print('Error: Cannot run in Windows..')
     exit(0)
 
-if platform == 'linux':
-    cmd = 'python3'
-else:
-    cmd = 'python'
+cmd = 'python3'
 
 # Check Python Version (3 or 2)
 if sys.version_info[0] == 2:
@@ -49,3 +64,5 @@ if platform == 'linux':
 # Server Deploy
 BASE_DIR = os.getcwd()
 os.system('sudo ln -s %s/local_nginx.conf /etc/nginx/sites-enabled/'%BASE_DIR)
+
+open_secret()
