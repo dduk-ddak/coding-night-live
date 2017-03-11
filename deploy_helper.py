@@ -71,7 +71,6 @@ os.system('sudo ln -s %s/local_nginx.conf /etc/nginx/sites-enabled/'%BASE_DIR)
 
 # OAuth setting
 open_secret()
-os.system('rm -rf collected_static')
 os.system('%s manage.py collectstatic'%cmd)
 os.system('%s manage.py autodeploy'%cmd)
 
