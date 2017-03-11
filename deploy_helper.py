@@ -68,7 +68,7 @@ if platform == 'linux':
 # Server Deploy
 BASE_DIR = os.getcwd()
 os.system('sudo rm -rf /etc/nginx/sites-enabled/local_nginx.conf')
-os.system('sudo ln -s %s/local_nginx.conf /etc/nginx/sites-enabled/' % BASE_DIR)
+os.system('sudo ln -s %s/nginx/local_nginx.conf /etc/nginx/sites-enabled/' % BASE_DIR)
 
 # OAuth setting
 open_secret()
