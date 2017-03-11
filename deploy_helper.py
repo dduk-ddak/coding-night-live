@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-import subprocess
+
 
 def open_secret():
     with open('secret.json', 'r') as f:
@@ -13,15 +13,16 @@ def open_secret():
         domain = input('>')
         
         result = json.load(f)
-
+        
         result['CLIENT_ID'] = str(client_id)
         result['SECRET'] = str(secret)
         result['DOMAIN'] = str(domain)
-
+        
         f.close()
     with open('secret.json', 'w') as f:
         json.dump(result, f)
         f.close()
+
 
 # Check OS
 platform = sys.platform
@@ -50,11 +51,11 @@ with open('requirements.txt', 'r') as packages:
         pip.main(['install', package])
 
 # DB Migration
-os.system('%s secret_key_gen.py'%cmd)
-os.system('%s manage.py migrate'%cmd)
+os.system('%s secret_key_gen.py' % cmd)
+os.system('%s manage.py migrate' % cmd)
 
 # Admin user setting
-os.system('%s manage.py createsuperuserauto'%cmd)
+os.system('%s manage.py createsuperuserauto' % cmd)
 
 # Install redis-server / nginx
 if platform == 'linux':
@@ -67,15 +68,15 @@ if platform == 'linux':
 # Server Deploy
 BASE_DIR = os.getcwd()
 os.system('sudo rm -rf /etc/nginx/sites-enabled/local_nginx.conf')
-os.system('sudo ln -s %s/local_nginx.conf /etc/nginx/sites-enabled/'%BASE_DIR)
+os.system('sudo ln -s %s/local_nginx.conf /etc/nginx/sites-enabled/' % BASE_DIR)
 
 # OAuth setting
 open_secret()
-os.system('%s manage.py collectstatic'%cmd)
-os.system('%s manage.py autodeploy'%cmd)
+os.system('%s manage.py collectstatic' % cmd)
+os.system('%s manage.py autodeploy' % cmd)
 
 # Server run
 os.system('redis-server &')
-os.system('%s manage.py runworker &'%cmd)
+os.system('%s manage.py runworker &' % cmd)
 os.system('daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &')
 os.system('sudo service nginx start')

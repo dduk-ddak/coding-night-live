@@ -2,9 +2,7 @@ import sys
 import json
 
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.utils.crypto import get_random_string
 
 from allauth.socialaccount.models import SocialApp
 
