@@ -5,20 +5,23 @@ import subprocess
 
 def open_secret():
     with open('secret.json', 'r') as f:
-        print('Plesase write your OAuth Client ID: ')
-        client_id = str(input())
-        print('Please write your OAuth Secret: ')
-        secret = str(input())
-        print('Please write your Server Domain (ex. example.com): ')
-        domain = str(input())
+        print('* Plesase write your OAuth Client ID')
+        client_id = input('>')
+        print('** Please write your OAuth Secret')
+        secret = input('>')
+        print('*** Please write your Server Domain (ex. example.com)')
+        domain = input('>')
         
-        secret = json.loads(f.read())
-        secret['CLIENT_ID'] = client_id
-        secret['SECRET'] = secret
-        secret['DOMAIN'] = domain
-        secret = json.dumps(secret)
+        result = json.load(f)
+
+        result['CLIENT_ID'] = str(client_id)
+        result['SECRET'] = str(secret)
+        result['DOMAIN'] = str(domain)
+
+        f.close()
     with open('secret.json', 'w') as f:
-        f.write(secret)
+        json.dump(result, f)
+        f.close()
 
 # Check OS
 platform = sys.platform
