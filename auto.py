@@ -66,6 +66,17 @@ if platform == 'linux':
 
 # Server Deploy
 BASE_DIR = os.getcwd()
+os.system('sudo rm -rf /etc/nginx/sites-enabled/local_nginx.conf')
 os.system('sudo ln -s %s/local_nginx.conf /etc/nginx/sites-enabled/'%BASE_DIR)
 
+# OAuth setting
 open_secret()
+os.system('rm -rf collected_static')
+os.system('%s manage.py collectstatic'%cmd)
+os.system('%s manage.py autodeploy'%cmd)
+
+# Server run
+os.system('redis-server &')
+os.system('%s manage.py runworker &'%cmd)
+os.system('daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &')
+os.system('sudo service nginx start')
