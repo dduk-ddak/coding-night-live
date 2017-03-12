@@ -8,7 +8,9 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 * [View in Korean version](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/README.ko.md)
 * For more detailed information, [we have our Wiki](https://github.com/dduk-ddak/coding-night-live/wiki)!
-* [Try to service](http://slb-319746.ncloudslb.com)
+
+## 3rd Place in [Naver](https://github.com/naver) [2016 D2 Campus Fest](https://github.com/D2CAMPUS-FEST/2016)!
+**Hosted with ♥ by [Naver ncloud](https://www.ncloud.com)! Try our service at [codingnightlive.com](http://codingnightlive.com)**
 
 ## Overview
 ### [Youtube Introduction for coding-night-live v1.0](https://youtu.be/EgOmuShXVNE)
