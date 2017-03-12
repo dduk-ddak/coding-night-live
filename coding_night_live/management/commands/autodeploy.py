@@ -3,6 +3,7 @@ import json
 
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
+from django.utils.crypto import get_random_string
 
 from allauth.socialaccount.models import SocialApp
 
@@ -13,6 +14,25 @@ class Command(BaseCommand):
         print(sys.platform)
 
     def open_secret(self):
+        print('* Please write your OAuth Client ID')
+        client_id = input('>')
+        print('** Please write your OAuth Secret')
+        secret = input('>')
+        print('*** Please write your Server Domain (ex. example.com)')
+        domain = input('>')
+
+        chars = 'qwertyuiopasdfghjklzxcvbnm0987654321!@#$%^&*(-_=+)'
+        SECRET_KEY = get_random_string(50, chars)
+
+        result = {}
+
+        result['CLIENT_ID'] = str(client_id)
+        result['SECRET'] = str(secret)
+        result['DOMAIN'] = str(domain)
+        result['SECRET_KEY'] = SECRET_KEY
+
+        with open('secret.json', 'w') as f:
+            json.dump(result, f)
         with open('secret.json', 'r') as f:
             secret = json.loads(f.read())
             self.social_app_setting(secret['DOMAIN'], secret['CLIENT_ID'], secret['SECRET'])

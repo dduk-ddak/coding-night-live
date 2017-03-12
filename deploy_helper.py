@@ -1,27 +1,5 @@
 import os
 import sys
-import json
-
-
-def open_secret():
-    with open('secret.json', 'r') as f:
-        print('* Plesase write your OAuth Client ID')
-        client_id = input('>')
-        print('** Please write your OAuth Secret')
-        secret = input('>')
-        print('*** Please write your Server Domain (ex. example.com)')
-        domain = input('>')
-        
-        result = json.load(f)
-        
-        result['CLIENT_ID'] = str(client_id)
-        result['SECRET'] = str(secret)
-        result['DOMAIN'] = str(domain)
-        
-        f.close()
-    with open('secret.json', 'w') as f:
-        json.dump(result, f)
-        f.close()
 
 
 # Check OS
@@ -51,7 +29,6 @@ with open('requirements.txt', 'r') as packages:
         pip.main(['install', package])
 
 # DB Migration
-os.system('%s secret_key_gen.py' % cmd)
 os.system('%s manage.py migrate' % cmd)
 
 # Admin user setting
@@ -71,7 +48,6 @@ os.system('sudo rm -rf /etc/nginx/sites-enabled/local_nginx.conf')
 os.system('sudo ln -s %s/nginx/local_nginx.conf /etc/nginx/sites-enabled/' % BASE_DIR)
 
 # OAuth setting
-open_secret()
 os.system('%s manage.py collectstatic' % cmd)
 os.system('%s manage.py autodeploy' % cmd)
 
