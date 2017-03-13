@@ -1,13 +1,22 @@
+OS := $(shell uname)
+
 default: start
 
 sudo:
 	sudo -v
 
 start: prepare sudo
+ifeq ($(OS),Linux)
 	sudo service redis-server start
+else
+	redis-server &
+endif
 	python3 manage.py runworker &
 	daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &
+ifeq ($(OS),Linux)
 	sudo service nginx start  # FIXME
+else
+endif
 
 db.sqlite3:
 	python3 manage.py migrate
@@ -21,10 +30,24 @@ collected_static/:
 secret.json: db.sqlite3
 	python3 manage.py autodeploy
 
-prepare: deps-install db.sqlite3 pw.txt collected_static/ secret.json
+nginx/local_nginx.conf: secret.json
+	python3 manage.py nginxconfgenerator > nginx/local_nginx.conf
+
+prepare-nginx: sudo nginx/local_nginx.conf
+	sudo rm -f /etc/nginx/sites-enabled/local_nginx.conf
+	sudo ln -s `pwd`/nginx/local_nginx.conf /etc/nginx/sites-enabled/
+
+prepare: \
+		deps-install\
+		db.sqlite3\
+		pw.txt\
+		collected_static/\
+		secret.json\
+		nginx/local_nginx.conf\
+		prepare-nginx\
 
 
-OS := $(shell uname)
+
 deps-install:
 ifeq ($(OS),Linux)
 	sudo apt-get install redis-server
