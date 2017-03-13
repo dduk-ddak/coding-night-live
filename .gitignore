@@ -102,4 +102,5 @@ collected_static/
 secret.json
 pw.txt
 nginx/local_nginx.conf
+.prepared
 
