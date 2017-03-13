@@ -8,6 +8,7 @@ install:
   - "pip install flake8"
 
 script:
-  - "python secret_key_gen.py"
   - "python manage.py migrate"
+  - "python manage.py autodeploy"
+  - "python manage.py createsuperuserauto"
   - "flake8 --count --ignore=E501,E302,W293,F841 --exclude ./docs,./manage_room/diff_match_patch,./manage_room/migrations,./manage_chat/migrations,./manage.py"
