@@ -4,7 +4,7 @@ import sys
 
 # Check OS
 platform = sys.platform
-if platform == 'win32' or platform == 'win64':
+if platform in ('win32', 'win64'):
     print('Error: Cannot run in Windows..')
     exit(0)
 
@@ -13,7 +13,7 @@ cmd = 'python3'
 # Check Python Version (3 or 2)
 if sys.version_info[0] == 2:
     print('Error: Cannot run in Python 2.x..')
-    exit(0)
+    exit(-1)
 
 # Install python packages
 try:
@@ -22,11 +22,8 @@ except ImportError:
     print("Installing pip...")
     if platform == 'linux':
         os.system('sudo apt-get install python3-pip')
-with open('requirements.txt', 'r') as packages:
-    for package in packages:
-        if package[0] == '#':
-            break
-        pip.main(['install', package])
+        import pip
+pip.main(['install', '-r', 'requirements.txt'])
 
 # DB Migration
 os.system('%s manage.py migrate' % cmd)
@@ -43,7 +40,7 @@ if platform == 'linux':
 # nginx = subprocess.checkoutput('sudo find / -name nginx.conf', shell=True)
 
 # Server Deploy
-BASE_DIR = os.getcwd()
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 os.system('sudo rm -rf /etc/nginx/sites-enabled/local_nginx.conf')
 os.system('sudo ln -s %s/nginx/local_nginx.conf /etc/nginx/sites-enabled/' % BASE_DIR)
 

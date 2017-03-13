@@ -9,9 +9,6 @@ from allauth.socialaccount.models import SocialApp
 
 
 class Command(BaseCommand):
-    def system_check(self):
-        # win32 / win64 / linux(Ubuntu)
-        print(sys.platform)
 
     def open_secret(self):
         print('* Please write your OAuth Client ID')
@@ -57,5 +54,4 @@ class Command(BaseCommand):
         new_social_app.save()
     
     def handle(self, *args, **options):
-        self.system_check()
         self.open_secret()
