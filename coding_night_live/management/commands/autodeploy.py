@@ -1,4 +1,3 @@
-import sys
 import json
 
 from django.core.management.base import BaseCommand
