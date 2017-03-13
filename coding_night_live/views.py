@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
 from django.views.generic.base import TemplateView
 
 # Create your views here.
@@ -14,3 +15,7 @@ class MainView(TemplateView):
 
 def PageNotFound(request):
     return render(request, '404.html', status=404)
+
+def withdraw(request):
+    User.objects.get(email=request.user.email).delete
+    return HttpResponseRedirect('/')

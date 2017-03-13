@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from coding_night_live.views import MainView, PageNotFound
+from coding_night_live.views import MainView, PageNotFound, withdraw
 
 import manage_room.views
 
@@ -24,6 +24,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    url(r'^services/withdraw/$', withdraw, name='withdraw'),
     url(r'^$', MainView.as_view(), name='main'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
