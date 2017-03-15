@@ -1,13 +1,34 @@
+OS := $(shell uname)
+
 default: start
+.PHONY: start stop clean uninstall prepare prepare-nginx deps-install
 
 sudo:
 	sudo -v
 
-start: prepare sudo
+start: \.prepared sudo
+	# REDIS
+ifeq ($(OS),Linux)
 	sudo service redis-server start
+else ifeq ($(OS),Darwin)
+	brew services run redis
+else
+	sudo redis-server &
+endif
+
+	# Django
 	python3 manage.py runworker &
 	daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &
-	sudo service nginx start  # FIXME
+
+	# NGINX
+ifeq ($(OS),Linux)
+	sudo service nginx start
+else ifeq ($(OS),Darwin)
+	brew services run nginx
+else
+	nginx &  # FIXME
+endif
+
 
 db.sqlite3:
 	python3 manage.py migrate
@@ -21,26 +42,70 @@ collected_static/:
 secret.json: db.sqlite3
 	python3 manage.py autodeploy
 
-prepare: deps-install db.sqlite3 pw.txt collected_static/ secret.json
+nginx/local_nginx.conf: secret.json
+	python3 manage.py nginxconfgenerator > nginx/local_nginx.conf
+
+prepare-nginx: sudo nginx/local_nginx.conf
+ifeq ($(OS),Linux)
+	sudo rm -f /etc/nginx/sites-enabled/local_nginx.conf
+	sudo ln -s `pwd`/nginx/local_nginx.conf /etc/nginx/sites-enabled/
+else ifeq ($(OS),Darwin)
+	rm -f /usr/local/etc/nginx/servers/local_nginx.conf
+	ln -s `pwd`/nginx/local_nginx.conf /usr/local/etc/nginx/servers/
+else
+	# FIXME ln -s `pwd`/nginx/local_nginx.conf /usr/local/etc/nginx/servers/
+endif
+
+prepare \.prepared: \
+		deps-install\
+		db.sqlite3\
+		pw.txt\
+		collected_static/\
+		secret.json\
+		nginx/local_nginx.conf\
+		prepare-nginx\
+
+	touch .prepared
 
 
-OS := $(shell uname)
 deps-install:
 ifeq ($(OS),Linux)
 	sudo apt-get install redis-server
 	sudo apt-get install nginx
+else ifeq ($(OS),Darwin)
+	brew list redis > /dev/null || brew install redis
+	brew list nginx > /dev/null || brew install nginx
 else
 	echo 'ACITON REQUIRED) Need to install redis and nginx before this.'
 endif
 
 stop: sudo
+ifeq ($(OS),Linux)
 	-sudo service nginx stop
+else ifeq ($(OS),Darwin)
+	-brew services stop nginx
+else
+	-sudo killall -9 nginx  # FIXME
+endif
 	-sudo killall -9 daphne  # FIXME
 	-sudo killall -9 python3  # FIXME
+	-sudo killall -9 python  # FIXME
+ifeq ($(OS),Linux)
 	-sudo service redis-server stop
+else ifeq ($(OS),Darwin)
+	-brew services stop redis
+else
+	-sudo killall -9 redis-server
+endif
 
 clean:
-	-rm secret.json db.sqlite3
+	-rm \
+			secret.json\
+			db.sqlite3\
+			pw.txt\
+			nginx/local_nginx.conf\
+			.prepared\
+
 	-rm -r collected_static
 
 uninstall: stop clean
