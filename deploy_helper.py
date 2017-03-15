@@ -6,7 +6,7 @@ import sys
 platform = sys.platform
 if platform in ('win32', 'win64'):
     print('Error: Cannot run in Windows..')
-    exit(0)
+    exit(-1)
 
 cmd = 'python3'
 
