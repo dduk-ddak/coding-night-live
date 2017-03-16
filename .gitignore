@@ -101,4 +101,6 @@ collected_static/
 # For hide SECRET_KEY
 secret.json
 pw.txt
+nginx/local_nginx.conf
+.prepared
 
