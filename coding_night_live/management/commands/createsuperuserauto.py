@@ -6,6 +6,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         password = get_random_string()
+
+        pwfile = open('pw.txt', 'w')
+        pwfile.write(password)
+        pwfile.close()
+
         print('Generated root password : %s' % (password,))
         admin = User.objects.create_superuser(
             email='root@localhost',
