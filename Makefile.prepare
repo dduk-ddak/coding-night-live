@@ -1,0 +1,36 @@
+.PHONY: prepare clean
+
+db.sqlite3:
+	python3 manage.py migrate
+
+pw.txt: db.sqlite3
+	python3 manage.py createsuperuserauto
+
+collected_static/:
+	yes yes | python3 manage.py collectstatic
+
+secret.json: db.sqlite3
+	python3 manage.py autodeploy
+
+nginx/local_nginx.conf: secret.json
+	python3 manage.py nginxconfgenerator > nginx/local_nginx.conf
+
+prepare \.prepared: \
+		deps-install\
+		db.sqlite3\
+		pw.txt\
+		collected_static/\
+		secret.json\
+		nginx/local_nginx.conf\
+		prepare-nginx\
+
+	touch .prepared
+
+clean:
+	-rm \
+			secret.json\
+			db.sqlite3\
+			pw.txt\
+			nginx/local_nginx.conf\
+			.prepared\
+	-rm -r collected_static
