@@ -73,7 +73,7 @@ ifeq ($(OS),Linux)
 	sudo apt-get install redis-server
 	sudo apt-get install nginx
 else ifeq ($(OS),Darwin)
-	brew list redis > /dev/null || brew install redis
+	brew list redis > /dev/null || brew install redis --build-from-source  # FIXME: Homebrew/homebrew-core#11134
 	brew list nginx > /dev/null || brew install nginx
 else
 	echo 'ACITON REQUIRED) Need to install redis and nginx before this.'
@@ -108,4 +108,15 @@ clean:
 
 	-rm -r collected_static
 
-uninstall: stop clean
+deps-uninstall: sudo
+ifeq ($(OS),Linux)
+    # TODO
+	echo 'ACITON REQUIRED) Need to uninstall redis and nginx after this.'
+else ifeq ($(OS),Darwin)
+	-brew list redis > /dev/null && brew uninstall redis
+	-brew list nginx > /dev/null && brew uninstall nginx
+else
+	echo 'ACITON REQUIRED) Need to uninstall redis and nginx after this.'
+endif
+
+uninstall: stop clean deps-uninstall
