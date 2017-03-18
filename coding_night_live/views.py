@@ -18,7 +18,7 @@ def PageNotFound(request):
 
 def withdraw(request):
     if request.method == 'POST':
-        User.objects.get(email=request.user.email).delete
+        User.objects.get(email=request.user.email).delete()
     else:
         print('Request method is not a GET.')
     return HttpResponseRedirect('/')

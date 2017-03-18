@@ -52,6 +52,21 @@
       </div>
     </div>
 
+    <!-- Account Withdraw modal -->
+    <div class="modal fade" id="account_withdraw_modal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Are you sure you want to withdraw from your account?</h4>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="withdrawAccount()">Withdrawal</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <nav class="navbar navbar-light bg-faded" style="background-color:#0275d8; border-radius:0em;">
       <a class="navbar-brand" href="#">
         <img src="{% static "image/small-logo-point.png" %}" height="30vh">
@@ -61,6 +76,7 @@
           {% load account %}
           <a class="nav-link dropdown-toggle" href="#" id="logged_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">Welcome, <b>{% user_display user %}</b></a>
           <div class="dropdown-menu" aria-labelledby="logged_dropdown">
+            <a class="dropdown-item" href="#" onclick="withdrawAccountModal()">Withdraw</a>
             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
           </div>
         </li>
@@ -79,7 +95,7 @@
         <div class="list-group-item list-group-item-action">
           <h4 class="list-group-item-heading"><a class="room-link-element" href="{{ room.link }}">{{ room.title }}</a></h4>
           <span class="tag tag-danger tag-pill float-xs-right">
-            <a href="#" class="room-delete-element" onclick="deleteRoom('{% url 'delete' pk=room.label %}')">Delete</a>
+            <a href="#" class="room-delete-element" onclick="deleteRoomModal('{% url 'delete' pk=room.label %}')">Delete</a>
           </span>
           <p class="list-group-item-text">Generated at {{ room.time }}</p>
         </div>
@@ -90,9 +106,24 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
 
     <script>
-      function deleteRoom(link) {
+      function deleteRoomModal(link) {
         $('#modal_delete_button').attr('onclick', 'location.href="' + link + '"');
         $('#room_delete_modal').modal('show');
+      }
+
+      function withdrawAccountModal() {
+        $('#account_withdraw_modal').modal('show');
+      }
+
+      function withdrawAccount() {
+        $.ajax({
+          url: "{% url 'withdraw' %}",
+          type: "POST",
+          data: { csrfmiddlewaretoken: "{{ csrf_token }}", },
+          success: function() {
+            location.href="/";
+          }
+        });
       }
     </script>
   </body>
