@@ -6,8 +6,12 @@ default: start
 sudo:
 	sudo -v
 
-start: \.prepared sudo
-	# REDIS
+start: \.prepared deps-start
+	# Django
+	python3 manage.py runworker &
+	daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &
+
+deps-start: sudo
 ifeq ($(OS),Linux)
 	sudo service redis-server start
 else ifeq ($(OS),Darwin)
@@ -15,12 +19,6 @@ else ifeq ($(OS),Darwin)
 else
 	sudo redis-server &
 endif
-
-	# Django
-	python3 manage.py runworker &
-	daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &
-
-	# NGINX
 ifeq ($(OS),Linux)
 	sudo service nginx start
 else ifeq ($(OS),Darwin)
@@ -79,17 +77,21 @@ else
 	echo 'ACITON REQUIRED) Need to install redis and nginx before this.'
 endif
 
-stop: sudo
+stop: sudo deps-stop
+	-sudo killall -9 daphne
+	-sudo killall -9 python3
+	-sudo killall -9 python  # FIXME: daphne at MAC OS
+
+deps-stop:
 ifeq ($(OS),Linux)
 	-sudo service nginx stop
 else ifeq ($(OS),Darwin)
 	-brew services stop nginx
 else
-	-sudo killall -9 nginx  # FIXME
+    -sudo killall -9 'nginx: master process nginx'
+	-sudo killall -9 'nginx: worker process'
+	-sudo killall -9 nginx
 endif
-	-sudo killall -9 daphne  # FIXME
-	-sudo killall -9 python3  # FIXME
-	-sudo killall -9 python  # FIXME
 ifeq ($(OS),Linux)
 	-sudo service redis-server stop
 else ifeq ($(OS),Darwin)
