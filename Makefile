@@ -22,7 +22,7 @@ endif
 ifeq ($(OS),Linux)
 	sudo service nginx start
 else ifeq ($(OS),Darwin)
-	brew services run nginx
+	sudo brew services run nginx
 else
 	sudo nginx &
 endif
@@ -86,7 +86,7 @@ deps-stop:
 ifeq ($(OS),Linux)
 	-sudo service nginx stop
 else ifeq ($(OS),Darwin)
-	-brew services stop nginx
+	-sudo brew services stop nginx
 else
     -sudo killall -9 'nginx: master process nginx'
 	-sudo killall -9 'nginx: worker process'
