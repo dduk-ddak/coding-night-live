@@ -1,0 +1,77 @@
+.PHONY: sudo deps-install deps-uninstall deps-start deps-stop prepare-nginx
+
+
+sudo:
+	sudo -v
+
+
+deps-install: sudo
+ifeq ($(OS),Linux)
+	sudo apt-get install redis-server
+	sudo apt-get install nginx
+else ifeq ($(OS),Darwin)
+	brew list redis > /dev/null || brew install redis --build-from-source  # FIXME: Homebrew/homebrew-core#11134
+	brew list nginx > /dev/null || brew install nginx
+else
+	echo 'ACITON REQUIRED) Need to install redis and nginx before this.'
+endif
+
+
+deps-uninstall: sudo
+ifeq ($(OS),Linux)
+    # TODO
+	echo 'ACITON REQUIRED) Need to uninstall redis and nginx after this.'
+else ifeq ($(OS),Darwin)
+	-brew list redis > /dev/null && brew uninstall redis
+	-brew list nginx > /dev/null && brew uninstall nginx
+else
+	echo 'ACITON REQUIRED) Need to uninstall redis and nginx after this.'
+endif
+
+
+deps-start: sudo
+ifeq ($(OS),Linux)
+	sudo service redis-server start
+else ifeq ($(OS),Darwin)
+	brew services run redis
+else
+	sudo redis-server &
+endif
+ifeq ($(OS),Linux)
+	sudo service nginx start
+else
+	sudo nginx &
+endif
+
+
+deps-stop: sudo
+ifeq ($(OS),Linux)
+	sudo service nginx stop
+else ifeq ($(OS),Darwin)
+	-sudo killall -9 'nginx: master process nginx'
+	-sudo killall -9 'nginx: worker process'
+	-sudo killall -9 nginx
+else
+	-sudo killall -9 'nginx: master process nginx'
+	-sudo killall -9 'nginx: worker process'
+	-sudo killall -9 nginx
+endif
+ifeq ($(OS),Linux)
+	-sudo service redis-server stop
+else ifeq ($(OS),Darwin)
+	-brew services stop redis
+else
+	-sudo killall -9 redis-server
+endif
+
+
+prepare-nginx: sudo nginx/local_nginx.conf
+ifeq ($(OS),Linux)
+	sudo rm -f /etc/nginx/sites-enabled/local_nginx.conf
+	sudo ln -s `pwd`/nginx/local_nginx.conf /etc/nginx/sites-enabled/
+else ifeq ($(OS),Darwin)
+	rm -f /usr/local/etc/nginx/servers/local_nginx.conf
+	ln -s `pwd`/nginx/local_nginx.conf /usr/local/etc/nginx/servers/
+else
+	# FIXME ln -s `pwd`/nginx/local_nginx.conf /usr/local/etc/nginx/servers/
+endif
