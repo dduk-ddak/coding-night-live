@@ -26,7 +26,7 @@ ifeq ($(OS),Linux)
 else ifeq ($(OS),Darwin)
 	brew services run nginx
 else
-	nginx &  # FIXME
+	sudo nginx &
 endif
 
 
