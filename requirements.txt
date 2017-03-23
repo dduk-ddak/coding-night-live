@@ -16,3 +16,4 @@ pyhaikunator
 django-redis
 raven
 Twisted
+psycopg2
