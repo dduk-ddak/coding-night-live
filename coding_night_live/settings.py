@@ -127,7 +127,7 @@ DATABASES = {
         'NAME': 'codingnightlive',
         'USER': 'cnluser',
         'PASSWORD': 'temporary',    # Need to change
-        'HOST': 'localhost',    # Need to change?
+        'HOST': 'localhost',
         'PORT': '',
     }
 }
