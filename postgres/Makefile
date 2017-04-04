@@ -15,6 +15,9 @@ delete:
 	sudo su postgres -c 'dropdb codingnightlive'
 	sudo su postgres -c 'dropuser cnluser'
 
+resize:
+	sudo -u postgres psql codingnightlive -c "ALTER TABLE socialaccount_socialapp ALTER COLUMN name TYPE character varying(65);"
+
 settings:
 	sudo su postgres -c 'createdb codingnightlive'
 	sudo -u postgres psql -c "CREATE USER cnluser WITH PASSWORD 'temporary';"
