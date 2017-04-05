@@ -22,8 +22,8 @@ from coding_night_live.views import MainView, withdraw
 import manage_room.views
 
 custom_conf = urls
-del custom_conf.urlpatterns [0]
-del custom_conf.urlpatterns [0]
+del custom_conf.urlpatterns[0]
+del custom_conf.urlpatterns[0]
 
 urlpatterns = [
     url(r'^services/withdraw/$', withdraw, name='withdraw'),
