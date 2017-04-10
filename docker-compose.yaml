@@ -16,6 +16,20 @@ services:
        DAPHNE_HOST: daphne
     volumes_from:
       - daphne
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_USER=cnluser
+      - POSTGRES_PASSWORD=temporary
+      - POSTGRES_DB=codingnightlive
+      - POSTGRES_USER=cnluser
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d:ro
+      - ./postgres_db:/var/lib/postgresql/data:rw
+    ports:
+      - "5432:5432"
+    networks:
+      - "back"
   redis:
     image: redis
     networks:
@@ -28,13 +42,16 @@ services:
     command: bash -c "python manage.py createsuperuserauto && python manage.py runworker"
     environment:
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
     networks:
       - front
       - back
     depends_on:
       - redis
+      - postgres
     links:
       - redis
+      - postgres
   daphne:
     build: .
     working_dir: /opt/coding-night-live
@@ -43,13 +60,16 @@ services:
       - "8000:8000"
     environment:
       - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
     networks:
      - front
      - back
     depends_on:
       - redis
+      - postgres
     links:
       - redis
+      - postgres
     volumes:
       - /opt/coding-night-live/collected_static
 networks:
