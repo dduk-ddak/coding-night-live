@@ -1,0 +1,4 @@
+docker_prepare:
+	python manage.py migrate
+	python manage.py createsuperuserauto
+	python manage.py autodeploy

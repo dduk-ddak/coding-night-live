@@ -22,7 +22,6 @@ services:
       - POSTGRES_USER=cnluser
       - POSTGRES_PASSWORD=temporary
       - POSTGRES_DB=codingnightlive
-      - POSTGRES_USER=cnluser
     volumes:
       - ./postgres:/docker-entrypoint-initdb.d:ro
       - ./postgres_db:/var/lib/postgresql/data:rw
@@ -39,7 +38,7 @@ services:
   worker:
     build: .
     working_dir: /opt/coding-night-live
-    command: bash -c "python manage.py createsuperuserauto && python manage.py runworker"
+    command: bash -c "python manage.py runworker"
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
