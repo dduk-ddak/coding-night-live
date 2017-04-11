@@ -23,10 +23,10 @@ services:
       - POSTGRES_PASSWORD=temporary
       - POSTGRES_DB=codingnightlive
     volumes:
-      - ./postgres:/docker-entrypoint-initdb.d:ro
-      - ./postgres_db:/var/lib/postgresql/data:rw
+      - ./postgres:/docker-entrypoint-initdb.d:ro  # Read ./postgres/*.sql and run it as initializing steps.
+      - ./postgres_db:/var/lib/postgresql/data:rw  # ./postgres_db will be used as database.
     ports:
-      - "5432:5432"
+      - "5432:5432"  # for SANDBOX
     networks:
       - "back"
   redis:
@@ -34,7 +34,7 @@ services:
     networks:
       - "back"
     ports:
-      - "6379:6379"
+      - "6379:6379"  # for SANDBOX
   worker:
     build: .
     working_dir: /opt/coding-night-live
@@ -56,7 +56,7 @@ services:
     working_dir: /opt/coding-night-live
     command: bash -c "daphne -b 0.0.0.0 -p 8000 coding_night_live.asgi:channel_layer"
     ports:
-      - "8000:8000"
+      - "8000:8000"  # for SANDBOX
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres

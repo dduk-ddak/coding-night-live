@@ -8,5 +8,5 @@ docker_prepare:
 
 _docker_prepare:
 	python manage.py migrate
-	python manage.py createsuperuserauto
-	python manage.py autodeploy
+	python manage.py createsuperuserauto  # TODO: initial run only check
+	python manage.py autodeploy  # TODO: initial run only check
