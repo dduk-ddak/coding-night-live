@@ -23,7 +23,7 @@ services:
       - POSTGRES_PASSWORD=temporary
       - POSTGRES_DB=codingnightlive
     volumes:
-      - ./postgres:/docker-entrypoint-initdb.d:ro  # Read ./postgres/*.sql and run it as initializing steps.
+      - ./postgres:/docker-entrypoint-initdb.d:ro  # Read ./postgres/*.sh and run it as initializing steps.
       - ./postgres_db:/var/lib/postgresql/data:rw  # ./postgres_db will be used as database.
     ports:
       - "5432:5432"  # for SANDBOX
