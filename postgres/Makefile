@@ -1,3 +1,7 @@
+export POSTGRES_USER=cnluser
+export POSTGRES_PASSWORD=temporary
+export POSTGRES_DB=codingnightlive
+
 all: settings logout
 
 install:
@@ -12,16 +16,14 @@ logout:
 	exit
 
 delete:
-	sudo su postgres -c 'dropdb codingnightlive'
-	sudo su postgres -c 'dropuser cnluser'
+	sudo su postgres -c 'dropdb $(POSTGRES_DB)'
+	sudo su postgres -c 'dropuser $(POSTGRES_USER)'
 
 resize:
-	sudo -u postgres psql codingnightlive -c "ALTER TABLE socialaccount_socialapp ALTER COLUMN name TYPE character varying(65);"
+	sudo -u postgres psql $(POSTGRES_DB) -c "ALTER TABLE socialaccount_socialapp ALTER COLUMN name TYPE character varying(65);"
 
 settings:
-	sudo su postgres -c 'createdb codingnightlive'
-	sudo -u postgres psql -c "CREATE USER cnluser WITH PASSWORD 'temporary';"
-	sudo -u postgres psql -c "ALTER ROLE cnluser SET client_encoding TO 'utf8';"
-	sudo -u postgres psql -c "ALTER ROLE cnluser SET default_transaction_isolation TO 'read committed';"
-	sudo -u postgres psql -c "ALTER ROLE cnluser SET timezone TO 'UTC-9';"
-	sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE codingnightlive TO cnluser;"
+	sudo su postgres -c 'createdb $(POSTGRES_DB)'
+	sudo -u postgres psql -c "CREATE USER $(POSTGRES_USER) WITH PASSWORD '$(POSTGRES_PASSWORD)';"
+	sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $(POSTGRES_DB) TO $(POSTGRES_USER);"
+	sudo -u postgres -E ./init_sql.sh
