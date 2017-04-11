@@ -4,7 +4,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.db import transaction
 from django.views.generic.base import TemplateView
-from django.contrib.sites.models import Site
 from django.contrib.auth.decorators import login_required
 
 from haikunator import Haikunator
