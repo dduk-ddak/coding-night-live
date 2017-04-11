@@ -1,4 +1,12 @@
+.PHONY: docker_prepare _docker_prepare
+
 docker_prepare:
+	@# XXX: Get a daphne container id deployed by docker-compose.yaml.
+	@# XXX: `docker exec` will share the environments from original container
+	@#      and run `make _docker_prepare` with those environments.
+	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "make _docker_prepare"
+
+_docker_prepare:
 	python manage.py migrate
 	python manage.py createsuperuserauto
 	python manage.py autodeploy
