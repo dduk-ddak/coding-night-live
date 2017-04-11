@@ -60,6 +60,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
+      - IS_HTTPS_IN_FRONT_OF_NGINX=False  # for SANDBOX, if not True.
     networks:
      - front
      - back
