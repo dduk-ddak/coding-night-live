@@ -16,7 +16,7 @@ from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 # create a room and redirect to the room
 @login_required
 def RoomCreateView(request):
-    url = 'http://' + Site.objects.get_current().domain + '/'
+    url = '/'
     room = None
     
     while not room:
@@ -37,7 +37,7 @@ def RoomCreateView(request):
 @login_required
 def RoomDeleteView(request, pk):
     Room.objects.filter(admin_user=request.user, label=pk).delete()
-    url = 'http://' + Site.objects.get_current().domain + '/services'
+    url = '/services'
     return HttpResponseRedirect(url)
 
 # check room list
