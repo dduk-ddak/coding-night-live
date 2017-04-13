@@ -2,11 +2,17 @@
 
 docker_prepare:
 	@# XXX: Get a daphne container id deployed by docker-compose.yaml.
-	@# XXX: `docker exec` will share the environments from original container
-	@#      and run `make _docker_prepare` with those environments.
-	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "make _docker_prepare"
+	@# XXX: `docker exec` will share the environments from original container.
+	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "python manage.py migrate"
+	make docker_resize
+	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "python manage.py createsuperuserauto"
+	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "python manage.py autodeploy"
 
-_docker_prepare:
-	python manage.py migrate
-	python manage.py createsuperuserauto  # TODO: initial run only check
-	python manage.py autodeploy  # TODO: initial run only check
+
+docker_resize:
+	@# XXX: Get a postgres container id deployed by docker-compose.yaml.
+	@# XXX: `docker exec` will share the environments from original container.
+	docker exec -it $(shell docker ps -q -f name=codingnightlive_postgres_1) /bin/bash -c '\
+	psql $$POSTGRES_DB $$POSTGRES_USER -c "ALTER TABLE socialaccount_socialapp ALTER COLUMN name TYPE character varying(65);" \
+	'
+
