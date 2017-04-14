@@ -6,6 +6,7 @@ default: start
 
 include Makefile.deps
 include Makefile.prepare
+include Makefile.docker
 
 
 start: \.prepared deps-start

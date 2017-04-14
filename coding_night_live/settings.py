@@ -46,6 +46,14 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+if os.environ.get('IS_HTTPS_IN_FRONT_OF_NGINX', 'False') == 'True':
+    # Issue #52, AllAuth with HTTPS (bypassing "Error: redirect_uri_mismatch" from Google and other OAuth2 providers.)
+    #
+    # When OAuth2 Authorization requested, AllAuth uses `django.contrib.sites.models.Site` for generating redirect_url.
+    # Because `django.contrib.sites.models.Site` doesn't contain the proto, the `http` proto used by default.
+    #
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -127,7 +135,7 @@ DATABASES = {
         'NAME': 'codingnightlive',
         'USER': 'cnluser',
         'PASSWORD': 'temporary',    # Need to change
-        'HOST': 'localhost',
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
         'PORT': '',
     }
 }
