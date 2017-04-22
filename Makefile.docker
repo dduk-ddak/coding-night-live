@@ -5,8 +5,8 @@ docker_prepare:
 	@# XXX: `docker exec` will share the environments from original container.
 	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "python manage.py migrate"
 	make docker_resize
-	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "python manage.py createsuperuserauto"
 	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "python manage.py autodeploy"
+	docker exec -it $(shell docker ps -q -f name=codingnightlive_daphne_1) /bin/bash -c "python manage.py createsuperuserauto"
 
 
 docker_resize:
