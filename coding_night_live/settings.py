@@ -203,9 +203,9 @@ USE_L10N = True
 USE_TZ = False
 
 # django social auth setting ; login redirect and logout url
-LOGIN_REDIRECT_URL = "/services/"
-LOGIN_URL = "/"
-LOGOUT_URL = "/"
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/services/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
