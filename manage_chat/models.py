@@ -4,6 +4,7 @@ import hashlib
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.postgres.fields import JSONField
 from channels import Group
 
 from manage_room.models import Room
@@ -50,8 +51,10 @@ class Poll(models.Model):
     hash_value = models.CharField(max_length=7, default=_createHash, unique=True)
     time = models.DateTimeField(default=timezone.now)
     question = models.CharField(max_length=130)
-    answer = models.TextField()
-    answer_count = models.TextField()
+    #answer = models.TextField()
+    #answer_count = models.TextField()
+    answer = JSONField()
+    answer_count = JSONField()
     # for result {'yes': 4, 'no': 0, 'x': 2332}, this is divided and saved.
     # answer example : ['yes', 'no', 'x'] ; json list
     # answer_count example : [4, 0, 2332] ; json list
