@@ -51,8 +51,6 @@ class Poll(models.Model):
     hash_value = models.CharField(max_length=7, default=_createHash, unique=True)
     time = models.DateTimeField(default=timezone.now)
     question = models.CharField(max_length=130)
-    #answer = models.TextField()
-    #answer_count = models.TextField()
     answer = JSONField()
     answer_count = JSONField()
     # for result {'yes': 4, 'no': 0, 'x': 2332}, this is divided and saved.
