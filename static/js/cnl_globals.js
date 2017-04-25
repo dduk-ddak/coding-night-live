@@ -1,3 +1,4 @@
+
 var cnl_globals = {
   // hash function that converts string --> integer
   hash: function java_hash_conv (str) {
@@ -29,11 +30,27 @@ var cnl_globals = {
           return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + hljs.highlight(lang, str).value + '</div></div>';
         } catch(_){}
       }
-      return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + str + '</div></div>';
+      return '<div><div style="width:2.5em; float:left; padding:0.5em 0.5em 0.5em 0; background-color: #f7f7f7; border-right-color: #bdbdbd;border-right-width: 1px; border-right-style: solid;">' + ret_lines + '</div><div style="margin-left:2.5em; padding:0.5em 0.5em 0.5em 1em; background-color:#fdf6e3;">' + cnl_globals.escapeHtml(str) + '</div></div>';
     },
   }),
 
   // diff_match_patch function group
   dmp: new diff_match_patch(),
 
+  entityMap: {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  },
+
+  escapeHtml: function (str) {
+    return String(str).replace(/[&<>"'`=\/]/g, function (c) {
+      return cnl_globals.entityMap[c];
+    });
+  },
 };

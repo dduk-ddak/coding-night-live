@@ -292,7 +292,7 @@ var cnl_chats = {
           <div style="float: left; width: 30px; margin-top: 10px;"><i class="fa fa-reply" aria-hidden="true"></i></div>\
             <div class="card" style="margin-left:30px;">\
               <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
-              <p class="card-text">' + obj.description + '</p>\
+              <p class="card-text">' + cnl_globals.escapeHtml(obj.description) + '</p>\
             </div>\
           </div>');
       $('#chat_list_items').find('#chat_' + obj.hash_value).append(appended_elem);
@@ -307,7 +307,7 @@ var cnl_chats = {
                 <div style="font-size:0.8em; margin-top:0.1em;" align="right">' + obj.time + '</div>\
               </div>\
               <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
-                <p class="card-text">' + obj.description + '</p>\
+                <p class="card-text">' + cnl_globals.escapeHtml(obj.description) + '</p>\
               </div>\
             </div>\
           </div>');
@@ -339,7 +339,7 @@ var cnl_chats = {
 
     $('#shown-notice').append('\
         <div class="notice-with-time">\
-          <p class="card-text" style="margin-bottom: 0px;">' + obj.description + '</p>\
+          <p class="card-text" style="margin-bottom: 0px;">' + cnl_globals.escapeHtml(obj.description) + '</p>\
           <p class="card-text text-muted" style="text-align:right;">' + obj.time + '</p>\
         </div>');
     chatListResize();
@@ -376,7 +376,7 @@ var cnl_chats = {
           <div class="card">\
             <div class="card-header" style="padding-left:15px; padding-bottom:0.5em; padding-top:0.5em;">\
               <div style="float:left; margin-right:10px;">\
-                <i class="fa fa-pie-chart" aria-hidden="true"></i> ' + q_str + '</div>\
+                <i class="fa fa-pie-chart" aria-hidden="true"></i> ' + cnl_globals.escapeHtml(q_str) + '</div>\
             </div>\
             <div class="card-block" style="padding-top:1em; padding-bottom:1em;">\
               <div id="poll_holder_' + obj.hash_value + '">\
