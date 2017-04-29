@@ -21,10 +21,10 @@ class Notice(models.Model):
     _id = models.AutoField(primary_key=True)
     time = models.DateTimeField(default=timezone.now)
     description = models.TextField()
-    
+
     def __str__(self):
         return str(self._id)
-    
+
     @property
     def websocket_group(self):
         """
@@ -32,7 +32,7 @@ class Notice(models.Model):
         messages as they are generated.
         """
         return Group(str(self.room.label))
-    
+
     def send_message(self):
         """
         Called to send a message to the room on behalf of a user.
@@ -63,11 +63,11 @@ class Poll(models.Model):
 
     def __str__(self):
         return str(self._id)
-    
+
     @property
     def websocket_group(self):
         return Group(str(self.room.label))
-    
+
     def start_poll(self, label):
         final_msg = {
             'start_poll': label,
@@ -78,7 +78,7 @@ class Poll(models.Model):
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )
-    
+
     def result_poll(self, label):
         final_msg = {
             'result_poll': label,
@@ -99,10 +99,10 @@ class ChatAndReply(models.Model):
     time = models.DateTimeField(default=timezone.now)
     is_reply = models.BooleanField(default=False)
     description = models.TextField()
-    
+
     def __str__(self):
         return str(self._id)
-    
+
     @property
     def websocket_group(self):
         """
@@ -110,20 +110,20 @@ class ChatAndReply(models.Model):
         messages as they are generated.
         """
         return Group(str(self.room.label))
-    
+
     # is_reply = true / return original hash value
-    def send_message_reply():
+    def send_message_reply(self):
         """
         Called to send a message to the room on behalf of a user.
         """
         # time format ; ex) 2017-01-31 16:21:37
         final_msg = {
-            'chat': self.room.label,
-            'description': self.description,
-            'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
-            'is_reply': self.is_reply,
-            'hash_value': str(self.hash_value)[:10]
-        }
+                        'chat': self.room.label,
+                        'description': self.description,
+                        'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
+                        'is_reply': self.is_reply,
+                        'hash_value': str(self.assist_hash)[:10]
+                    }
 
         # Send out the message to everyone in the room
         self.websocket_group.send(
@@ -137,12 +137,12 @@ class ChatAndReply(models.Model):
         """
         # time format ; ex) 2017-01-31 16:21:37
         final_msg = {
-            'chat': self.room.label,
-            'description': self.description,
-            'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
-            'is_reply': self.is_reply,
-            'hash_value': str(self.hash_value)[:20]
-        }
+                        'chat': self.room.label,
+                        'description': self.description,
+                        'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
+                        'is_reply': self.is_reply,
+                        'hash_value': str(self.hash_value)[:20]
+                    }
 
         # Send out the message to everyone in the room
         self.websocket_group.send(
