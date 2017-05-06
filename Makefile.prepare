@@ -1,15 +1,15 @@
-.PHONY: prepare clean
+.PHONY: prepare clean postgres_db/
 
-db.sqlite3:
+postgres_db/: prepare-postgresql
 	python3 manage.py migrate
 
-pw.txt: db.sqlite3
+pw.txt: postgres_db/
 	python3 manage.py createsuperuserauto
 
 collected_static/:
 	yes yes | python3 manage.py collectstatic
 
-secret.json: db.sqlite3
+secret.json: postgres_db/ resize-postgresql
 	python3 manage.py autodeploy
 
 nginx/local_nginx.conf: secret.json
@@ -17,7 +17,7 @@ nginx/local_nginx.conf: secret.json
 
 prepare \.prepared: \
 		deps-install\
-		db.sqlite3\
+		postgres_db/\
 		pw.txt\
 		collected_static/\
 		secret.json\
@@ -26,11 +26,11 @@ prepare \.prepared: \
 
 	touch .prepared
 
-clean:
+clean: delete-postgresql
 	-rm \
 			secret.json\
-			db.sqlite3\
 			pw.txt\
 			nginx/local_nginx.conf\
-			.prepared\
-	-rm -r collected_static
+			.prepared
+	-rm -r collected_static/\
+		postgres_db/

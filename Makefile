@@ -3,7 +3,6 @@ OS := $(shell uname)
 default: start
 .PHONY: start stop uninstall
 
-
 include Makefile.deps
 include Makefile.prepare
 include Makefile.docker
@@ -20,4 +19,4 @@ stop: deps-stop
 	-killall -9 python  # FIXME: daphne at MAC OS
 
 
-uninstall: stop clean deps-uninstall
+uninstall: clean stop deps-uninstall
