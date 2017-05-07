@@ -118,12 +118,12 @@ class ChatAndReply(models.Model):
         """
         # time format ; ex) 2017-01-31 16:21:37
         final_msg = {
-                        'chat': self.room.label,
-                        'description': self.description,
-                        'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
-                        'is_reply': self.is_reply,
-                        'hash_value': str(self.assist_hash)[:10]
-                    }
+            'chat': self.room.label,
+            'description': self.description,
+            'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
+            'is_reply': self.is_reply,
+            'hash_value': str(self.assist_hash)[:10]
+        }
 
         # Send out the message to everyone in the room
         self.websocket_group.send(
@@ -137,12 +137,12 @@ class ChatAndReply(models.Model):
         """
         # time format ; ex) 2017-01-31 16:21:37
         final_msg = {
-                        'chat': self.room.label,
-                        'description': self.description,
-                        'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
-                        'is_reply': self.is_reply,
-                        'hash_value': str(self.hash_value)[:20]
-                    }
+            'chat': self.room.label,
+            'description': self.description,
+            'time': str(self.time.strftime("%Y-%m-%d %H:%M:%S")),
+            'is_reply': self.is_reply,
+            'hash_value': str(self.hash_value)[:20]
+        }
 
         # Send out the message to everyone in the room
         self.websocket_group.send(
