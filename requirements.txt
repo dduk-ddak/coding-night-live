@@ -1,5 +1,5 @@
 defusedxml==0.4.1
-Django==1.10.4
+Django==1.11
 django-allauth==0.30.0
 oauthlib==2.0.1
 PyJWT==1.4.2
@@ -16,3 +16,4 @@ pyhaikunator
 django-redis
 raven
 Twisted
+psycopg2

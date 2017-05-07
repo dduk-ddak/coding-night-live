@@ -16,10 +16,10 @@ def new_chat(message):
 
     if message["is_reply"]:
         chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"], assist_hash=message["hash"])
-        chat.send_message_reply(message["description"], message["hash"], room.label)
+        chat.send_message_reply()
     else:
         chat = ChatAndReply.objects.create(room=room, description=message["description"])
-        chat.send_message(message["description"], room.label)
+        chat.send_message()
 
 @channel_session_user
 @catch_client_error
@@ -28,7 +28,7 @@ def new_notice(message):
         room = get_room_or_error(message["room"])
         notice = Notice.objects.create(room=room, description=message["description"])
 
-        notice.send_message(message["description"], room.label)
+        notice.send_message()
     else:
         pass
 

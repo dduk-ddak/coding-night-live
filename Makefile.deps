@@ -1,4 +1,4 @@
-.PHONY: sudo deps-install deps-uninstall deps-start deps-stop prepare-nginx
+.PHONY: sudo deps-install deps-uninstall deps-start deps-stop prepare-nginx wait-postgresql prepare-postgresql resize resize-postgresql delete delete-postgresql
 
 
 sudo:
@@ -9,9 +9,11 @@ deps-install: sudo
 ifeq ($(OS),Linux)
 	sudo apt-get install redis-server
 	sudo apt-get install nginx
+	sudo apt-get install python3-dev libpq-dev postgresql postgresql-contrib
 else ifeq ($(OS),Darwin)
 	brew list redis > /dev/null || brew install redis --build-from-source  # FIXME: Homebrew/homebrew-core#11134
 	brew list nginx > /dev/null || brew install nginx
+	brew list postgresql > /dev/null || brew install postgresql
 else
 	echo 'ACITON REQUIRED) Need to install redis and nginx before this.'
 endif
@@ -19,17 +21,21 @@ endif
 
 deps-uninstall: sudo
 ifeq ($(OS),Linux)
-    # TODO
-	echo 'ACITON REQUIRED) Need to uninstall redis and nginx after this.'
+	# TODO
+	echo 'ACITON REQUIRED) Need to uninstall redis, nginx and postgresql after this.'
 else ifeq ($(OS),Darwin)
 	-brew list redis > /dev/null && brew uninstall redis
 	-brew list nginx > /dev/null && brew uninstall nginx
+	-brew list postgresql > /dev/null && brew uninstall postgresql
 else
-	echo 'ACITON REQUIRED) Need to uninstall redis and nginx after this.'
+	echo 'ACITON REQUIRED) Need to uninstall redis, nginx and postgresql after this.'
 endif
 
 
-deps-start: sudo
+deps-start:
+	# XXX: resudo for first-time user.
+	sudo -k
+	sudo -v
 ifeq ($(OS),Linux)
 	sudo service redis-server start
 else ifeq ($(OS),Darwin)
@@ -41,6 +47,16 @@ ifeq ($(OS),Linux)
 	sudo service nginx start
 else
 	sudo nginx &
+endif
+
+
+deps-start-postgresql: deps-install  #[postgres]
+ifeq ($(OS),Linux)
+	sudo service postgresql start
+else ifeq ($(OS),Darwin)
+	brew services run postgresql
+else
+	# TODO
 endif
 
 
@@ -63,6 +79,13 @@ else ifeq ($(OS),Darwin)
 else
 	-sudo killall -9 redis-server
 endif
+ifeq ($(OS),Linux)
+	-sudo service postgresql stop
+else ifeq ($(OS),Darwin)
+	-brew services stop postgresql
+else
+	# TODO
+endif
 
 
 prepare-nginx: sudo nginx/local_nginx.conf
@@ -74,4 +97,53 @@ else ifeq ($(OS),Darwin)
 	ln -s `pwd`/nginx/local_nginx.conf /usr/local/etc/nginx/servers/
 else
 	# FIXME ln -s `pwd`/nginx/local_nginx.conf /usr/local/etc/nginx/servers/
+endif
+
+
+wait-postgresql:
+	while ! pg_isready -h localhost; do sleep 1; done
+
+
+export POSTGRES_USER=cnluser
+export POSTGRES_PASSWORD=temporary
+export POSTGRES_DB=codingnightlive
+
+
+prepare-postgresql: sudo deps-start-postgresql wait-postgresql
+ifeq ($(OS),Linux)
+	sudo su postgres -c 'createdb $(POSTGRES_DB)'
+	sudo -u postgres psql -c "CREATE USER $(POSTGRES_USER) WITH PASSWORD '$(POSTGRES_PASSWORD)';"
+	sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $(POSTGRES_DB) TO $(POSTGRES_USER);"
+	sudo -u postgres -E ./postgres/init_sql.sh
+else ifeq ($(OS),Darwin)
+	psql -c "CREATE DATABASE $(POSTGRES_DB)" -d postgres
+	psql -c "CREATE USER $(POSTGRES_USER) WITH PASSWORD '$(POSTGRES_PASSWORD)';" -d postgres
+	psql -c "GRANT ALL PRIVILEGES ON DATABASE $(POSTGRES_DB) TO $(POSTGRES_USER);" -d postgres
+	./postgres/init_sql.sh
+else
+	# TODO
+endif
+	touch .prepared-postgresql
+
+
+resize resize-postgresql: sudo
+ifeq ($(OS),Linux)
+	sudo -u postgres psql $(POSTGRES_DB) -c "ALTER TABLE socialaccount_socialapp ALTER COLUMN name TYPE character varying(65);"
+else ifeq ($(OS),Darwin)
+	psql $(POSTGRES_DB) -c "ALTER TABLE socialaccount_socialapp ALTER COLUMN name TYPE character varying(65);"
+else
+	# TODO
+endif
+
+
+delete delete-postgresql: sudo
+	# FIXME: make stop -> make uninstall : won't worked.
+ifeq ($(OS),Linux)
+	-sudo su postgres -c 'dropdb $(POSTGRES_DB)'
+	-sudo su postgres -c 'dropuser $(POSTGRES_USER)'
+else ifeq ($(OS),Darwin)
+	-psql -c 'drop database $(POSTGRES_DB)' -d postgres
+	-psql -c 'drop user $(POSTGRES_USER)' -d postgres
+else
+	# TODO
 endif

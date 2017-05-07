@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.core.management.base import BaseCommand
 from django.contrib.sites.models import Site
@@ -41,12 +42,18 @@ class Command(BaseCommand):
     requires_migrations_checks = True
 
     def open_secret(self):
-        print('* Please write your OAuth Client ID')
-        client_id = input('>')
-        print('** Please write your OAuth Secret')
-        secret = input('>')
-        print('*** Please write your Server Domain (ex. example.com)')
-        domain = input('>')
+        client_id = os.environ.get('OAUTH_CLIENT_ID', None)
+        if not client_id:
+            print('* Please write your OAuth Client ID')
+            client_id = input('>')
+        secret = os.environ.get('OAUTH_SECRET', None)
+        if not secret:
+            print('** Please write your OAuth Secret')
+            secret = input('>')
+        domain = os.environ.get('DOMAIN', None)
+        if not domain:
+            print('*** Please write your Server Domain (ex. example.com)')
+            domain = input('>')
 
         chars = 'qwertyuiopasdfghjklzxcvbnm0987654321!@#$%^&*(-_=+)'
         SECRET_KEY = get_random_string(50, chars)

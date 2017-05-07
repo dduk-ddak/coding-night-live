@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -13,9 +11,6 @@ class MainView(TemplateView):
         if request.user.is_authenticated():
             return HttpResponseRedirect('/services/')
         return super(MainView, self).dispatch(request, *args, **kwargs)
-
-def PageNotFound(request):
-    return render(request, '404.html', status=404)
 
 @login_required
 def withdraw(request):

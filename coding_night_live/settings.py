@@ -46,6 +46,14 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+if os.environ.get('IS_HTTPS_IN_FRONT_OF_NGINX', 'False') == 'True':
+    # Issue #52, AllAuth with HTTPS (bypassing "Error: redirect_uri_mismatch" from Google and other OAuth2 providers.)
+    #
+    # When OAuth2 Authorization requested, AllAuth uses `django.contrib.sites.models.Site` for generating redirect_url.
+    # Because `django.contrib.sites.models.Site` doesn't contain the proto, the `http` proto used by default.
+    #
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -113,10 +121,22 @@ SOCIALACCOUNT_PROVIDERS = \
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'codingnightlive',
+        'USER': 'cnluser',
+        'PASSWORD': 'temporary',    # Need to change
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': '',
     }
 }
 
@@ -183,9 +203,9 @@ USE_L10N = True
 USE_TZ = False
 
 # django social auth setting ; login redirect and logout url
-LOGIN_REDIRECT_URL = "/services/"
-LOGIN_URL = "/"
-LOGOUT_URL = "/"
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/services/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

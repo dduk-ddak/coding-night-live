@@ -1,3 +1,12 @@
+# for Faster docker build
+.git/
+# for raven.fetch_git_sha() @ ./coding_night_live/settings.py
+!.git/HEAD
+!.git/refs/
+# for persistent DB
+postgres_db/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -103,4 +112,5 @@ secret.json
 pw.txt
 nginx/local_nginx.conf
 .prepared
+.prepared-postgresql
 
