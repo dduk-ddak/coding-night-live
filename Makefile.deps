@@ -9,7 +9,7 @@ deps-install: sudo
 ifeq ($(OS),Linux)
 	sudo apt-get install redis-server
 	sudo apt-get install nginx
-	sudo apt-get install python3-dev libpq-dev postgresql postgresql-contrib netcat
+	sudo apt-get install python3-dev libpq-dev postgresql postgresql-contrib
 else ifeq ($(OS),Darwin)
 	brew list redis > /dev/null || brew install redis --build-from-source  # FIXME: Homebrew/homebrew-core#11134
 	brew list nginx > /dev/null || brew install nginx
@@ -101,7 +101,7 @@ endif
 
 
 wait-postgresql:
-	while ! nc -z localhost 5432 </dev/null; do sleep 1; done
+	while ! pg_isready -h localhost -p 5432 -d postgres; do sleep 1; done
 	sleep 1  # FIXME OMG!
 
 
