@@ -101,8 +101,7 @@ endif
 
 
 wait-postgresql:
-	while ! pg_isready -h localhost -p 5432 -d postgres; do sleep 1; done
-	sleep 1  # FIXME OMG!
+	while ! pg_isready -h localhost; do sleep 1; done
 
 
 export POSTGRES_USER=cnluser
@@ -111,7 +110,6 @@ export POSTGRES_DB=codingnightlive
 
 
 prepare-postgresql: sudo deps-start-postgresql wait-postgresql
-	# TODO FAILSAFE (RECALLABLE)
 ifeq ($(OS),Linux)
 	sudo su postgres -c 'createdb $(POSTGRES_DB)'
 	sudo -u postgres psql -c "CREATE USER $(POSTGRES_USER) WITH PASSWORD '$(POSTGRES_PASSWORD)';"
@@ -125,6 +123,7 @@ else ifeq ($(OS),Darwin)
 else
 	# TODO
 endif
+	touch .prepared-postgresql
 
 
 resize resize-postgresql: sudo
@@ -138,6 +137,7 @@ endif
 
 
 delete delete-postgresql: sudo
+	# FIXME: make stop -> make uninstall : won't worked.
 ifeq ($(OS),Linux)
 	-sudo su postgres -c 'dropdb $(POSTGRES_DB)'
 	-sudo su postgres -c 'dropuser $(POSTGRES_USER)'

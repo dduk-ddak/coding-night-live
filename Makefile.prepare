@@ -1,23 +1,25 @@
-.PHONY: prepare clean postgres_db/
+.PHONY: migrate prepare clean
 
-postgres_db/: prepare-postgresql
+migrate:
+	-test ! -f .prepared-postgresql && make prepare-postgresql
+	make wait-postgresql
 	python3 manage.py migrate
 
-pw.txt: postgres_db/
+pw.txt: migrate
 	python3 manage.py createsuperuserauto
 
 collected_static/:
 	yes yes | python3 manage.py collectstatic
 
-secret.json: postgres_db/ resize-postgresql
+secret.json: migrate resize-postgresql
 	python3 manage.py autodeploy
 
 nginx/local_nginx.conf: secret.json
 	python3 manage.py nginxconfgenerator > nginx/local_nginx.conf
 
-prepare \.prepared: \
+prepare: \
 		deps-install\
-		postgres_db/\
+		migrate\
 		pw.txt\
 		collected_static/\
 		secret.json\
@@ -31,6 +33,7 @@ clean: delete-postgresql
 			secret.json\
 			pw.txt\
 			nginx/local_nginx.conf\
+			.prepared-postgresql\
 			.prepared
 	-rm -r collected_static/\
 		postgres_db/

@@ -112,4 +112,5 @@ secret.json
 pw.txt
 nginx/local_nginx.conf
 .prepared
+.prepared-postgresql
 

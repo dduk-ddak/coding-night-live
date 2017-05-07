@@ -8,7 +8,9 @@ include Makefile.prepare
 include Makefile.docker
 
 
-start: \.prepared deps-start
+start:
+	-test ! -f .prepared && make prepare
+	make deps-start
 	python3 manage.py runworker &
 	daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &
 
