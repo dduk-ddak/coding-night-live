@@ -38,7 +38,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 #### Installation
 
-For further instructions on installation, [please visit our wiki page.](https://github.com/dduk-ddak/coding-night-live-doc)
+For further instructions on installation, [please visit our doc page.](https://github.com/dduk-ddak/coding-night-live-doc)
 
 ## Third Party Libraries
 * [`python`](https://www.python.org/) 3.5 +
