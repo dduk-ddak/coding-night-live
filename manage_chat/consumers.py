@@ -15,10 +15,18 @@ def new_chat(message):
     room = get_room_or_error(message["room"])
 
     if message["is_reply"]:
-        chat = ChatAndReply.objects.create(room=room, is_reply=True, description=message["description"], assist_hash=message["hash"])
+        chat = ChatAndReply.objects.create(
+            room=room,
+            is_reply=True,
+            description=message["description"],
+            assist_hash=message["hash"]
+        )
         chat.send_message_reply()
     else:
-        chat = ChatAndReply.objects.create(room=room, description=message["description"])
+        chat = ChatAndReply.objects.create(
+            room=room,
+            description=message["description"]
+        )
         chat.send_message()
 
 @channel_session_user
@@ -26,7 +34,10 @@ def new_chat(message):
 def new_notice(message):
     if check_admin(message):
         room = get_room_or_error(message["room"])
-        notice = Notice.objects.create(room=room, description=message["description"])
+        notice = Notice.objects.create(
+            room=room,
+            description=message["description"]
+        )
 
         notice.send_message()
     else:
@@ -39,7 +50,12 @@ def new_poll(message):
         room = get_room_or_error(message["room"])
         answers = json.loads(message["answer"])
         answer_count = json.dumps([0] * len(answers))
-        poll = Poll.objects.create(room=room, question=message["question"], answer=message["answer"], answer_count=answer_count)
+        poll = Poll.objects.create(
+            room=room,
+            question=message["question"],
+            answer=message["answer"],
+            answer_count=answer_count
+        )
         if not message["question"]:
             poll.question = 'poll_' + poll.hash_value
             poll.save()

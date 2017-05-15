@@ -1,5 +1,5 @@
 from channels import route
-from .consumers import room_join, room_leave, new_slide, del_slide, change_slide_order, rename_slide, get_slide, change_slide, rename_room, get_slide_diff, curr_slide
+from .consumers import *
 
 # Websocket command : join => call room_join
 custom_routing = [

@@ -24,7 +24,9 @@ class AutoDeployDatabaseNotPrepared(AutoDeployException):
             try:
                 return suspiciousFunc(*args, **kwargs)
             except OperationalError:
-                raise AutoDeployDatabaseNotPrepared('ACTION REQUIRED) RUN `python manage.py migrate` FIRST!')
+                raise AutoDeployDatabaseNotPrepared(
+                    'ACTION REQUIRED) RUN `python manage.py migrate` FIRST!'
+                )
         return _runtime_checker
 
 
@@ -34,7 +36,9 @@ def loadSecret():
         with open('secret.json', 'r') as f:  # FIXME: PATH
             secret.update(json.loads(f.read()))
     except FileNotFoundError:
-        raise AutoDeploySecretNotFound('ACITON REQUIRED) RUN `python manage.py autodeploy` FIRST!')
+        raise AutoDeploySecretNotFound(
+            'ACITON REQUIRED) RUN `python manage.py autodeploy` FIRST!'
+        )
     return secret
 
 
@@ -69,7 +73,11 @@ class Command(BaseCommand):
             json.dump(result, f)
 
         secret = loadSecret()
-        self.social_app_setting(secret['DOMAIN'], secret['CLIENT_ID'], secret['SECRET'])
+        self.social_app_setting(
+            secret['DOMAIN'],
+            secret['CLIENT_ID'],
+            secret['SECRET']
+        )
 
     @AutoDeployDatabaseNotPrepared.checker
     def social_app_setting(self, domain, client_id, secret):

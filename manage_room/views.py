@@ -11,7 +11,6 @@ from haikunator import Haikunator
 from .models import Room, Slide
 from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 
-# Create your views here.
 # create a room and redirect to the room
 @login_required
 def RoomCreateView(request):
@@ -24,8 +23,14 @@ def RoomCreateView(request):
             if Room.objects.filter(label=share_link).exists():
                 continue
             url += share_link
-            room = Room.objects.create(title=share_link, admin_user=request.user, link=url, label=share_link)
-    header = Slide.objects.create(title="header@slide", room=room)  # Create header slide
+            room = Room.objects.create(
+                title=share_link,
+                admin_user=request.user,
+                link=url,
+                label=share_link
+            )
+    # Create header slide
+    header = Slide.objects.create(title='header@slide', room=room)
     first_slide = Slide.objects.create(room=room)
     header.next_id = first_slide.now_id
     header.save()
@@ -52,13 +57,19 @@ def MarkdownToPdfView(request, label):
         room = Room.objects.get(label=label)
 
         slides = []
-        header = Slide.objects.get(title="header@slide", room=room)
+        header = Slide.objects.get(title='header@slide', room=room)
         while header.next_id != 0:
             header = Slide.objects.get(now_id=header.next_id, room=room)
             slides.append(header)
         notices = get_notice_list(label).reverse()
         
-        data = {'slides': slides, 'notices': notices, 'room_title': room.title, 'author': room.admin_user, 'time': room.time}
+        data = {
+            'slides': slides,
+            'notices': notices,
+            'room_title': room.title,
+            'author': room.admin_user,
+            'time': room.time
+        }
         return render(request, 'print.html', data)
     except:
         return HttpResponse('<h1>' + label + ' room does not exist!</h1>')
@@ -107,10 +118,19 @@ class RedirectRoomView(TemplateView):
         is_admin = False
         if not self.request.user.is_anonymous():
             try:
-                admin = Room.objects.get(label=label, admin_user=self.request.user)  # check admin user
+                # check admin user
+                admin = Room.objects.get(label=label, admin_user=self.request.user)
                 is_admin = True
             except:
                 # Matching query does not exist - request.user is not a admin_user
                 pass
         pdf_link = room.link + '/pdf/'
-        return {'admin': is_admin, 'title': room.title, "head_notice": head_notice, "notices": notices, "all_chats": all_chats, "slides": title_list, "pdf": pdf_link}
+        return {
+            'admin': is_admin,
+            'title': room.title,
+            'head_notice': head_notice,
+            'notices': notices,
+            'all_chats': all_chats,
+            'slides': title_list,
+            'pdf': pdf_link
+        }

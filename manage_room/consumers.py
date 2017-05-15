@@ -46,7 +46,11 @@ def room_leave(message):
     room = get_room_or_error(message["room"])
 
     room.websocket_group.discard(message.reply_channel)
-    # message.channel_session['room'] = list(set(message.channel_session['room']).difference([room.label]))
+    '''
+    message.channel_session['room'] = list(
+        set(message.channel_session['room']).difference([room.label]))
+    '''
+
     # Send a message back that will prompt them to close the room
     message.reply_channel.send({
         "text": json.dumps({
@@ -94,8 +98,14 @@ def del_slide(message):
             raise ClientError("CANNOT_DELETE_LAST")
         else:
             with transaction.atomic():
-                delete_slide = Slide.objects.get(room=room, now_id=message["id"])
-                slide = Slide.objects.get(room=room, next_id=message["id"])
+                delete_slide = Slide.objects.get(
+                    room=room,
+                    now_id=message["id"]
+                )
+                slide = Slide.objects.get(
+                    room=room,
+                    next_id=message["id"]
+                )
                 slide.next_id = delete_slide.next_id
                 delete_slide.delete()
                 slide.save()
@@ -128,11 +138,25 @@ def get_slide(message):
     hash_blob = javaHash(slide.md_blob)
 
     if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
-        cache.set("%s/%s" % (message["room"], message["id"]), slide.md_blob, timeout=60)
-        cache.set("%s/%s/%s" % (message["room"], message["id"], hash_blob), slide.md_blob, timeout=60)
+        cache.set(
+            "%s/%s" % (message["room"], message["id"]),
+            slide.md_blob,
+            timeout=60
+        )
+        cache.set(
+            "%s/%s/%s" % (message["room"], message["id"], hash_blob),
+            slide.md_blob,
+            timeout=60
+        )
     else:
-        cache.expire("%s/%s" % (message["room"], message["id"]), timeout=60)
-        cache.expire("%s/%s/%s" % (message["room"], message["id"], hash_blob), timeout=60)
+        cache.expire(
+            "%s/%s" % (message["room"], message["id"]),
+            timeout=60
+        )
+        cache.expire(
+            "%s/%s/%s" % (message["room"], message["id"], hash_blob),
+            timeout=60
+        )
 
     message.reply_channel.send({
         "text": json.dumps({

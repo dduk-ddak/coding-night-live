@@ -28,7 +28,7 @@ class Notice(models.Model):
     @property
     def websocket_group(self):
         """
-        Returns the Channels Group that sockets should subscribe to to get sent
+        Returns the Channels Group that sockets should subscribe to get sent
         messages as they are generated.
         """
         return Group(str(self.room.label))
@@ -95,7 +95,8 @@ class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     hash_value = models.CharField(max_length=7, default=_createHash, unique=True)
-    assist_hash = models.CharField(max_length=7, default=0)    # saving existing hash (is_reply=True)
+    # assist_hash : Saving existing hash (is_reply=True)
+    assist_hash = models.CharField(max_length=7, default=0)
     time = models.DateTimeField(default=timezone.now)
     is_reply = models.BooleanField(default=False)
     description = models.TextField()
@@ -106,7 +107,7 @@ class ChatAndReply(models.Model):
     @property
     def websocket_group(self):
         """
-        Returns the Channels Group that sockets should subscribe to to get sent
+        Returns the Channels Group that sockets should subscribe to get sent
         messages as they are generated.
         """
         return Group(str(self.room.label))
