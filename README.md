@@ -38,7 +38,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 #### Installation
 
-For further instructions on installation, [please visit our wiki page.](https://github.com/dduk-ddak/coding-night-live/wiki/2.-Installation-and-Settings)
+For further instructions on installation, [please visit our wiki page.](https://github.com/dduk-ddak/coding-night-live-doc)
 
 ## Third Party Libraries
 * [`python`](https://www.python.org/) 3.5 +
@@ -65,9 +65,9 @@ For further instructions on installation, [please visit our wiki page.](https://
 * [`raven`](https://github.com/getsentry/raven-python/)
 * [`twisted`](https://github.com/twisted/twisted/)
 
-## Wiki
+## Documentation
 
-We have a [wiki](https://github.com/dduk-ddak/coding-night-live/wiki) page for project introduction, installation guide, and some documentation.
+We have a [coding-night-live-doc](https://github.com/dduk-ddak/coding-night-live-doc) page for project introduction, installation guide, and some documentation.
 We welcome any documentation contribution.
 
 ## Bug Report & Contribution
