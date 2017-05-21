@@ -1,11 +1,9 @@
 # How to Use : fab deploy:host=[USER_NAME]@[HOST_NAME]?
 # fab new_server
 import os
-import json
-import random
 
-from fabric.contrib.files import append, exist, sed, put
-from fabric.api import run, env, local, sudo
+from fabric.contrib.files import sed, exists
+from fabric.api import run, env, sudo
 
 REPO_URL = 'https://github.com/dduk-ddak/coding-night-live.git'
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +19,7 @@ apt_requirements = [
     'postgresql-contrib',
     'nginx',
 ]
+
 
 def _get_latest_apt():
     sudo('sudo apt-get update && sudo apt-get -y upgrade')
@@ -40,6 +39,8 @@ def _make_virtualenv():
         sudo('sudo pip3 install virtualenv virtualenvwrapper')
         run('echo {} >> ~/.bashrc'.format(script))
 '''
+
+
 def _create_directory(site_folder):
     run('mkdir -p {0}'.format(site_folder))
 
@@ -49,8 +50,10 @@ def _create_directory_structure(site_folder):
     for subfolder in ('database', 'static', 'virtualenv')
         run('mkdir -p {0}/{1}'.format(site_folder, subfolder))
 '''
+
+
 def _get_latest_source(site_folder):
-    if exists(site_foler + '/.git');
+    if exists(site_folder + '/.git'):
         run('cd {0} && git pull origin master'.format(site_folder))
     else:
         run('git clone {0} {1}'.format(REPO_URL, site_folder))
