@@ -31,6 +31,7 @@ try:
 except FileNotFoundError:
     secret = {'SECRET_KEY': True}
 
+
 def get_secret(setting, secret=secret):
     try:
         return secret[setting]

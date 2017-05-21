@@ -9,6 +9,7 @@ from manage_room.utils import get_room_or_error, catch_client_error
 
 from .models import ChatAndReply, Notice, Poll
 
+
 @channel_session_user
 @catch_client_error
 def new_chat(message):
@@ -29,6 +30,7 @@ def new_chat(message):
         )
         chat.send_message()
 
+
 @channel_session_user
 @catch_client_error
 def new_notice(message):
@@ -42,6 +44,7 @@ def new_notice(message):
         notice.send_message()
     else:
         pass
+
 
 @channel_session_user
 @catch_client_error
@@ -64,6 +67,7 @@ def new_poll(message):
     else:
         pass
 
+
 @channel_session_user
 @catch_client_error
 def end_poll(message):
@@ -76,6 +80,7 @@ def end_poll(message):
         poll.save()
 
     poll.result_poll(message["room"])
+
 
 @channel_session_user
 @catch_client_error

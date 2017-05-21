@@ -11,15 +11,16 @@ from haikunator import Haikunator
 from .models import Room, Slide
 from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 
-# create a room and redirect to the room
+
 @login_required
 def RoomCreateView(request):
     url = '/'
     room = None
-    
+
     while not room:
         with transaction.atomic():
-            share_link = Haikunator.haikunate()  # Ex) 'icy-dream-4198'
+            # EX) 'icy-dream-4198'
+            share_link = Haikunator.haikunate()
             if Room.objects.filter(label=share_link).exists():
                 continue
             url += share_link
@@ -37,20 +38,23 @@ def RoomCreateView(request):
 
     return HttpResponseRedirect(url)
 
-# delete a room
+
+# Delete a room
 @login_required
 def RoomDeleteView(request, pk):
     Room.objects.filter(admin_user=request.user, label=pk).delete()
     url = '/services'
     return HttpResponseRedirect(url)
 
-# check room list
+
+# Check room list
 @login_required
 def RoomListView(request):
     rooms = Room.objects.filter(admin_user=request.user).order_by('time')
     return render(request, 'list.html', {'rooms': rooms})
 
-# convert markdown to pdf
+
+# Convert markdown to pdf
 def MarkdownToPdfView(request, label):
     label = label.strip('/')
     try:
@@ -62,7 +66,7 @@ def MarkdownToPdfView(request, label):
             header = Slide.objects.get(now_id=header.next_id, room=room)
             slides.append(header)
         notices = get_notice_list(label).reverse()
-        
+
         data = {
             'slides': slides,
             'notices': notices,
@@ -77,10 +81,10 @@ def MarkdownToPdfView(request, label):
 
 class RedirectRoomView(TemplateView):
     template_name = 'room.html'
-    
+
     def get_context_data(self, **kwargs):
         label = self.request.path
-        label = label.strip('/')    # get label
+        label = label.strip('/')    # Get label
 
         room = Room.objects.get(label=label)
         notices = get_notice_list(label).reverse()
@@ -118,7 +122,7 @@ class RedirectRoomView(TemplateView):
         is_admin = False
         if not self.request.user.is_anonymous():
             try:
-                # check admin user
+                # Check admin user
                 admin = Room.objects.get(label=label, admin_user=self.request.user)
                 is_admin = True
             except:

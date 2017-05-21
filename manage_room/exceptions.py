@@ -1,5 +1,6 @@
 import json
 
+
 class ClientError(Exception):
     """
     Custom exception class that is caught by the websocket receive()

@@ -1,9 +1,10 @@
 from django.contrib import admin
 from .models import Notice, Poll, ChatAndReply
 
-# Register your models here.
+
 class NoticeAdmin(admin.ModelAdmin):
     list_display = ('room', '_id', 'time', 'description')
+
 
 class PollAdmin(admin.ModelAdmin):
     list_display = (
@@ -15,6 +16,7 @@ class PollAdmin(admin.ModelAdmin):
         'answer_count',
         'hash_value'
     )
+
 
 class ChatAndReplyAdmin(admin.ModelAdmin):
     list_display = (

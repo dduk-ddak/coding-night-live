@@ -14,6 +14,7 @@ from .exceptions import ClientError
 from .diff_match_patch.java_hashcode_conv import javaHash
 from .diff_match_patch import diff_match_patch
 
+
 # Chat channel handling
 @channel_session_user
 @catch_client_error
@@ -39,6 +40,7 @@ def room_join(message):
         }),
     })
 
+
 @channel_session_user
 @catch_client_error
 def room_leave(message):
@@ -48,7 +50,8 @@ def room_leave(message):
     room.websocket_group.discard(message.reply_channel)
     '''
     message.channel_session['room'] = list(
-        set(message.channel_session['room']).difference([room.label]))
+        set(message.channel_session['room']).difference([room.label])
+    )
     '''
 
     # Send a message back that will prompt them to close the room
@@ -72,6 +75,7 @@ def room_leave(message):
         }),
     })
 
+
 @channel_session_user
 @catch_client_error
 def new_slide(message):
@@ -86,6 +90,7 @@ def new_slide(message):
         slide.send_idx(message["command"])
     else:
         pass
+
 
 @channel_session_user
 @catch_client_error
@@ -109,7 +114,7 @@ def del_slide(message):
                 slide.next_id = delete_slide.next_id
                 delete_slide.delete()
                 slide.save()
-            
+
             Group(message["room"]).send({
                 "text": json.dumps({
                     "del_slide": message["id"],
@@ -117,6 +122,7 @@ def del_slide(message):
             })
     else:
         pass
+
 
 @channel_session_user
 @catch_client_error
@@ -129,6 +135,7 @@ def curr_slide(message):
         })
     else:
         pass
+
 
 @channel_session_user
 @catch_client_error
@@ -166,6 +173,7 @@ def get_slide(message):
             "idx": slide.now_id,
         }),
     })
+
 
 @channel_session_user
 @catch_client_error
@@ -210,11 +218,12 @@ def rename_slide(message):
     else:
         pass
 
+
 @channel_session_user
 @catch_client_error
 def change_slide(message):
     if check_admin(message):
-        # cache is expired, moved to redis->sqlite
+        # Cache is expired, moved to redis->DB
         if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
             with transaction.atomic():
                 room = get_room_or_error(message["room"])
@@ -238,7 +247,7 @@ def change_slide(message):
         pre_hash = javaHash(pre_text)
         curr_hash = javaHash(curr_text)
 
-        # some data got dirty
+        # Some data got dirty
         if curr_hash != message["curr_hash"]:
             Group(message["room"]).send({
                 "text": json.dumps({
@@ -257,13 +266,13 @@ def change_slide(message):
                     "curr_hash": curr_hash,
                 }),
             })
-        
-        # update redis
+
+        # Update redis
         cache.set("%s/%s" % (message["room"], message["id"]), curr_text)
         cache.set("%s/%s/%s" % (message["room"], message["id"], curr_hash), curr_text)
 
         with transaction.atomic():
-            # update sqlite
+            # Update DB
             room = get_room_or_error(message["room"])
             slide = Slide.objects.get(room=room, now_id=message["id"])
             slide.md_blob = curr_text
@@ -271,10 +280,11 @@ def change_slide(message):
     else:
         pass
 
+
 @channel_session_user
 @catch_client_error
 def get_slide_diff(message):
-    # cache is expired, moved to redis->sqlite
+    # Cache is expired, moved to redis->DB
     if cache.ttl("%s/%s" % (message["room"], message["id"])) == 0:
         with transaction.atomic():
             room = get_room_or_error(message["room"])
@@ -311,6 +321,7 @@ def get_slide_diff(message):
             }),
         })
 
+
 @channel_session_user
 @catch_client_error
 def rename_room(message):
@@ -326,6 +337,7 @@ def rename_room(message):
         })
     else:
         pass
+
 
 @channel_session_user
 @catch_client_error
