@@ -214,3 +214,5 @@ LOGOUT_REDIRECT_URL = '/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]    # static files DIR
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
