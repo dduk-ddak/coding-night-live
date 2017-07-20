@@ -345,7 +345,7 @@ def check_admin(message):
     is_admin = False
     if not message.user.is_anonymous():
         try:
-            admin = Room.objects.get(admin_user=message.user, label=message["room"])
+            Room.objects.get(admin_user=message.user, label=message["room"])
             is_admin = True
         except:
             pass

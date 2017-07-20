@@ -123,7 +123,7 @@ class RedirectRoomView(TemplateView):
         if not self.request.user.is_anonymous():
             try:
                 # Check admin user
-                admin = Room.objects.get(label=label, admin_user=self.request.user)
+                Room.objects.get(label=label, admin_user=self.request.user)
                 is_admin = True
             except:
                 # Matching query does not exist - request.user is not a admin_user
