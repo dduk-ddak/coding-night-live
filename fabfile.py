@@ -1,29 +1,70 @@
-# How to Use : fab deploy:host=[USER_NAME]@[HOST_NAME]?
-# fab new_server
+from fabric.contrib.files import append, exists, sed, put
+from fabric.api import env, local, sudo, run
+
 import os
+import json
+import random
 
-from fabric.contrib.files import sed, exists
-from fabric.api import run, env, sudo
-
-REPO_URL = 'https://github.com/dduk-ddak/coding-night-live.git'
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+
+with open(os.path.join(PROJECT_DIR, 'deploy.json')) as f:
+    envs = json.loads(f.read())
+
+REPO_URL = envs['REPO_URL']
+PROJECT_NAME = envs['PROJECT_NAME']
+REMOTE_HOST_SSH = envs['REMOTE_HOST_SSH']
+REMOTE_HOST = envs['REMOTE_HOST']
+REMOTE_USER = envs['REMOTE_USER']
+REMOTE_PASSWORD = envs['REMOTE_PASSWORD']
+
+STATIC_ROOT_NAME = 'collected_static'
+STATIC_URL_NAME = 'static'
+
+env.user = REMOTE_USER
+username = env.user
+env.hosts = [
+    REMOTE_HOST_SSH,
+]
+
+env.password = REMOTE_PASSWORD
+
+project_folder = '/home/{}/{}'.format(env.user, PROJECT_NAME)
 
 apt_requirements = [
     'git',
     'python3-dev',
     'python3-pip',
-    'redis-server',
-    'libpq-dev',
-    'postgresql',
-    'postgresql-contrib',
+    'build-essential',
+    'python3-setuptools',
     'nginx',
+    'postgresql',
+    'redis-server',
 ]
 
+def new_server():
+    setup()
+    deploy()
+
+def setup():
+    _get_latest_apt()
+    _install_apt_requirements(apt_requirements)
+    _make_virtualenv()
+
+def deploy():
+    _get_latest_source()
+    #_put_envs()
+    #_update_settings()
+    #_update_virtualenv()
+    _update_static_files()
+    _update_database()
+    _make_virtualhost()
+    _grant_nginx()
+    _grant_postgresql()
+    _restart_nginx()
 
 def _get_latest_apt():
-    sudo('sudo apt-get update && sudo apt-get -y upgrade')
-
+    sudo('sudo apt-get install update && sudo apt-get -y upgrade')
 
 def _install_apt_requirements(apt_requirements):
     reqs = ''
@@ -31,80 +72,43 @@ def _install_apt_requirements(apt_requirements):
         reqs += (' ' + req)
     sudo('sudo apt-get -y install {}'.format(reqs))
 
+#def _make_virtualenv():
 
-'''
-def _make_virtualenv():
-    if not exists('~/.virtualenvs'):
-        run('mkdir ~/.virtualenvs')
-        sudo('sudo pip3 install virtualenv virtualenvwrapper')
-        run('echo {} >> ~/.bashrc'.format(script))
-'''
+def _get_latest_source():
+    run('git clone %s %s' % (REPO_URL, project_folder))
 
+#def _put_envs():
 
-def _create_directory(site_folder):
-    run('mkdir -p {0}'.format(site_folder))
+def _update_settings():
+    settings_path = project_folder + '/{}/settings.py'.format(PROJECT_NAME)
+    sed(settings_path, 'DEBUG = TRUE', 'DEBUG = FALSE')
+    sed(settings_path,
+        'ALLOWED_HOSTS = .+$',
+        'ALLOWED_HOSTS = ["%s"]' % (REMOTE_HOST,)
+    )
 
+def _update_static_files():
+    run('cd %s && python3 manage.py collectstatic --noinput' % (project_folder))
 
-'''
-def _create_directory_structure(site_folder):
-    for subfolder in ('database', 'static', 'virtualenv')
-        run('mkdir -p {0}/{1}'.format(site_folder, subfolder))
-'''
+def _update_database():
+    sudo('cd %s && python3 manage.py migrate --noinput' % (project_folder))
 
+# nginx conf file..
+def _make_virtualhost():
+    script = """'
+    '""".format(
+        static_root=STATIC_ROOT_NAME,
+        username=env.user,
+        project_name=PROJECT_NAME,
+        static_url=STATIC_URL_NAME,
+        servername=REMOTE_HOST
+    )
 
-def _get_latest_source(site_folder):
-    if exists(site_folder + '/.git'):
-        run('cd {0} && git pull origin master'.format(site_folder))
-    else:
-        run('git clone {0} {1}'.format(REPO_URL, site_folder))
+def _grant_nginx():
+    pass
 
-    # current_commit = local('git log -n 1 --format=%H', capture=True)
-    # run('cd {0} && git reset --hard {1}'.format(site_folder, current_commit))
+def _grant_postgresql():
+    pass
 
-
-def _update_settings(source_folder, site_name):
-    settings_path = source_folder + '/coding_night_live/settings.py'
-    sed(settings_path, "DEBUG = True", "DEBUG = False")
-    sed(settings_path, 'ALLOWED_HOSTS =.+$', 'ALLOWED_HOSTS = ["{0}"]'.format(site_name))
-
-
-def _update_virtualenv(python_version, python_version_folder, virtualenv_folder, site_folder):
-    if not exists(python_version_folder + '/bin/pip'):
-        run('pyenv install {0}'.format(python_version))
-    if not exists(virtualenv_folder + '/bin/pip'):
-        run('pyenv virtualenv {0} [ENV_NAME]'.format(python_version))
-    run('{0}/bin/pip install -r {1}/requirements.txt'.format(virtualenv_folder, site_folder))
-
-
-def _update_static_files(source_folder, virtualenv_folder):
-    run('cd {0} && {1}/bin/python manage.py collectstatic --noinput'.format(source_folder, virtualenv_folder))
-
-
-def _update_database(source_folder, virtualenv_folder):
-    run('cd {0} && {1}/bin/python manage.py migrate --noinput'.format(source_folder, virtualenv_folder))
-
-
-def new_server():
-    setup()
-    deploy()
-
-
-def setup():
-    _get_latest_apt()
-    _install_apt_requirements(apt_requirements)
-    # _make_virtualenv()
-
-
-def deploy():
-    python_version = '3.5.2'
-    python_version_folder = '/home/{0}/.pyenv/versions/{1}'.format(env.user, python_version)
-    virtualenv_folder = '/home/{0}/.pyenv/versions/[ENV_NAME]'.format(env.user)
-    site_folder = '/home/{0}/sites/{1}'.format(env.user, env.host)
-    source_folder = site_folder + '/[APP_NAME]'
-    _create_directory(site_folder)
-    _get_latest_source(site_folder)
-    # _create_directory_structure(site_folder)
-    _update_settings(source_folder, env.host)
-    _update_virtualenv(python_version, python_version_folder, virtualenv_folder, site_folder)
-    _update_static_files(source_folder, virtualenv_folder)
-    _update_database(source_folder, virtualenv_folder)
+def _restart_nginx():
+    sudo('sudo systemctl restart nginx')
