@@ -36,9 +36,11 @@ apt_requirements = [
     'python3-dev',
     'python3-pip',
     'build-essential',
+    'libpq-dev',
     'python3-setuptools',
     'nginx',
     'postgresql',
+    'postgresql-contrib',
     'redis-server',
 ]
 
@@ -53,9 +55,6 @@ def setup():
 
 def deploy():
     _get_latest_source()
-    #_put_envs()
-    #_update_settings()
-    #_update_virtualenv()
     _update_static_files()
     _update_database()
     _make_virtualhost()
@@ -72,12 +71,8 @@ def _install_apt_requirements(apt_requirements):
         reqs += (' ' + req)
     sudo('sudo apt-get -y install {}'.format(reqs))
 
-#def _make_virtualenv():
-
 def _get_latest_source():
     run('git clone %s %s' % (REPO_URL, project_folder))
-
-#def _put_envs():
 
 def _update_settings():
     settings_path = project_folder + '/{}/settings.py'.format(PROJECT_NAME)
