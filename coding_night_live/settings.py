@@ -56,7 +56,6 @@ if os.environ.get('IS_HTTPS_IN_FRONT_OF_NGINX', 'False') == 'True':
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -93,7 +92,7 @@ ROOT_URLCONF = 'coding_night_live.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],    # templates DIR
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,8 +122,12 @@ SOCIALACCOUNT_PROVIDERS = {
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+<<<<<<< HEAD
 
 '''
+=======
+"""
+>>>>>>> 640affe90f4f84d17efdee8c023f1a7e20446005
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -148,11 +151,18 @@ redis_host = os.environ.get('REDIS_HOST', 'localhost')
 
 # channel layer definitions
 CHANNEL_LAYERS = {
+<<<<<<< HEAD
     'default': {
         # This example app uses the Redis channel layer implementation asgi_redis
         'BACKEND': 'asgi_redis.RedisChannelLayer',
         'CONFIG': {
             'hosts': [(redis_host, 6379)],
+=======
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(redis_host, 6379)],
+>>>>>>> 640affe90f4f84d17efdee8c023f1a7e20446005
         },
         'ROUTING': 'coding_night_live.routing.channel_routing',
     },
@@ -175,20 +185,11 @@ RAVEN_CONFIG = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
 

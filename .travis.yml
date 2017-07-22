@@ -2,10 +2,11 @@ language: python
 
 python:
   - "3.5"
+  - "3.6"
 
 install:
   - "pip install -r requirements.txt"
   - "pip install flake8"
 
 script:
-  - "flake8 --count --ignore=E501,F405,F403,F841 --exclude ./docs,./manage_room/diff_match_patch,./manage_room/migrations,./manage_chat/migrations,./manage.py"
+  - "flake8 --count --ignore=E501 --exclude ./docs,./manage_room/diff_match_patch,./manage_room/migrations,./manage_chat/migrations,./manage.py"

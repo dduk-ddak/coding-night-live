@@ -13,7 +13,7 @@ from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
 
 
 @login_required
-def RoomCreateView(request):
+def room_create_view(request):
     url = '/'
     room = None
 
@@ -41,7 +41,7 @@ def RoomCreateView(request):
 
 # Delete a room
 @login_required
-def RoomDeleteView(request, pk):
+def room_delete_view(request, pk):
     Room.objects.filter(admin_user=request.user, label=pk).delete()
     url = '/services'
     return HttpResponseRedirect(url)
@@ -49,13 +49,13 @@ def RoomDeleteView(request, pk):
 
 # Check room list
 @login_required
-def RoomListView(request):
+def room_list_view(request):
     rooms = Room.objects.filter(admin_user=request.user).order_by('time')
     return render(request, 'list.html', {'rooms': rooms})
 
 
 # Convert markdown to pdf
-def MarkdownToPdfView(request, label):
+def markdown_to_pdf_view(request, label):
     label = label.strip('/')
     try:
         room = Room.objects.get(label=label)
@@ -123,7 +123,7 @@ class RedirectRoomView(TemplateView):
         if not self.request.user.is_anonymous():
             try:
                 # Check admin user
-                admin = Room.objects.get(label=label, admin_user=self.request.user)
+                Room.objects.get(label=label, admin_user=self.request.user)
                 is_admin = True
             except:
                 # Matching query does not exist - request.user is not a admin_user

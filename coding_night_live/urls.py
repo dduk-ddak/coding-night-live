@@ -30,11 +30,11 @@ urlpatterns = [
     url(r'^$', MainView.as_view(), name='main'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include(custom_conf)),
-    url(r'^services/$', manage_room.views.RoomListView, name='services'),
-    url(r'^services/new/', manage_room.views.RoomCreateView, name='new'),
+    url(r'^services/$', manage_room.views.room_list_view, name='services'),
+    url(r'^services/new/', manage_room.views.room_create_view, name='new'),
     url(
         r'^services/delete/(?P<pk>([a-z]{3,}-[a-z]{3,}-[0-9]{1,4}))/$',
-        manage_room.views.RoomDeleteView,
+        manage_room.views.room_delete_view,
         name='delete'
     ),
     url(
@@ -44,7 +44,7 @@ urlpatterns = [
     ),
     url(
         r'^([a-z]{3,}-[a-z]{3,}-[0-9]{1,4})/pdf/$',
-        manage_room.views.MarkdownToPdfView,
+        manage_room.views.markdown_to_pdf_view,
         name='get_pdf'
     ),
     url(r'^auth/', include('django.contrib.auth.urls'), {'next_page': '/'}),
