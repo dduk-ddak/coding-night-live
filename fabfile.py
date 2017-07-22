@@ -1,6 +1,9 @@
 from fabric.contrib.files import append, exists, sed, put
 from fabric.api import env, local, sudo, run
 
+#from django.conf import settings
+#from django.template import Template, Context
+
 import os
 import json
 import random
@@ -17,6 +20,7 @@ REMOTE_HOST_SSH = envs['REMOTE_HOST_SSH']
 REMOTE_HOST = envs['REMOTE_HOST']
 REMOTE_USER = envs['REMOTE_USER']
 REMOTE_PASSWORD = envs['REMOTE_PASSWORD']
+SERVER_DOMAIN = envs['SERVER_DOMAIN']
 
 STATIC_ROOT_NAME = 'collected_static'
 STATIC_URL_NAME = 'static'
@@ -90,20 +94,45 @@ def _update_database():
 
 # nginx conf file..
 def _make_virtualhost():
-    script = """'
-    '""".format(
-        static_root=STATIC_ROOT_NAME,
-        username=env.user,
-        project_name=PROJECT_NAME,
-        static_url=STATIC_URL_NAME,
-        servername=REMOTE_HOST
-    )
+    nginx_conf = '''
+    server {
+        listen 80;
+        server_name %s;
+        charset utf-8;
+        client_max_body_size 20M;
+
+        location /static/ {
+            alias %s/collected_static/;
+        }
+
+        location / {
+            proxy_pass http://0.0.0.0:8001;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Host $server_name;
+        }
+    }
+    ''' % (SERVER_DOMAIN, project_folder)
+
+    print(nginx_conf)
+    
+    f = open(project_folder + '/coding-night-live_nginx.conf', 'w')
+    f.write(nginx_conf)
+    f.close()
 
 def _grant_nginx():
-    pass
+    sudo('sudo ln -s ' + project_folder + '/coding-night-live_nginx.conf /etc/nginx/sites-enabled/')
 
 def _grant_postgresql():
     pass
 
 def _restart_nginx():
+    sudo('sudo redis-server &')
+    sudo('sudo python3 manage.py runworker &')
+    sudo('sudo daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &')
     sudo('sudo systemctl restart nginx')
