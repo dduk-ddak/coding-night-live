@@ -54,7 +54,6 @@ def new_server():
 def setup():
     _get_latest_apt()
     _install_apt_requirements(apt_requirements)
-    _make_virtualenv()
 
 def deploy():
     _get_latest_source()
@@ -65,11 +64,11 @@ def deploy():
     _grant_postgresql()
     _restart_nginx()
 
-    #_autodeploy()
+    _autodeploy()
     _createsuperuserauto()
 
 def _get_latest_apt():
-    sudo('sudo apt-get install update && sudo apt-get -y upgrade')
+    sudo('sudo apt-get update && sudo apt-get -y upgrade')
 
 def _install_apt_requirements(apt_requirements):
     reqs = ''
@@ -78,7 +77,8 @@ def _install_apt_requirements(apt_requirements):
     sudo('sudo apt-get -y install {}'.format(reqs))
 
 def _get_latest_source():
-    run('git clone %s %s' % (REPO_URL, project_folder))
+    #run('git clone %s %s' % (REPO_URL, project_folder))
+    run('git clone %s %s -b fabric' % (REPO_URL, project_folder))
 
 def _update_settings():
     settings_path = project_folder + '/{}/settings.py'.format(PROJECT_NAME)
@@ -92,10 +92,11 @@ def _update_static_files():
     run('cd %s && python3 manage.py collectstatic --noinput' % (project_folder))
 
 def _update_database():
-    sudo('cd %s && python3 manage.py migrate --noinput' % (project_folder))
+    run('cd %s && make prepare-postgresql' % (project_folder))
+    run('cd %s && python3 manage.py migrate --noinput' % (project_folder))
 
 def _autodeploy():
-    run('python3 manage.py autodeploy')
+    run('cd %s && python3 manage.py autodeploy' % (project_folder))
 
 def _createsuperuserauto():
     run('cd %s && python3 manage.py createsuperuserauto' % (project_folder))
