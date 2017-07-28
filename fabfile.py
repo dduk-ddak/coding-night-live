@@ -1,12 +1,9 @@
-from fabric.contrib.files import append, exists, sed, put
-from fabric.api import env, local, sudo, run
-
-#from django.conf import settings
-#from django.template import Template, Context
-
 import os
 import json
 import random
+
+from fabric.contrib.files import append, exists, sed, put
+from fabric.api import env, local, sudo, run
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -46,6 +43,8 @@ apt_requirements = [
     'postgresql',
     'postgresql-contrib',
     'redis-server',
+    'libzmq-dev',
+    'libevent-dev',
 ]
 
 def new_server():
@@ -65,6 +64,9 @@ def deploy():
     _grant_nginx()
     _grant_postgresql()
     _restart_nginx()
+
+    _autodeploy()
+    _createsuperuserauto()
 
 def _get_latest_apt():
     sudo('sudo apt-get install update && sudo apt-get -y upgrade')
@@ -91,6 +93,12 @@ def _update_static_files():
 
 def _update_database():
     sudo('cd %s && python3 manage.py migrate --noinput' % (project_folder))
+
+def _autodeploy():
+    sudo('python3 manage.py autodeploy')
+
+def _createsuperuserauto():
+    sudo('python3 manage.py createsuperuserauto')
 
 # nginx conf file..
 def _make_virtualhost():
@@ -132,7 +140,5 @@ def _grant_postgresql():
     pass
 
 def _restart_nginx():
-    sudo('sudo redis-server &')
-    sudo('sudo python3 manage.py runworker &')
-    sudo('sudo daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer &')
+    #sudo('sudo redis-server &')
     sudo('sudo systemctl restart nginx')
