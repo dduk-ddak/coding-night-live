@@ -65,7 +65,7 @@ def deploy():
     _grant_postgresql()
     _restart_nginx()
 
-    _autodeploy()
+    #_autodeploy()
     _createsuperuserauto()
 
 def _get_latest_apt():
@@ -95,10 +95,10 @@ def _update_database():
     sudo('cd %s && python3 manage.py migrate --noinput' % (project_folder))
 
 def _autodeploy():
-    sudo('python3 manage.py autodeploy')
+    run('python3 manage.py autodeploy')
 
 def _createsuperuserauto():
-    sudo('python3 manage.py createsuperuserauto')
+    run('cd %s && python3 manage.py createsuperuserauto' % (project_folder))
 
 # nginx conf file..
 def _make_virtualhost():
