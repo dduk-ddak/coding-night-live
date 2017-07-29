@@ -17,4 +17,4 @@ django-redis
 raven
 Twisted
 psycopg2
-fabric3
+circus

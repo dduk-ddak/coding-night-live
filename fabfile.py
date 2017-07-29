@@ -57,6 +57,7 @@ def setup():
 
 def deploy():
     _get_latest_source()
+    _install_python_packages()
     _update_static_files()
     _update_database()
     _make_virtualhost()
@@ -79,6 +80,9 @@ def _install_apt_requirements(apt_requirements):
 def _get_latest_source():
     #run('git clone %s %s' % (REPO_URL, project_folder))
     run('git clone %s %s -b fabric' % (REPO_URL, project_folder))
+
+def install_python_pacakges():
+    sudo('cd %s && sudo pip3 install -r requirements.txt' % (project_folder))
 
 def _update_settings():
     settings_path = project_folder + '/{}/settings.py'.format(PROJECT_NAME)
