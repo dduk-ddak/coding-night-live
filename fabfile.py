@@ -81,7 +81,7 @@ def _get_latest_source():
     #run('git clone %s %s' % (REPO_URL, project_folder))
     run('git clone %s %s -b fabric' % (REPO_URL, project_folder))
 
-def install_python_pacakges():
+def _install_python_pacakges():
     sudo('cd %s && sudo pip3 install -r requirements.txt' % (project_folder))
 
 def _update_settings():
