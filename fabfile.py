@@ -3,6 +3,7 @@ import json
 import random
 
 from fabric.contrib.files import append, exists, sed, put
+from fabric.context_managers import cd
 from fabric.api import env, local, sudo, run
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -82,7 +83,8 @@ def _get_latest_source():
     run('git clone %s %s -b fabric' % (REPO_URL, project_folder))
 
 def _install_python_packages():
-    sudo('cd %s && sudo pip3 install -r requirements.txt' % (project_folder))
+    with cd(project_folder):
+        sudo('sudo pip3 install -r requirements.txt')
 
 def _update_settings():
     settings_path = project_folder + '/{}/settings.py'.format(PROJECT_NAME)
@@ -93,17 +95,21 @@ def _update_settings():
     )
 
 def _update_static_files():
-    run('cd %s && python3 manage.py collectstatic --noinput' % (project_folder))
+    with cd(project_folder):
+        run('python3 manage.py collectstatic --noinput')
 
 def _update_database():
-    run('cd %s && make prepare-postgresql' % (project_folder))
-    run('cd %s && python3 manage.py migrate --noinput' % (project_folder))
+    with cd(project_folder):
+        run('make prepare-postgresql')
+        run('python3 manage.py migrate --noinput')
 
 def _autodeploy():
-    run('cd %s && python3 manage.py autodeploy' % (project_folder))
+    with cd(project_folder):
+        run('python3 manage.py autodeploy')
 
 def _createsuperuserauto():
-    run('cd %s && python3 manage.py createsuperuserauto' % (project_folder))
+    with cd(project_folder):
+        run('python3 manage.py createsuperuserauto')
 
 # nginx conf file..
 def _make_virtualhost():
@@ -132,8 +138,6 @@ def _make_virtualhost():
     }
     ''' % (SERVER_DOMAIN, project_folder)
 
-    print(nginx_conf)
-    
     f = open(project_folder + '/coding-night-live_nginx.conf', 'w')
     f.write(nginx_conf)
     f.close()
@@ -145,4 +149,5 @@ def _restart_nginx():
     sudo('sudo systemctl restart nginx')
 
 def _start_circusd():
-    sudo('cd %s && sudo nohup circusd --daemon circus.ini' % (project_folder))
+    with cd(project_folder):
+        sudo('sudo nohup circusd --daemon ./circus.ini')
