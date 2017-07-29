@@ -62,8 +62,8 @@ def deploy():
     _update_database()
     _make_virtualhost()
     _grant_nginx()
-    _grant_postgresql()
     _restart_nginx()
+    _start_circusd()
 
     _autodeploy()
     _createsuperuserauto()
@@ -141,9 +141,8 @@ def _make_virtualhost():
 def _grant_nginx():
     sudo('sudo ln -s ' + project_folder + '/coding-night-live_nginx.conf /etc/nginx/sites-enabled/')
 
-def _grant_postgresql():
-    pass
-
 def _restart_nginx():
-    #sudo('sudo redis-server &')
     sudo('sudo systemctl restart nginx')
+
+def _start_circusd():
+    sudo('cd %s && sudo nohup circusd --daemon circus.ini' % (project_folder))
