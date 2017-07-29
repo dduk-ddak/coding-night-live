@@ -18,3 +18,4 @@ raven
 Twisted
 psycopg2
 circus
+circus-web
