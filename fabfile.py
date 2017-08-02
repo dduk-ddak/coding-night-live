@@ -153,7 +153,7 @@ def _make_circus():
     [watcher:daphne]
     cmd = daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer
     working_dir = %s/
-    copyy_env = True
+    copy_env = True
     user = %s
 
     [watcher:worker]
