@@ -38,7 +38,6 @@ apt_requirements = [
     'python3-dev',
     'python3-pip',
     'build-essential',
-    'libpq-dev',
     'python3-setuptools',
     'nginx',
     'postgresql',
@@ -62,6 +61,7 @@ def deploy():
     _update_static_files()
     _update_database()
     _make_virtualhost()
+    _make_circus()
     _grant_nginx()
     _restart_nginx()
     _start_circusd()
@@ -147,6 +147,30 @@ def _grant_nginx():
 
 def _restart_nginx():
     sudo('sudo systemctl restart nginx')
+
+def _make_circus():
+    circus_conf = '''
+    [watcher:daphne]
+    cmd = daphne -b 0.0.0.0 -p 8001 coding_night_live.asgi:channel_layer
+    working_dir = %s/
+    copyy_env = True
+    user = %s
+
+    [watcher:worker]
+    cmd = python3 manage.py runworker
+    working_dir = %s/
+    copy_env = True
+    user = www-data
+
+    [watcher:redis]
+    cmd = redis-server
+    copy_env = True
+    user = %s
+    ''' % (project_folder, REMOTE_USER, project_folder, REMOTE_USER)
+
+    f = open(project_folder + '/circus.ini', 'w')
+    f.write(circus_conf.replace('    ', ''))
+    f.close()
 
 def _start_circusd():
     with cd(project_folder):
