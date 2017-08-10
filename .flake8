@@ -1,0 +1,3 @@
+[flake8]
+max-line-length = 120
+exclude = ./docs,./manage_room/diff_match_patch,./manage_room/migrations,./manage_chat/migrations,./manage.py
