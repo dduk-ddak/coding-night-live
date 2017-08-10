@@ -1,14 +1,14 @@
 import os
 import json
-import random
 
-from fabric.contrib.files import append, exists, sed, put
+from fabric.contrib.files import sed
 from fabric.context_managers import cd
-from fabric.api import env, local, sudo, run
+from fabric.api import env, sudo, run
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
+# Load deploy settings in deploy.json
 with open(os.path.join(PROJECT_DIR, 'deploy.json')) as f:
     envs = json.loads(f.read())
 
@@ -47,20 +47,23 @@ apt_requirements = [
     'libevent-dev',
 ]
 
+
 def new_server():
     setup()
     deploy()
 
+
 def setup():
     _get_latest_apt()
     _install_apt_requirements(apt_requirements)
+
 
 def deploy():
     _get_latest_source()
     _install_python_packages()
     _update_static_files()
     _update_database()
-    _make_virtualhost()
+    _generate_nginx_conf()
     _make_circus()
     _grant_nginx()
     _restart_nginx()
@@ -69,8 +72,10 @@ def deploy():
     _autodeploy()
     _createsuperuserauto()
 
+
 def _get_latest_apt():
     sudo('sudo apt-get update && sudo apt-get -y upgrade')
+
 
 def _install_apt_requirements(apt_requirements):
     reqs = ''
@@ -78,41 +83,49 @@ def _install_apt_requirements(apt_requirements):
         reqs += (' ' + req)
     sudo('sudo apt-get -y install {}'.format(reqs))
 
+
 def _get_latest_source():
-    #run('git clone %s %s' % (REPO_URL, project_folder))
+    # run('git clone %s %s' % (REPO_URL, project_folder))
     run('git clone %s %s -b fabric' % (REPO_URL, project_folder))
+
 
 def _install_python_packages():
     with cd(project_folder):
         sudo('sudo pip3 install -r requirements.txt')
 
+
 def _update_settings():
     settings_path = project_folder + '/{}/settings.py'.format(PROJECT_NAME)
     sed(settings_path, 'DEBUG = TRUE', 'DEBUG = FALSE')
-    sed(settings_path,
+    sed(
+        settings_path,
         'ALLOWED_HOSTS = .+$',
         'ALLOWED_HOSTS = ["%s"]' % (REMOTE_HOST,)
     )
 
+
 def _update_static_files():
     with cd(project_folder):
         run('python3 manage.py collectstatic --noinput')
+
 
 def _update_database():
     with cd(project_folder):
         run('make prepare-postgresql')
         run('python3 manage.py migrate --noinput')
 
+
 def _autodeploy():
     with cd(project_folder):
         run('python3 manage.py autodeploy')
+
 
 def _createsuperuserauto():
     with cd(project_folder):
         run('python3 manage.py createsuperuserauto')
 
-# nginx conf file..
-def _make_virtualhost():
+
+def _generate_nginx_conf():
     nginx_conf = '''
     server {
         listen 80;
@@ -142,11 +155,14 @@ def _make_virtualhost():
     f.write(nginx_conf)
     f.close()
 
+
 def _grant_nginx():
     sudo('sudo ln -s ' + project_folder + '/coding-night-live_nginx.conf /etc/nginx/sites-enabled/')
 
+
 def _restart_nginx():
     sudo('sudo systemctl restart nginx')
+
 
 def _make_circus():
     circus_conf = '''
@@ -171,6 +187,7 @@ def _make_circus():
     f = open(project_folder + '/circus.ini', 'w')
     f.write(circus_conf.replace('    ', ''))
     f.close()
+
 
 def _start_circusd():
     with cd(project_folder):
