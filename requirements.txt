@@ -17,5 +17,6 @@ django-redis
 raven
 Twisted
 psycopg2
+Fabric3
 circus
 circus-web
