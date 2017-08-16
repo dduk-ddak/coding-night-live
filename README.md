@@ -1,7 +1,8 @@
-# Coding-Night-Live
+# coding-night-live
+
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/dduk-ddak/coding-night-live/blob/master/LICENSE) [![DOI](https://zenodo.org/badge/76672254.svg)](https://zenodo.org/badge/latestdoi/76672254) [![Build Status](https://travis-ci.org/dduk-ddak/coding-night-live.svg?branch=master)](https://travis-ci.org/dduk-ddak/coding-night-live)
 
-**Coding-Night-Live** is a Web-Based Communication Application for codelabs.
+**coding-night-live** is a Web-Based Communication Application for codelabs.
 
 > Codelab is a fun step-by-step, seminar-based approach to developing a software together. 
 
@@ -9,7 +10,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 * For more detailed information, [we have our Wiki](https://github.com/dduk-ddak/coding-night-live/wiki)!
 
-## 3rd Place in [Naver](https://github.com/naver) [2016 D2 Campus FEST](https://github.com/D2CAMPUS-FEST/2016)!
+## 3rd Place in [Naver](https://github.com/naver) [2016 D2 CAMPUS FEST](https://github.com/D2CAMPUS-FEST/2016)!
 **Hosted with ♥ by [Naver ncloud](https://www.ncloud.com). Try our service at [codingnightlive.com](http://codingnightlive.com)**
 
 ## Overview
@@ -86,7 +87,8 @@ If you find a bug, please report it to us using the [Issues](https://github.com/
 And we're also using error logging system with [`Sentry`](https://sentry.io/dduk-ddak/). so you don't need a capture page for every error log.
 
 ## License
-Coding-Night-Live is licensed under the MIT license.
+coding-night-live is licensed under the MIT license.
+
 ```
 The MIT License (MIT)
 
