@@ -9,7 +9,7 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 * For more detailed information, [we have our Wiki](https://github.com/dduk-ddak/coding-night-live/wiki)!
 
-## 3rd Place in [Naver](https://github.com/naver) [2016 D2 Campus Fest](https://github.com/D2CAMPUS-FEST/2016)!
+## 3rd Place in [Naver](https://github.com/naver) [2016 D2 Campus FEST](https://github.com/D2CAMPUS-FEST/2016)!
 **Hosted with ♥ by [Naver ncloud](https://www.ncloud.com). Try our service at [codingnightlive.com](http://codingnightlive.com)**
 
 ## Overview
@@ -33,9 +33,10 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 #### Build Requirements
 
-* `Python 3.5+` installed
-* `Django 1.10+` installed
-* `redis 3+` installed
+* `Python 3.5+`
+* `Django 1.10+`
+* `Redis 3+`
+* `Docker` *(recommended)*
 
 [Check requirements.txt](https://github.com/dduk-ddak/coding-night-live/blob/master/requirements.txt) for additional python packages
 
@@ -45,7 +46,8 @@ For further instructions on installation, [please visit our doc page.](https://g
 
 ## Third Party Libraries
 
-* [`python`](https://www.python.org/) 3.5+
+Please check [NOTICE](https://github.com/dduk-ddak/coding-night-live/blob/master/NOTICE)
+
 * [`django`](https://github.com/django/django) 1.10+
 * [`django-allauth`](https://github.com/pennersr/django-allauth)
 * [`django-redis`](https://github.com/niwinz/django-redis)
