@@ -1,20 +1,23 @@
-# Coding-Night-Live
+# coding-night-live
+
 [![Packagist](https://img.shields.io/packagist/l/doctrine/orm.svg)](https://github.com/dduk-ddak/coding-night-live/blob/master/LICENSE) [![DOI](https://zenodo.org/badge/76672254.svg)](https://zenodo.org/badge/latestdoi/76672254) [![Build Status](https://travis-ci.org/dduk-ddak/coding-night-live.svg?branch=master)](https://travis-ci.org/dduk-ddak/coding-night-live)
 
-**Coding-Night-Live** is a Web-Based Communication Application for codelabs.
+**coding-night-live** is a Web-Based Communication Application for codelabs.
+
 > Codelab is a fun step-by-step, seminar-based approach to developing a software together. 
 
 Popular web-based applications like `Slack`, `PingPong`, etc., do exist for hosting interactive seminars, but none are customized exclusively for the codelabs. Coding-Night-Live is the light-weight, installation-free, web-based solution for the awesome codelab-thristy programmers!
 
-* [View in Korean version](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/README.ko.md)
 * For more detailed information, [we have our Wiki](https://github.com/dduk-ddak/coding-night-live/wiki)!
 
-## 3rd Place in [Naver](https://github.com/naver) [2016 D2 Campus Fest](https://github.com/D2CAMPUS-FEST/2016)!
+## 3rd Place in [Naver](https://github.com/naver) [2016 D2 CAMPUS FEST](https://github.com/D2CAMPUS-FEST/2016)!
 **Hosted with ♥ by [Naver ncloud](https://www.ncloud.com). Try our service at [codingnightlive.com](http://codingnightlive.com)**
 
 ## Overview
+
 ### [Youtube Introduction for coding-night-live v1.0](https://youtu.be/EgOmuShXVNE)
-![Overview](https://github.com/dduk-ddak/coding-night-live/blob/master/docs/img/0.%20Overview.gif)
+
+![Overview](https://github.com/dduk-ddak/coding-night-live-doc/blob/master/images/0.%20Overview.gif)
 
 ## Features
 * Markdown-based slides
@@ -31,18 +34,22 @@ Popular web-based applications like `Slack`, `PingPong`, etc., do exist for host
 
 #### Build Requirements
 
-* `Python 3` installed ([Python 3.5.2](https://www.python.org/downloads/release/python-352/) recommended)
-* `Django 1.9` installed ([Django 1.10.5](https://www.djangoproject.com/download/) recommended)
-* `redis 3.x` installed ([Redis 3.2](https://redis.io/download) recommended)
-* [Check requirements.txt](https://github.com/dduk-ddak/coding-night-live/blob/master/requirements.txt) for additional python packages
+* `Python 3.5+`
+* `Django 1.10+`
+* `Redis 3+`
+* `Docker` *(recommended)*
+
+[Check requirements.txt](https://github.com/dduk-ddak/coding-night-live/blob/master/requirements.txt) for additional python packages
 
 #### Installation
 
 For further instructions on installation, [please visit our doc page.](https://github.com/dduk-ddak/coding-night-live-doc)
 
 ## Third Party Libraries
-* [`python`](https://www.python.org/) 3.5 +
-* [`django`](https://github.com/django/django) 1.9 +
+
+Please check [NOTICE](https://github.com/dduk-ddak/coding-night-live/blob/master/NOTICE)
+
+* [`django`](https://github.com/django/django) 1.10+
 * [`django-allauth`](https://github.com/pennersr/django-allauth)
 * [`django-redis`](https://github.com/niwinz/django-redis)
 * [`python-social-auth`](https://github.com/omab/python-social-auth)
@@ -68,6 +75,7 @@ For further instructions on installation, [please visit our doc page.](https://g
 ## Documentation
 
 We have a [coding-night-live-doc](https://github.com/dduk-ddak/coding-night-live-doc) page for project introduction, installation guide, and some documentation.
+
 We welcome any documentation contribution.
 
 ## Bug Report & Contribution
@@ -79,7 +87,8 @@ If you find a bug, please report it to us using the [Issues](https://github.com/
 And we're also using error logging system with [`Sentry`](https://sentry.io/dduk-ddak/). so you don't need a capture page for every error log.
 
 ## License
-Coding-Night-Live is licensed under the MIT license.
+coding-night-live is licensed under the MIT license.
+
 ```
 The MIT License (MIT)
 
