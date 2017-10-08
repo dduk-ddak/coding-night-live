@@ -55,7 +55,6 @@ Please check [NOTICE](https://github.com/dduk-ddak/coding-night-live/blob/master
 * [`python-social-auth`](https://github.com/omab/python-social-auth)
 * [`bootstrap`](https://github.com/twbs/bootstrap)
 * [`CodeMirror`](https://github.com/codemirror/CodeMirror)
-* [`bootstrap4 (alpha)`](https://v4-alpha.getbootstrap.com/)
 * [`jquery`](https://github.com/jquery/jquery)
 * [`highlight.js`](https://github.com/isagalaev/highlight.js)
 * [`markdown-it`](https://github.com/markdown-it/markdown-it)
