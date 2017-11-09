@@ -342,11 +342,10 @@ def rename_room(message):
 @channel_session_user
 @catch_client_error
 def check_admin(message):
-    is_admin = False
     if not message.user.is_anonymous():
         try:
             Room.objects.get(admin_user=message.user, label=message["room"])
-            is_admin = True
-        except:
-            pass
-    return is_admin
+        except Exception as ex:
+            print('message.user is not a admin user', ex)
+            return False
+    return True

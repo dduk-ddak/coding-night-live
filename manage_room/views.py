@@ -75,7 +75,8 @@ def markdown_to_pdf_view(request, label):
             'time': room.time
         }
         return render(request, 'print.html', data)
-    except:
+    except Exception as ex:
+        print(label + ' room does not exist!', ex)
         return HttpResponse('<h1>' + label + ' room does not exist!</h1>')
 
 
@@ -125,9 +126,9 @@ class RedirectRoomView(TemplateView):
                 # Check admin user
                 Room.objects.get(label=label, admin_user=self.request.user)
                 is_admin = True
-            except:
+            except Exception as ex:
                 # Matching query does not exist - request.user is not a admin_user
-                pass
+                print('request.user is not a admin user', ex)
         pdf_link = room.link + '/pdf/'
         return {
             'admin': is_admin,
