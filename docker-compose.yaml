@@ -3,8 +3,8 @@ services:
   nginx:
     build: ./nginx
     networks:
-      - back
-      - front
+      - backend
+      - frontend
     ports:
       - "80:80"
     links:
@@ -28,11 +28,11 @@ services:
     ports:
       - "5432:5432"  # for SANDBOX
     networks:
-      - "back"
+      - backend
   redis:
     image: redis
     networks:
-      - "back"
+      - backend
     ports:
       - "6379:6379"  # for SANDBOX
   worker:
@@ -43,8 +43,8 @@ services:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
     networks:
-      - front
-      - back
+      - frontend
+      - backend
     depends_on:
       - redis
       - postgres
@@ -62,8 +62,8 @@ services:
       - POSTGRES_HOST=postgres
       - IS_HTTPS_IN_FRONT_OF_NGINX=False  # for SANDBOX, if not True.
     networks:
-     - front
-     - back
+     - frontend
+     - backend
     depends_on:
       - redis
       - postgres
@@ -73,5 +73,5 @@ services:
     volumes:
       - /opt/coding-night-live/collected_static
 networks:
-  front:  # exposed
-  back:  # not exposed (DO NOT OPEN THESE PORTS)
+  frontend:  # exposed
+  backend:  # not exposed (DO NOT OPEN THESE PORTS)
