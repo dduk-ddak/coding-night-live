@@ -1,7 +1,8 @@
 from functools import wraps
 
 from .exceptions import ClientError
-from .models import Room
+
+from manage_room.models import Room, Slide
 
 
 def catch_client_error(func):
@@ -33,3 +34,25 @@ def get_room_or_error(room_label):
     except Room.DoesNotExist:
         raise ClientError("ROOM_INVALID")
     return room
+
+
+def get_room(room_id):
+    try:
+        room = Room.objects.get(curr_id=room_id)
+    except Exception as err:
+        return None
+    else:
+        return room
+
+
+def get_slide_list(room):
+    slide_list = list()
+
+    if room:
+        header = Slide.objects.get(header=True, room=room)
+
+        while header.next_id != 0:
+            header = Slide.objects.get(curr_id=header.next_id, room=room)
+            slide_list.append(header)
+    return slide_list
+

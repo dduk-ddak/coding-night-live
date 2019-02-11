@@ -1,83 +1,70 @@
-# /services/list.html - manage the room (create, delete, ..)
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
-from django.shortcuts import render
 from django.db import transaction
 from django.views.generic.base import TemplateView
 from django.contrib.auth.decorators import login_required
 
-from haikunator import Haikunator
-
-from .models import Room, Slide
 from manage_chat.views import get_chat_list, get_notice_list, get_poll_list
+from manage_room.models import Room, Slide
+from manage_room.utils import get_room, get_slide_list
 
 
-@login_required
-def room_create_view(request):
-    url = '/'
-    room = None
-
-    while not room:
-        with transaction.atomic():
-            # EX) 'icy-dream-4198'
-            share_link = Haikunator.haikunate()
-            if Room.objects.filter(label=share_link).exists():
-                continue
-            url += share_link
-            room = Room.objects.create(
-                title=share_link,
-                admin_user=request.user,
-                link=url,
-                label=share_link
-            )
-    # Create header slide
-    header = Slide.objects.create(title='header@slide', room=room)
-    first_slide = Slide.objects.create(room=room)
-    header.next_id = first_slide.now_id
-    header.save()
-
-    return HttpResponseRedirect(url)
+class RoomListApiView():
+    def get():
+        room_list = Room.objects.all().order_by('created')
+        context = {'room_list': room_list}
+        return context
 
 
-# Delete a room
-@login_required
-def room_delete_view(request, pk):
-    Room.objects.filter(admin_user=request.user, label=pk).delete()
-    url = '/services'
-    return HttpResponseRedirect(url)
+class RoomApiView():
+    pass
 
 
-# Check room list
-@login_required
-def room_list_view(request):
-    rooms = Room.objects.filter(admin_user=request.user).order_by('time')
-    return render(request, 'list.html', {'rooms': rooms})
+class RoomManageApiView():
+    # Create new room
+    def post():
+        room = None
+
+        while not room:
+            room_url = 'temp'
+            with transaction.atomic():
+                try:
+                    room = Room.objects.create(
+                        title=title
+                        label=room_url
+                    )
+                except Exception as err:
+                    print(f'[ERROR] {err}')
+
+        header = Slide.objects.create(header=True, room=room)    # Create header slide
+        first_slide = Slide.objects.create(room=room)    # Create first empty slide
+        header.next_id = first_slide.curr_id
+        header.save()
+
+    # Delete a room
+    def delete():
+        room_id = ''
+        try:
+            Room.objects.get(curr_id=room_id).delete()
+        except Exception as err:
+            print(f'[ERROR] {err}')
 
 
-# Convert markdown to pdf
-def markdown_to_pdf_view(request, label):
-    label = label.strip('/')
-    try:
-        room = Room.objects.get(label=label)
+class RoomPdfApiView():
+    # Export room contents as PDF
+    def post():
+        room_id = ''
+        slides = list()
 
-        slides = []
-        header = Slide.objects.get(title='header@slide', room=room)
-        while header.next_id != 0:
-            header = Slide.objects.get(now_id=header.next_id, room=room)
-            slides.append(header)
-        notices = get_notice_list(label).reverse()
+        room = get_room(room_id)
+        notice_list = get_notice_list(room)
+        slide_list = get_slide_list(room)
 
-        data = {
-            'slides': slides,
-            'notices': notices,
-            'room_title': room.title,
-            'author': room.admin_user,
-            'time': room.time
+        response = {
+            'room': room,
+            'notice_list': notice_list,
+            'slide_list': slide_list,
         }
-        return render(request, 'print.html', data)
-    except Exception as ex:
-        print(label + ' room does not exist!', ex)
-        return HttpResponse('<h1>' + label + ' room does not exist!</h1>')
 
 
 class RedirectRoomView(TemplateView):

@@ -15,3 +15,4 @@ custom_routing = [
     route("room.receive", consumers.change_slide, command="^change_slide$"),
     route("room.receive", consumers.get_slide_diff, command="^get_slide_diff$"),
 ]
+

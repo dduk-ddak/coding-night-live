@@ -16,16 +16,15 @@ def _createHash():
     hash = hashlib.sha1(now)
     return hash.hexdigest()[:7]
 
-
 class Notice(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
     _id = models.AutoField(primary_key=True)
-    time = models.DateTimeField(default=timezone.now)
+    created = models.DateTimeField(audo_now_add=True, editable=False)
     description = models.TextField()
 
     def __str__(self):
-        return str(self._id)
+        return f'{self.id}'
 
+    '''
     @property
     def websocket_group(self):
         return Group(str(self.room.label))
@@ -42,13 +41,14 @@ class Notice(models.Model):
         self.websocket_group.send(
             {"text": json.dumps(final_msg)}
         )
+    '''
 
 
 class Poll(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    create = models.DateTimeField(auto_now_add=True, editable=False)
     hash_value = models.CharField(max_length=7, default=_createHash, unique=True)
-    time = models.DateTimeField(default=timezone.now)
     question = models.CharField(max_length=130)
     answer = JSONField()
     answer_count = JSONField()
@@ -57,8 +57,9 @@ class Poll(models.Model):
     # answer_count example : [4, 0, 2332] ; json list
 
     def __str__(self):
-        return str(self._id)
+        return f'{self.id}'
 
+    '''
     @property
     def websocket_group(self):
         return Group(str(self.room.label))
@@ -85,21 +86,22 @@ class Poll(models.Model):
         self.websocket_group.send({
             "text": json.dumps(final_msg)
         })
+    '''
 
 
 class ChatAndReply(models.Model):
     _id = models.AutoField(primary_key=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
     hash_value = models.CharField(max_length=7, default=_createHash, unique=True)
-    # assist_hash : Saving existing hash (is_reply=True)
-    assist_hash = models.CharField(max_length=7, default=0)
-    time = models.DateTimeField(default=timezone.now)
-    is_reply = models.BooleanField(default=False)
+    reply_hash = models.CharField(max_length=7, default=0)    # Saving existing hash when **reply** is True
+    reply = models.BooleanField(default=False)
     description = models.TextField()
 
     def __str__(self):
-        return str(self._id)
+        return f'{self.id}'
 
+    '''
     @property
     def websocket_group(self):
         return Group(str(self.room.label))
@@ -135,3 +137,4 @@ class ChatAndReply(models.Model):
         self.websocket_group.send({
             "text": json.dumps(final_msg)
         })
+    '''

@@ -1,9 +1,0 @@
-{
-    "REPO_URL": "https://github.com/dduk-ddak/coding-night-live.git",
-    "PROJECT_NAME": "coding_night_live",
-    "REMOTE_HOST_SSH": "{{ IP_ADDR }}",
-    "REMOTE_HOST": "{{ IP_ADDR }}",
-    "REMOTE_USER": "{{ REMOTE_USER_NAME }}",
-    "REMOTE_PASSWORD": "{{ REMOTE_USER_PASSWORD }}",
-    "SERVER_DOMAIN": "{{ SERVER_DOMAIN_NAME }}"
-}

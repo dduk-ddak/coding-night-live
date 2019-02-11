@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "coding-night-live"
+version = "2.0.0"
+description = "Web-based Communication Application for Codelabs"
+authors = ["dduk-ddak"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+django = "^2.1"
+channels = "^2.1"
+raven = "^6.10"
+psycopg2 = "^2.7"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
